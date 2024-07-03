@@ -12,15 +12,19 @@ const DropZone: React.FC<Props_DropZone> = ({ type, item, onDrop }) => {
   const [{ isOver }, dropRef] = useDrop({
     accept: "wardrobe-item",
     drop: (droppedItem: Interface_Wardrobe_Item) => {
-      onDrop(droppedItem.type, droppedItem);
+      if (type === droppedItem.type) {
+        onDrop(type, droppedItem);
+      }
     },
+    canDrop: (droppedItem: Interface_Wardrobe_Item) =>
+      type === droppedItem.type,
     collect: (monitor) => ({
       isOver: monitor.isOver(),
     }),
   });
 
   const getDropZoneClass = (isOver: boolean) => {
-    return isOver ? "drop-zone hover" : "drop-zone";
+    return isOver && type === item?.type ? "drop-zone hover" : "drop-zone";
   };
 
   return (

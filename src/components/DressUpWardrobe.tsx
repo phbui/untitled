@@ -7,6 +7,7 @@ export interface Inteface_Wardrobe {
 
 export interface Interface_Wardrobe_Item {
   key: string;
+  type: string;
   description: string;
   asset_url: string;
 }
@@ -22,12 +23,14 @@ const DressUpWardrobe: React.FC<Props_DressUpWardrobe> = ({ onDrop }) => {
     hat: [
       {
         key: "hat1",
+        type: "hat",
         description: "Red Hat",
         asset_url:
           "https://m.media-amazon.com/images/I/61WBFfETdrL._AC_SX679_.jpg",
       },
       {
         key: "hat2",
+        type: "hat",
         description: "Blue Hat",
         asset_url:
           "https://m.media-amazon.com/images/I/61WBFfETdrL._AC_SX679_.jpg",
@@ -36,12 +39,14 @@ const DressUpWardrobe: React.FC<Props_DressUpWardrobe> = ({ onDrop }) => {
     accessory: [
       {
         key: "jewel1",
+        type: "accessory",
         description: "Gold Necklace",
         asset_url:
           "https://m.media-amazon.com/images/I/61WBFfETdrL._AC_SX679_.jpg",
       },
       {
         key: "jewel2",
+        type: "accessory",
         description: "Silver Bracelet",
         asset_url:
           "https://m.media-amazon.com/images/I/61WBFfETdrL._AC_SX679_.jpg",
@@ -50,6 +55,7 @@ const DressUpWardrobe: React.FC<Props_DressUpWardrobe> = ({ onDrop }) => {
     handheld: [
       {
         key: "purse1",
+        type: "handheld",
         description: "Red Purse",
         asset_url:
           "https://m.media-amazon.com/images/I/61WBFfETdrL._AC_SX679_.jpg",
@@ -58,26 +64,30 @@ const DressUpWardrobe: React.FC<Props_DressUpWardrobe> = ({ onDrop }) => {
     shirt: [
       {
         key: "shirt1",
+        type: "shirt",
         description: "White Shirt",
         asset_url:
           "https://m.media-amazon.com/images/I/61WBFfETdrL._AC_SX679_.jpg",
       },
       {
         key: "shirt2",
+        type: "shirt",
         description: "Black Shirt",
         asset_url:
           "https://m.media-amazon.com/images/I/61WBFfETdrL._AC_SX679_.jpg",
       },
     ],
-    jackets: [
+    jacket: [
       {
         key: "jacket1",
+        type: "jacket",
         description: "Leather Jacket",
         asset_url:
           "https://m.media-amazon.com/images/I/61WBFfETdrL._AC_SX679_.jpg",
       },
       {
         key: "jacket2",
+        type: "jacket",
         description: "Denim Jacket",
         asset_url:
           "https://m.media-amazon.com/images/I/61WBFfETdrL._AC_SX679_.jpg",
@@ -86,12 +96,14 @@ const DressUpWardrobe: React.FC<Props_DressUpWardrobe> = ({ onDrop }) => {
     pants: [
       {
         key: "pants1",
+        type: "pants",
         description: "Blue Jeans",
         asset_url:
           "https://m.media-amazon.com/images/I/61WBFfETdrL._AC_SX679_.jpg",
       },
       {
         key: "pants2",
+        type: "pants",
         description: "Black Trousers",
         asset_url:
           "https://m.media-amazon.com/images/I/61WBFfETdrL._AC_SX679_.jpg",
@@ -100,12 +112,14 @@ const DressUpWardrobe: React.FC<Props_DressUpWardrobe> = ({ onDrop }) => {
     shoes: [
       {
         key: "shoes1",
+        type: "shoes",
         description: "Sneakers",
         asset_url:
           "https://m.media-amazon.com/images/I/61WBFfETdrL._AC_SX679_.jpg",
       },
       {
         key: "shoes2",
+        type: "shoes",
         description: "Boots",
         asset_url:
           "https://m.media-amazon.com/images/I/61WBFfETdrL._AC_SX679_.jpg",

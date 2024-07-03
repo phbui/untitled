@@ -1,3 +1,4 @@
+/* General Styles */
 .character {
   position: relative;
   width: 200px;
@@ -19,12 +20,14 @@
 .drop-zone {
   position: absolute;
   width: 100%;
-  height: auto;
+  height: 100%;
   border: 2px dashed transparent;
+  transition: border-color 0.2s, background-color 0.2s;
 }
 
 .drop-zone.hover {
   border-color: blue;
+  background-color: rgba(0, 0, 255, 0.1);
 }
 
 .drop-zone.hat {
@@ -69,6 +72,7 @@
   height: 10%;
 }
 
+/* Wardrobe Styles */
 .wardrobe {
   display: flex;
   flex-direction: column;
@@ -112,6 +116,7 @@
   text-align: center;
 }
 
+/* Character Catalog Styles */
 .character-catalog {
   margin: 20px;
 }
@@ -132,4 +137,21 @@
 .catalog-item .character {
   width: 100%;
   height: auto;
+}
+
+.sort-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.sort-buttons button {
+  margin-right: 10px;
+  padding: 5px 10px;
+}
+
+.likes {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

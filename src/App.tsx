@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
-import {
-  getAuth,
-  signInWithPopup,
-  GoogleAuthProvider,
-  onAuthStateChanged,
-  signOut,
-} from "firebase/auth";
+import { signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
 import { db, auth, provider } from "./firebaseConfig";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  doc,
+  updateDoc,
+  increment,
+} from "firebase/firestore";
 import DressUpCharacter from "./components/DressUpCharacter";
 import DressUpWardrobe, {
   Interface_Wardrobe_Item,
@@ -32,9 +33,14 @@ const App: React.FC = () => {
       id: string;
       name: string;
       items: { [key: string]: Interface_Wardrobe_Item };
+      likes: number;
+      createdAt: number;
     }[]
   >([]);
   const [user, setUser] = useState<any>(null);
+  const [sortOrder, setSortOrder] = useState<
+    "newest" | "oldest" | "mostLiked" | "leastLiked"
+  >("newest");
 
   const handleDrop = (type: string, item: Interface_Wardrobe_Item) => {
     setSelectedItems((prevItems) => ({
@@ -59,13 +65,21 @@ const App: React.FC = () => {
         name: characterName,
         items: selectedItems,
         userId: user.uid,
+        likes: 0,
+        createdAt: Date.now(),
       };
       console.log("Attempting to add document...");
       const docRef = await addDoc(collection(db, "characters"), newCharacter);
       console.log("Document written with ID: ", docRef.id);
       setCatalog([
         ...catalog,
-        { id: docRef.id, name: characterName, items: selectedItems },
+        {
+          id: docRef.id,
+          name: characterName,
+          items: selectedItems,
+          likes: 0,
+          createdAt: newCharacter.createdAt,
+        },
       ]);
       setCharacterName(""); // Clear the input field after saving
     } catch (e) {
@@ -81,9 +95,18 @@ const App: React.FC = () => {
         id: doc.id,
         name: doc.data().name as string,
         items: doc.data().items as { [key: string]: Interface_Wardrobe_Item },
+        likes: doc.data().likes as number,
+        createdAt: doc.data().createdAt as number,
       }));
       console.log("Loaded catalog: ", loadedCatalog);
       setCatalog(loadedCatalog);
+      if (loadedCatalog.length > 0) {
+        setSelectedItems(
+          loadedCatalog.reduce((oldest, current) =>
+            oldest.createdAt < current.createdAt ? oldest : current
+          ).items
+        );
+      }
     } catch (e) {
       console.error("Error loading documents: ", e);
     }
@@ -125,6 +148,54 @@ const App: React.FC = () => {
       });
   };
 
+  const likeCharacter = async (characterId: string) => {
+    if (!user) {
+      console.error("User not authenticated");
+      alert("Please sign in to like a character.");
+      signInWithGoogle();
+      return;
+    }
+    try {
+      const characterDoc = doc(db, "characters", characterId);
+      await updateDoc(characterDoc, { likes: increment(1) });
+      setCatalog(
+        catalog.map((char) =>
+          char.id === characterId ? { ...char, likes: char.likes + 1 } : char
+        )
+      );
+    } catch (e) {
+      console.error("Error liking character: ", e);
+    }
+  };
+
+  const sortedCatalog = [...catalog].sort((a, b) => {
+    switch (sortOrder) {
+      case "newest":
+        return b.createdAt - a.createdAt;
+      case "oldest":
+        return a.createdAt - b.createdAt;
+      case "mostLiked":
+        return b.likes - a.likes;
+      case "leastLiked":
+        return a.likes - b.likes;
+      default:
+        return 0;
+    }
+  });
+
+  const warnUserOnUnload = (event: BeforeUnloadEvent) => {
+    event.preventDefault();
+    event.returnValue =
+      "You have unsaved changes, are you sure you want to leave?";
+  };
+
+  useEffect(() => {
+    window.addEventListener("beforeunload", warnUserOnUnload);
+    return () => {
+      window.removeEventListener("beforeunload", warnUserOnUnload);
+    };
+  }, []);
+
   return (
     <div className="App">
       <div className="auth-buttons">
@@ -143,7 +214,17 @@ const App: React.FC = () => {
       <DressUpWardrobe onDrop={handleDrop} />
       <DressUpCharacter clothingItems={selectedItems} onDrop={handleDrop} />
       <button onClick={saveCharacter}>Save Character</button>
-      <CharacterCatalog catalog={catalog} />
+      <div className="sort-buttons">
+        <button onClick={() => setSortOrder("newest")}>Sort by Newest</button>
+        <button onClick={() => setSortOrder("oldest")}>Sort by Oldest</button>
+        <button onClick={() => setSortOrder("mostLiked")}>
+          Sort by Most Liked
+        </button>
+        <button onClick={() => setSortOrder("leastLiked")}>
+          Sort by Least Liked
+        </button>
+      </div>
+      <CharacterCatalog catalog={sortedCatalog} onLike={likeCharacter} />
     </div>
   );
 };

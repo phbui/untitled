@@ -2,7 +2,11 @@ import React from "react";
 import { Interface_Wardrobe_Item } from "./DressUpWardrobe";
 
 interface CharacterCatalogProps {
-  catalog: { id: string; items: { [key: string]: Interface_Wardrobe_Item } }[];
+  catalog: {
+    id: string;
+    name: string;
+    items: { [key: string]: Interface_Wardrobe_Item };
+  }[];
 }
 
 const CharacterCatalog: React.FC<CharacterCatalogProps> = ({ catalog }) => {
@@ -12,6 +16,7 @@ const CharacterCatalog: React.FC<CharacterCatalogProps> = ({ catalog }) => {
       <div className="catalog-list">
         {catalog.map((character) => (
           <div key={character.id} className="catalog-item">
+            <h3>{character.name}</h3>
             <div className="character">
               <img
                 src="path/to/base/character.png"

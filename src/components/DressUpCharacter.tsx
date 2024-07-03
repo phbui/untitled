@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import { useDrop } from "react-dnd";
 import { Interface_Wardrobe_Item } from "./DressUpWardrobe";
 

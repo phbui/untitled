@@ -26,8 +26,13 @@ const App: React.FC = () => {
     shoes: {} as Interface_Wardrobe_Item,
   });
 
+  const [characterName, setCharacterName] = useState<string>("");
   const [catalog, setCatalog] = useState<
-    { id: string; items: { [key: string]: Interface_Wardrobe_Item } }[]
+    {
+      id: string;
+      name: string;
+      items: { [key: string]: Interface_Wardrobe_Item };
+    }[]
   >([]);
   const [user, setUser] = useState<any>(null);
 
@@ -45,10 +50,24 @@ const App: React.FC = () => {
       signInWithGoogle();
       return;
     }
+    if (!characterName) {
+      alert("Please enter a name for your character.");
+      return;
+    }
     try {
-      const newCharacter = { items: selectedItems, userId: user.uid };
+      const newCharacter = {
+        name: characterName,
+        items: selectedItems,
+        userId: user.uid,
+      };
+      console.log("Attempting to add document...");
       const docRef = await addDoc(collection(db, "characters"), newCharacter);
-      setCatalog([...catalog, { id: docRef.id, items: selectedItems }]);
+      console.log("Document written with ID: ", docRef.id);
+      setCatalog([
+        ...catalog,
+        { id: docRef.id, name: characterName, items: selectedItems },
+      ]);
+      setCharacterName(""); // Clear the input field after saving
     } catch (e) {
       console.error("Error adding document: ", e);
     }
@@ -56,11 +75,14 @@ const App: React.FC = () => {
 
   const loadCatalog = async () => {
     try {
+      console.log("Attempting to load documents...");
       const querySnapshot = await getDocs(collection(db, "characters"));
       const loadedCatalog = querySnapshot.docs.map((doc) => ({
         id: doc.id,
+        name: doc.data().name as string,
         items: doc.data().items as { [key: string]: Interface_Wardrobe_Item },
       }));
+      console.log("Loaded catalog: ", loadedCatalog);
       setCatalog(loadedCatalog);
     } catch (e) {
       console.error("Error loading documents: ", e);
@@ -112,6 +134,12 @@ const App: React.FC = () => {
           <button onClick={signInWithGoogle}>Sign In with Google</button>
         )}
       </div>
+      <input
+        type="text"
+        placeholder="Enter character name"
+        value={characterName}
+        onChange={(e) => setCharacterName(e.target.value)}
+      />
       <DressUpWardrobe onDrop={handleDrop} />
       <DressUpCharacter clothingItems={selectedItems} onDrop={handleDrop} />
       <button onClick={saveCharacter}>Save Character</button>

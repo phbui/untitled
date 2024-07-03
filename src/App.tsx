@@ -41,6 +41,12 @@ const App: React.FC = () => {
   const [sortOrder, setSortOrder] = useState<
     "newest" | "oldest" | "mostLiked" | "leastLiked"
   >("newest");
+  const [currentlyDragging, setCurrentlyDragging] =
+    useState<Interface_Wardrobe_Item>();
+
+  const handleDrag = (item: Interface_Wardrobe_Item) => {
+    setCurrentlyDragging(item);
+  };
 
   const handleDrop = (type: string, item: Interface_Wardrobe_Item) => {
     setSelectedItems((prevItems) => ({
@@ -211,8 +217,12 @@ const App: React.FC = () => {
         value={characterName}
         onChange={(e) => setCharacterName(e.target.value)}
       />
-      <DressUpWardrobe onDrop={handleDrop} />
-      <DressUpCharacter clothingItems={selectedItems} onDrop={handleDrop} />
+      <DressUpWardrobe startDrag={handleDrag} onDrop={handleDrop} />
+      <DressUpCharacter
+        clothingItems={selectedItems}
+        currentlyDragging={currentlyDragging}
+        onDrop={handleDrop}
+      />
       <button onClick={saveCharacter}>Save Character</button>
       <div className="sort-buttons">
         <button onClick={() => setSortOrder("newest")}>Sort by Newest</button>

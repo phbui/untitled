@@ -13,10 +13,14 @@ export interface Interface_Wardrobe_Item {
 }
 
 interface Props_DressUpWardrobe {
+  startDrag: (item: Interface_Wardrobe_Item) => void;
   onDrop: (type: string, item: Interface_Wardrobe_Item) => void;
 }
 
-const DressUpWardrobe: React.FC<Props_DressUpWardrobe> = ({ onDrop }) => {
+const DressUpWardrobe: React.FC<Props_DressUpWardrobe> = ({
+  startDrag,
+  onDrop,
+}) => {
   const [selectedTab, setSelectedTab] = useState<string>("hat");
 
   const wardrobeItems: Inteface_Wardrobe = {
@@ -130,7 +134,11 @@ const DressUpWardrobe: React.FC<Props_DressUpWardrobe> = ({ onDrop }) => {
   const renderItems = () => {
     return wardrobeItems[selectedTab].map((item) => (
       <div key={item.key} className="wardrobe-item">
-        <DressUpItem item={item} onDrop={() => onDrop(selectedTab, item)} />
+        <DressUpItem
+          item={item}
+          startDrag={() => startDrag(item)}
+          onDrop={() => onDrop(selectedTab, item)}
+        />
       </div>
     ));
   };

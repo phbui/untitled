@@ -4,10 +4,15 @@ import { Interface_Wardrobe_Item } from "./DressUpWardrobe";
 
 interface Props_DressUpItem {
   item: Interface_Wardrobe_Item;
+  startDrag: () => void;
   onDrop: () => void;
 }
 
-const DressUpItem: React.FC<Props_DressUpItem> = ({ item, onDrop }) => {
+const DressUpItem: React.FC<Props_DressUpItem> = ({
+  item,
+  startDrag,
+  onDrop,
+}) => {
   const [, dragRef] = useDrag({
     type: "wardrobe-item",
     item: { name: item.key },
@@ -15,7 +20,7 @@ const DressUpItem: React.FC<Props_DressUpItem> = ({ item, onDrop }) => {
   });
 
   return (
-    <div ref={dragRef} className="wardrobe-item">
+    <div ref={dragRef} className="wardrobe-item" onDrag={startDrag}>
       <img src={item.asset_url} alt={item.description} />
       <p>{item.description}</p>
     </div>

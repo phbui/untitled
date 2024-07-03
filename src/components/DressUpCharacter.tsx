@@ -1,94 +1,111 @@
-import React, { useState } from "react";
-import { Interface_Wardrobe_Item } from "./DressUpWardrobe";
+import React, { useCallback } from "react";
 import { useDrop } from "react-dnd";
+import { Interface_Wardrobe_Item } from "./DressUpWardrobe";
 
-interface Props_DressUpCharacterPart {
-  type: string;
-  item: Interface_Wardrobe_Item | null;
-  onDrop: (item: Interface_Wardrobe_Item) => void;
+interface DressUpCharacterProps {
+  clothingItems: { [key: string]: string };
+  onDrop: (type: string, item: Interface_Wardrobe_Item) => void;
 }
 
-const DressUpCharacterPart: React.FC<Props_DressUpCharacterPart> = ({
-  type,
-  item,
+const DressUpCharacter: React.FC<DressUpCharacterProps> = ({
+  clothingItems,
   onDrop,
 }) => {
-  const [{ isOver }, dropRef] = useDrop({
-    accept: "wardrobe-item",
-    drop: (draggedItem: Interface_Wardrobe_Item) => onDrop(draggedItem),
-    collect: (monitor) => ({
-      isOver: !!monitor.isOver(),
-    }),
-  });
-
-  return (
-    <div
-      ref={dropRef}
-      data-type={type}
-      className={`${type} ${isOver ? "highlight" : ""}`}
-    >
-      {item && <img src={item.asset_url} alt={item.key} />}
-    </div>
+  const createDropHandler = useCallback(
+    (type: string) =>
+      useDrop({
+        accept: "wardrobe-item",
+        drop: (item: Interface_Wardrobe_Item) => onDrop(type, item),
+        collect: (monitor) => ({
+          isOver: !!monitor.isOver(),
+        }),
+      }),
+    [onDrop]
   );
-};
 
-const DressUpCharacter: React.FC = () => {
-  const [items, setItems] = useState({
-    hat: null as Interface_Wardrobe_Item | null,
-    accessories: null as Interface_Wardrobe_Item | null,
-    shirt: null as Interface_Wardrobe_Item | null,
-    jacket: null as Interface_Wardrobe_Item | null,
-    pants: null as Interface_Wardrobe_Item | null,
-    shoes: null as Interface_Wardrobe_Item | null,
-  });
-
-  const handleDrop = (
-    type: keyof typeof items,
-    item: Interface_Wardrobe_Item
-  ) => {
-    setItems((prevItems) => ({
-      ...prevItems,
-      [type]: item,
-    }));
-  };
+  const [{ isOver: isOverHat }, hatDropRef] = createDropHandler("hat");
+  const [{ isOver: isOverAccessories }, accessoriesDropRef] =
+    createDropHandler("accessories");
+  const [{ isOver: isOverShirt }, shirtDropRef] = createDropHandler("shirt");
+  const [{ isOver: isOverJacket }, jacketDropRef] = createDropHandler("jacket");
+  const [{ isOver: isOverPants }, pantsDropRef] = createDropHandler("pants");
+  const [{ isOver: isOverShoes }, shoesDropRef] = createDropHandler("shoes");
 
   return (
     <div className="character">
-      <DressUpCharacterPart
-        type="hat"
-        item={items.hat}
-        onDrop={(item) => handleDrop("hat", item)}
+      <img
+        src="path/to/base/character.png"
+        alt="Base Character"
+        className="base-character"
       />
-      <DressUpCharacterPart
-        type="accessories"
-        item={items.accessories}
-        onDrop={(item) => handleDrop("accessories", item)}
-      />
-      <DressUpCharacterPart
-        type="accessories"
-        item={items.accessories}
-        onDrop={(item) => handleDrop("accessories", item)}
-      />
-      <DressUpCharacterPart
-        type="shirt"
-        item={items.shirt}
-        onDrop={(item) => handleDrop("shirt", item)}
-      />
-      <DressUpCharacterPart
-        type="jacket"
-        item={items.jacket}
-        onDrop={(item) => handleDrop("jacket", item)}
-      />
-      <DressUpCharacterPart
-        type="pants"
-        item={items.pants}
-        onDrop={(item) => handleDrop("pants", item)}
-      />
-      <DressUpCharacterPart
-        type="shoes"
-        item={items.shoes}
-        onDrop={(item) => handleDrop("shoes", item)}
-      />
+      <div
+        ref={hatDropRef}
+        className={`drop-zone hat ${isOverHat ? "hover" : ""}`}
+      >
+        {clothingItems.hat && (
+          <img src={clothingItems.hat} alt="hat" className="clothing hat" />
+        )}
+      </div>
+      <div
+        ref={accessoriesDropRef}
+        className={`drop-zone accessories ${isOverAccessories ? "hover" : ""}`}
+      >
+        {clothingItems.accessories && (
+          <img
+            src={clothingItems.accessories}
+            alt="accessories"
+            className="clothing accessories"
+          />
+        )}
+      </div>
+      <div
+        ref={shirtDropRef}
+        className={`drop-zone shirt ${isOverShirt ? "hover" : ""}`}
+      >
+        {clothingItems.shirt && (
+          <img
+            src={clothingItems.shirt}
+            alt="shirt"
+            className="clothing shirt"
+          />
+        )}
+      </div>
+      <div
+        ref={jacketDropRef}
+        className={`drop-zone jacket ${isOverJacket ? "hover" : ""}`}
+      >
+        {clothingItems.jacket && (
+          <img
+            src={clothingItems.jacket}
+            alt="jacket"
+            className="clothing jacket"
+          />
+        )}
+      </div>
+      <div
+        ref={pantsDropRef}
+        className={`drop-zone pants ${isOverPants ? "hover" : ""}`}
+      >
+        {clothingItems.pants && (
+          <img
+            src={clothingItems.pants}
+            alt="pants"
+            className="clothing pants"
+          />
+        )}
+      </div>
+      <div
+        ref={shoesDropRef}
+        className={`drop-zone shoes ${isOverShoes ? "hover" : ""}`}
+      >
+        {clothingItems.shoes && (
+          <img
+            src={clothingItems.shoes}
+            alt="shoes"
+            className="clothing shoes"
+          />
+        )}
+      </div>
     </div>
   );
 };

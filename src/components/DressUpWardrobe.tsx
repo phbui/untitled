@@ -11,7 +11,11 @@ export interface Interface_Wardrobe_Item {
   asset_url: string;
 }
 
-const DressUpWardrobe: React.FC = () => {
+interface Props_DressUpWardrobe {
+  onDrop: (type: string, item: Interface_Wardrobe_Item) => void;
+}
+
+const DressUpWardrobe: React.FC<Props_DressUpWardrobe> = ({ onDrop }) => {
   const [selectedTab, setSelectedTab] = useState<string>("hats");
 
   const wardrobeItems: Inteface_Wardrobe = {
@@ -19,79 +23,92 @@ const DressUpWardrobe: React.FC = () => {
       {
         key: "hat1",
         description: "Red Hat",
-        asset_url: "https://example.com/red_hat.png",
+        asset_url:
+          "https://m.media-amazon.com/images/I/61WBFfETdrL._AC_SX679_.jpg",
       },
       {
         key: "hat2",
         description: "Blue Hat",
-        asset_url: "https://example.com/blue_hat.png",
+        asset_url:
+          "https://m.media-amazon.com/images/I/61WBFfETdrL._AC_SX679_.jpg",
       },
     ],
     accessories: [
       {
         key: "jewel1",
         description: "Gold Necklace",
-        asset_url: "https://example.com/gold_necklace.png",
+        asset_url:
+          "https://m.media-amazon.com/images/I/61WBFfETdrL._AC_SX679_.jpg",
       },
       {
         key: "jewel2",
         description: "Silver Bracelet",
-        asset_url: "https://example.com/silver_bracelet.png",
+        asset_url:
+          "https://m.media-amazon.com/images/I/61WBFfETdrL._AC_SX679_.jpg",
       },
     ],
     handheld: [
       {
         key: "purse1",
         description: "Red Purse",
-        asset_url: "https://example.com/red_purse.png",
+        asset_url:
+          "https://m.media-amazon.com/images/I/61WBFfETdrL._AC_SX679_.jpg",
       },
     ],
     shirts: [
       {
         key: "shirt1",
         description: "White Shirt",
-        asset_url: "https://example.com/white_shirt.png",
+        asset_url:
+          "https://m.media-amazon.com/images/I/61WBFfETdrL._AC_SX679_.jpg",
       },
       {
         key: "shirt2",
         description: "Black Shirt",
-        asset_url: "https://example.com/black_shirt.png",
+        asset_url:
+          "https://m.media-amazon.com/images/I/61WBFfETdrL._AC_SX679_.jpg",
       },
     ],
     jackets: [
       {
         key: "jacket1",
         description: "Leather Jacket",
-        asset_url: "https://example.com/leather_jacket.png",
+        asset_url:
+          "https://m.media-amazon.com/images/I/61WBFfETdrL._AC_SX679_.jpg",
       },
       {
         key: "jacket2",
         description: "Denim Jacket",
-        asset_url: "https://example.com/denim_jacket.png",
+        asset_url:
+          "https://m.media-amazon.com/images/I/61WBFfETdrL._AC_SX679_.jpg",
       },
     ],
     pants: [
       {
         key: "pants1",
         description: "Blue Jeans",
-        asset_url: "https://example.com/blue_jeans.png",
+        asset_url:
+          "https://m.media-amazon.com/images/I/61WBFfETdrL._AC_SX679_.jpg",
       },
       {
         key: "pants2",
         description: "Black Trousers",
-        asset_url: "https://example.com/black_trousers.png",
+        asset_url:
+          "https://m.media-amazon.com/images/I/61WBFfETdrL._AC_SX679_.jpg",
       },
     ],
     shoes: [
       {
         key: "shoes1",
         description: "Sneakers",
-        asset_url: "https://example.com/sneakers.png",
+        asset_url:
+          "https://m.media-amazon.com/images/I/61WBFfETdrL._AC_SX679_.jpg",
       },
       {
         key: "shoes2",
         description: "Boots",
-        asset_url: "https://example.com/boots.png",
+        asset_url:
+          "https://m.media-amazon.com/images/I/61WBFfETdrL._AC_SX679_.jpg",
       },
     ],
   };
@@ -99,7 +116,7 @@ const DressUpWardrobe: React.FC = () => {
   const renderItems = () => {
     return wardrobeItems[selectedTab].map((item) => (
       <div key={item.key} className="wardrobe-item">
-        <DressUpItem item={item} />
+        <DressUpItem item={item} onDrop={() => onDrop(selectedTab, item)} />
       </div>
     ));
   };

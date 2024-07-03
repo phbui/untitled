@@ -2,10 +2,16 @@ import React from "react";
 import { useDrag } from "react-dnd";
 import { Interface_Wardrobe_Item } from "./DressUpWardrobe";
 
-const DressUpItem: React.FC<{ item: Interface_Wardrobe_Item }> = ({ item }) => {
+interface Props_DressUpItem {
+  item: Interface_Wardrobe_Item;
+  onDrop: () => void;
+}
+
+const DressUpItem: React.FC<Props_DressUpItem> = ({ item, onDrop }) => {
   const [, dragRef] = useDrag({
     type: "wardrobe-item",
     item: { name: item.key },
+    end: onDrop,
   });
 
   return (

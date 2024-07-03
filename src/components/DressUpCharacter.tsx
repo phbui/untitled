@@ -1,9 +1,9 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useDrop } from "react-dnd";
 import { Interface_Wardrobe_Item } from "./DressUpWardrobe";
 
 interface DressUpCharacterProps {
-  clothingItems: { [key: string]: string };
+  clothingItems: { [key: string]: Interface_Wardrobe_Item };
   onDrop: (type: string, item: Interface_Wardrobe_Item) => void;
 }
 
@@ -43,7 +43,11 @@ const DressUpCharacter: React.FC<DressUpCharacterProps> = ({
         className={`drop-zone hat ${isOverHat ? "hover" : ""}`}
       >
         {clothingItems.hat && (
-          <img src={clothingItems.hat} alt="hat" className="clothing hat" />
+          <img
+            src={clothingItems.hat.asset_url}
+            alt="hat"
+            className="clothing hat"
+          />
         )}
       </div>
       <div
@@ -52,7 +56,7 @@ const DressUpCharacter: React.FC<DressUpCharacterProps> = ({
       >
         {clothingItems.accessories && (
           <img
-            src={clothingItems.accessories}
+            src={clothingItems.accessories.asset_url}
             alt="accessories"
             className="clothing accessories"
           />
@@ -64,7 +68,7 @@ const DressUpCharacter: React.FC<DressUpCharacterProps> = ({
       >
         {clothingItems.shirt && (
           <img
-            src={clothingItems.shirt}
+            src={clothingItems.shirt.asset_url}
             alt="shirt"
             className="clothing shirt"
           />
@@ -76,7 +80,7 @@ const DressUpCharacter: React.FC<DressUpCharacterProps> = ({
       >
         {clothingItems.jacket && (
           <img
-            src={clothingItems.jacket}
+            src={clothingItems.jacket.asset_url}
             alt="jacket"
             className="clothing jacket"
           />
@@ -88,7 +92,7 @@ const DressUpCharacter: React.FC<DressUpCharacterProps> = ({
       >
         {clothingItems.pants && (
           <img
-            src={clothingItems.pants}
+            src={clothingItems.pants.asset_url}
             alt="pants"
             className="clothing pants"
           />
@@ -100,7 +104,7 @@ const DressUpCharacter: React.FC<DressUpCharacterProps> = ({
       >
         {clothingItems.shoes && (
           <img
-            src={clothingItems.shoes}
+            src={clothingItems.shoes.asset_url}
             alt="shoes"
             className="clothing shoes"
           />

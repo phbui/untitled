@@ -4,46 +4,49 @@ import DressUpWardrobe, {
   Interface_Wardrobe_Item,
 } from "./components/DressUpWardrobe";
 import CharacterCatalog from "./components/CharacterCatalog";
+import { db } from "./firebaseConfig";
+import { addDoc, collection, getDocs } from "firebase/firestore";
 
 const App: React.FC = () => {
-  const [selectedItems, setSelectedItems] = useState<{ [key: string]: string }>(
-    {
-      hat: "",
-      accessories: "",
-      shirt: "",
-      jacket: "",
-      pants: "",
-      shoes: "",
-    }
-  );
+  const [selectedItems, setSelectedItems] = useState<{
+    [key: string]: Interface_Wardrobe_Item;
+  }>({
+    hat: {} as Interface_Wardrobe_Item,
+    accessories: {} as Interface_Wardrobe_Item,
+    shirt: {} as Interface_Wardrobe_Item,
+    jacket: {} as Interface_Wardrobe_Item,
+    pants: {} as Interface_Wardrobe_Item,
+    shoes: {} as Interface_Wardrobe_Item,
+  });
 
   const [catalog, setCatalog] = useState<
-    { id: number; items: { [key: string]: string } }[]
+    { id: string; items: { [key: string]: Interface_Wardrobe_Item } }[]
   >([]);
 
   const handleDrop = (type: string, item: Interface_Wardrobe_Item) => {
-    console.log(selectedItems);
-
     setSelectedItems((prevItems) => ({
       ...prevItems,
-      [type]: item.asset_url,
+      [type]: item,
     }));
   };
 
-  const saveCharacter = () => {
-    const newCharacter = { id: Date.now(), items: selectedItems };
-    setCatalog([...catalog, newCharacter]);
-    localStorage.setItem(
-      "characterCatalog",
-      JSON.stringify([...catalog, newCharacter])
-    );
+  const saveCharacter = async () => {
+    try {
+      const newCharacter = { items: selectedItems };
+      const docRef = await addDoc(collection(db, "characters"), newCharacter);
+      setCatalog([...catalog, { id: docRef.id, items: selectedItems }]);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
   };
 
-  const loadCatalog = () => {
-    const savedCatalog = localStorage.getItem("characterCatalog");
-    if (savedCatalog) {
-      setCatalog(JSON.parse(savedCatalog));
-    }
+  const loadCatalog = async () => {
+    const querySnapshot = await getDocs(collection(db, "characters"));
+    const loadedCatalog = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      items: doc.data().items as { [key: string]: Interface_Wardrobe_Item },
+    }));
+    setCatalog(loadedCatalog);
   };
 
   // Load catalog on initial render

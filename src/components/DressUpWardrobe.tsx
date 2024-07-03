@@ -16,10 +16,10 @@ interface Props_DressUpWardrobe {
 }
 
 const DressUpWardrobe: React.FC<Props_DressUpWardrobe> = ({ onDrop }) => {
-  const [selectedTab, setSelectedTab] = useState<string>("hats");
+  const [selectedTab, setSelectedTab] = useState<string>("hat");
 
   const wardrobeItems: Inteface_Wardrobe = {
-    hats: [
+    hat: [
       {
         key: "hat1",
         description: "Red Hat",
@@ -33,7 +33,7 @@ const DressUpWardrobe: React.FC<Props_DressUpWardrobe> = ({ onDrop }) => {
           "https://m.media-amazon.com/images/I/61WBFfETdrL._AC_SX679_.jpg",
       },
     ],
-    accessories: [
+    accessory: [
       {
         key: "jewel1",
         description: "Gold Necklace",
@@ -55,7 +55,7 @@ const DressUpWardrobe: React.FC<Props_DressUpWardrobe> = ({ onDrop }) => {
           "https://m.media-amazon.com/images/I/61WBFfETdrL._AC_SX679_.jpg",
       },
     ],
-    shirts: [
+    shirt: [
       {
         key: "shirt1",
         description: "White Shirt",

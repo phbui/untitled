@@ -1,7 +1,8 @@
 import React from "react";
+import { Interface_Wardrobe_Item } from "./DressUpWardrobe";
 
 interface CharacterCatalogProps {
-  catalog: { id: number; items: { [key: string]: string } }[];
+  catalog: { id: string; items: { [key: string]: Interface_Wardrobe_Item } }[];
 }
 
 const CharacterCatalog: React.FC<CharacterCatalogProps> = ({ catalog }) => {
@@ -21,7 +22,7 @@ const CharacterCatalog: React.FC<CharacterCatalogProps> = ({ catalog }) => {
                 character.items[key] ? (
                   <img
                     key={key}
-                    src={character.items[key]}
+                    src={character.items[key].asset_url}
                     alt={key}
                     className={`clothing ${key}`}
                   />

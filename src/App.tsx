@@ -4,8 +4,7 @@ import { addDoc, collection } from "firebase/firestore";
 import DressUpCharacter from "./components/DressUpCharacter";
 import BottomTabs from "./components/BottomTabs";
 import { Interface_Wardrobe_Item } from "./components/BottomTabs";
-import SignIn from "./SignIn";
-import CharacterCatalog from "./components/CharacterCatalog";
+import SignIn from "./components/SignIn";
 
 const App: React.FC = () => {
   const [selectedItems, setSelectedItems] = useState<{
@@ -79,12 +78,6 @@ const App: React.FC = () => {
   return (
     <div className="App">
       <SignIn user={user} setUser={setUser} />
-      <input
-        type="text"
-        placeholder="Enter character name"
-        value={characterName}
-        onChange={(e) => setCharacterName(e.target.value)}
-      />
       <BottomTabs
         user={user}
         onSelect={setSelectedItems}
@@ -95,6 +88,12 @@ const App: React.FC = () => {
         clothingItems={selectedItems}
         currentlyDragging={currentlyDragging}
         onDrop={handleDrop}
+      />
+      <input
+        type="text"
+        placeholder="Enter character name"
+        value={characterName}
+        onChange={(e) => setCharacterName(e.target.value)}
       />
       <button onClick={saveCharacter}>Save Character</button>
     </div>

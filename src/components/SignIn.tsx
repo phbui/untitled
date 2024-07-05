@@ -1,11 +1,6 @@
 import React, { useEffect } from "react";
-import {
-  signInWithRedirect,
-  getRedirectResult,
-  onAuthStateChanged,
-  signOut,
-} from "firebase/auth";
-import { auth, provider } from "./firebaseConfig";
+import { signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
+import { auth, provider } from "../firebaseConfig";
 
 interface SignInProps {
   user: any;
@@ -14,16 +9,6 @@ interface SignInProps {
 
 const SignIn: React.FC<SignInProps> = ({ user, setUser }) => {
   useEffect(() => {
-    getRedirectResult(auth)
-      .then((result) => {
-        if (result?.user) {
-          setUser(result.user);
-        }
-      })
-      .catch((error) => {
-        console.error("Error getting redirect result: ", error);
-      });
-
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user);
@@ -36,7 +21,13 @@ const SignIn: React.FC<SignInProps> = ({ user, setUser }) => {
   }, [setUser]);
 
   const signInWithGoogle = () => {
-    signInWithRedirect(auth, provider);
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        setUser(result.user);
+      })
+      .catch((error) => {
+        console.error("Error signing in: ", error);
+      });
   };
 
   const signOutUser = () => {

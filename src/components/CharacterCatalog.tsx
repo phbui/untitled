@@ -9,12 +9,12 @@ import {
 } from "firebase/firestore";
 import { Interface_Wardrobe_Item } from "./BottomTabs";
 
-interface CharacterCatalogProps {
+interface Props_CharacterCatalog {
   user: any;
   onSelect: (items: { [key: string]: Interface_Wardrobe_Item }) => void;
 }
 
-const CharacterCatalog: React.FC<CharacterCatalogProps> = ({
+const CharacterCatalog: React.FC<Props_CharacterCatalog> = ({
   user,
   onSelect,
 }) => {

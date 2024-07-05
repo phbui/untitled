@@ -40,10 +40,6 @@ const SignIn: React.FC<SignInProps> = ({ user, setUser }) => {
       });
   };
 
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
-
   return (
     <div className="auth-buttons">
       {user ? (

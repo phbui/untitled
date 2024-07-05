@@ -10,7 +10,7 @@ interface Props_DressUpCharacter {
 
 const clothingTypes = [
   "hat",
-  "accessories",
+  "accessory",
   "jacket",
   "shirt",
   "handheld",
@@ -30,15 +30,17 @@ const DressUpCharacter: React.FC<Props_DressUpCharacter> = ({
         alt="Base Character"
         className="base-character"
       />
-      {clothingTypes.map((type) => (
-        <DropZone
-          key={type}
-          type={type}
-          item={clothingItems[type]}
-          currentlyDragging={currentlyDragging}
-          onDrop={onDrop}
-        />
-      ))}
+      <div className="drop-zone-container">
+        {clothingTypes.map((type) => (
+          <DropZone
+            key={type}
+            type={type}
+            item={clothingItems[type]}
+            currentlyDragging={currentlyDragging}
+            onDrop={onDrop}
+          />
+        ))}
+      </div>
     </div>
   );
 };

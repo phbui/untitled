@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import DressUpItem from "./DressUpItem";
 import CharacterCatalog from "./CharacterCatalog";
+import { Interface_Character } from "../App";
 
 interface Interface_Wardrobe {
   [key: string]: {
@@ -22,6 +23,8 @@ interface Props_BottomTabs {
   onSelect: (items: { [key: string]: Interface_Wardrobe_Item }) => void;
   startDrag: (item: Interface_Wardrobe_Item) => void;
   onDrop: (type: string, item: Interface_Wardrobe_Item) => void;
+  catalog: Interface_Character[];
+  setCatalog: (catalog: Interface_Character[]) => void;
 }
 
 const wardrobeItems: Interface_Wardrobe = {
@@ -165,6 +168,8 @@ const BottomTabs: React.FC<Props_BottomTabs> = ({
   onSelect,
   startDrag,
   onDrop,
+  catalog,
+  setCatalog,
 }) => {
   const [openTab, setOpenTab] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -220,7 +225,12 @@ const BottomTabs: React.FC<Props_BottomTabs> = ({
         </div>
       ))}
       <div className={`tab-content ${openTab === "catalog" ? "open" : ""}`}>
-        <CharacterCatalog user={user} onSelect={onSelect} />
+        <CharacterCatalog
+          user={user}
+          catalog={catalog}
+          setCatalog={setCatalog}
+          onSelect={onSelect}
+        />
       </div>
     </div>
   );

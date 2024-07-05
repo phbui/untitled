@@ -1,64 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { db } from "../firebaseConfig";
-import {
-  collection,
-  getDocs,
-  doc,
-  updateDoc,
-  increment,
-} from "firebase/firestore";
+import { doc, updateDoc, increment } from "firebase/firestore";
 import { Interface_Wardrobe_Item } from "./BottomTabs";
+import { Interface_Character } from "../App";
 
 interface Props_CharacterCatalog {
   user: any;
+  catalog: Interface_Character[];
+  setCatalog: (catalog: Interface_Character[]) => void;
   onSelect: (items: { [key: string]: Interface_Wardrobe_Item }) => void;
 }
 
 const CharacterCatalog: React.FC<Props_CharacterCatalog> = ({
   user,
+  catalog,
+  setCatalog,
   onSelect,
 }) => {
-  const [catalog, setCatalog] = useState<
-    {
-      id: string;
-      name: string;
-      items: { [key: string]: Interface_Wardrobe_Item };
-      likes: number;
-      createdAt: number;
-    }[]
-  >([]);
   const [sortOrder, setSortOrder] = useState<
     "newest" | "oldest" | "mostLiked" | "leastLiked"
   >("newest");
-
-  const loadCatalog = async () => {
-    try {
-      console.log("Attempting to load documents...");
-      const querySnapshot = await getDocs(collection(db, "characters"));
-      const loadedCatalog = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        name: doc.data().name as string,
-        items: doc.data().items as { [key: string]: Interface_Wardrobe_Item },
-        likes: doc.data().likes as number,
-        createdAt: doc.data().createdAt as number,
-      }));
-      console.log("Loaded catalog: ", loadedCatalog);
-      setCatalog(loadedCatalog);
-      if (loadedCatalog.length > 0) {
-        onSelect(
-          loadedCatalog.reduce((oldest, current) =>
-            oldest.createdAt < current.createdAt ? oldest : current
-          ).items
-        );
-      }
-    } catch (e) {
-      console.error("Error loading documents: ", e);
-    }
-  };
-
-  useEffect(() => {
-    loadCatalog();
-  }, []);
 
   const likeCharacter = async (characterId: string) => {
     if (!user) {

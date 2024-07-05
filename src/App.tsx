@@ -1,10 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { db } from "./firebaseConfig";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, getDocs } from "firebase/firestore";
 import DressUpCharacter from "./components/DressUpCharacter";
 import BottomTabs from "./components/BottomTabs";
-import { Interface_Wardrobe_Item } from "./components/BottomTabs";
 import SignIn from "./components/SignIn";
+import { Interface_Wardrobe_Item } from "./components/BottomTabs";
+
+export interface Interface_Character {
+  id: string;
+  name: string;
+  items: { [key: string]: Interface_Wardrobe_Item };
+  likes: number;
+  createdAt: number;
+}
 
 const App: React.FC = () => {
   const [selectedItems, setSelectedItems] = useState<{
@@ -19,9 +27,10 @@ const App: React.FC = () => {
   });
 
   const [characterName, setCharacterName] = useState<string>("");
-  const [user, setUser] = useState<any>();
+  const [user, setUser] = useState<any>(null);
   const [currentlyDragging, setCurrentlyDragging] =
     useState<Interface_Wardrobe_Item>();
+  const [catalog, setCatalog] = useState<Interface_Character[]>([]);
 
   const handleDrag = (item: Interface_Wardrobe_Item) => {
     setCurrentlyDragging(item);
@@ -57,10 +66,40 @@ const App: React.FC = () => {
       const docRef = await addDoc(collection(db, "characters"), newCharacter);
       console.log("Document written with ID: ", docRef.id);
       setCharacterName(""); // Clear the input field after saving
+      loadCatalog(); // Reload catalog after saving
     } catch (e) {
       console.error("Error adding document: ", e);
     }
   };
+
+  const loadCatalog = useCallback(async () => {
+    try {
+      console.log("Attempting to load documents...");
+      const querySnapshot = await getDocs(collection(db, "characters"));
+      const loadedCatalog = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        name: doc.data().name as string,
+        items: doc.data().items as { [key: string]: Interface_Wardrobe_Item },
+        likes: doc.data().likes as number,
+        createdAt: doc.data().createdAt as number,
+      }));
+      console.log("Loaded catalog: ", loadedCatalog);
+      setCatalog(loadedCatalog);
+      if (loadedCatalog.length > 0) {
+        setSelectedItems(
+          loadedCatalog.reduce((oldest, current) =>
+            oldest.createdAt < current.createdAt ? oldest : current
+          ).items
+        );
+      }
+    } catch (e) {
+      console.error("Error loading documents: ", e);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadCatalog();
+  }, [loadCatalog]);
 
   const warnUserOnUnload = (event: BeforeUnloadEvent) => {
     event.preventDefault();
@@ -80,9 +119,11 @@ const App: React.FC = () => {
       <SignIn user={user} setUser={setUser} />
       <BottomTabs
         user={user}
-        onSelect={setSelectedItems}
         startDrag={handleDrag}
         onDrop={handleDrop}
+        onSelect={setSelectedItems}
+        catalog={catalog}
+        setCatalog={setCatalog}
       />
       <DressUpCharacter
         clothingItems={selectedItems}

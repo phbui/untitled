@@ -1,3 +1,8 @@
+* {
+  box-sizing: border-box;
+  user-select: none;
+}
+
 /* General Styles */
 html {
   height: 100%;
@@ -11,10 +16,6 @@ body {
   height: 100%;
   width: 100%;
   position: relative;
-}
-
-* {
-  box-sizing: border-box;
 }
 
 .App {
@@ -43,75 +44,34 @@ body {
 }
 
 .clothing {
-  position: absolute;
-  width: 100%;
-  height: auto;
-}
-
-.drop-zone {
-  position: absolute;
-  width: 100%;
+  width: auto;
   height: 100%;
-  border: 2px dashed transparent;
-  transition: border-color 0.2s, background-color 0.2s;
-}
-
-.drop-zone.hover {
-  border-color: blue;
-  background-color: rgba(0, 0, 255, 0.1);
-}
-
-.drop-zone img {
   pointer-events: none;
 }
 
-.drop-zone.hat {
-  top: 10%;
-  left: 30%;
-  width: 40%;
-  height: 20%;
+.drop-zone-container {
+  display: flex;
+  flex-direction: column;
+  width: 120px;
 }
 
-.drop-zone.accessories {
-  top: 30%;
-  left: 20%;
-  width: 60%;
-  height: 10%;
+.drop-zone {
+  transition: border-color 0.2s, background-color 0.2s;
+  border-color: transparent;
+  height: 100px;
+  padding: 5px;
 }
 
-.drop-zone.jacket {
-  top: 40%;
-  left: 20%;
-  width: 60%;
-  height: 20%;
+.drop-zone.correct {
+  border-color: black;
+  border: 2px dashed;
+  background-color: rgba(0, 0, 255, 0.1);
 }
 
-.drop-zone.shirt {
-  top: 40%;
-  left: 20%;
-  width: 60%;
-  height: 20%;
-}
-
-.drop-zone.handheld {
-  top: 50%;
-  left: 80%;
-  width: 20%;
-  height: 20%;
-}
-
-.drop-zone.pants {
-  top: 60%;
-  left: 25%;
-  width: 50%;
-  height: 20%;
-}
-
-.drop-zone.shoes {
-  top: 80%;
-  left: 30%;
-  width: 40%;
-  height: 10%;
+.drop-zone.hover {
+  border-color: black;
+  border: 2px solid;
+  background-color: rgba(0, 0, 255, 0.1);
 }
 
 /* Bottom Tabs Styles */
@@ -197,7 +157,6 @@ body {
 .sort-buttons {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 20px;
   width: 100%;
 }
 
@@ -224,7 +183,7 @@ body {
   border: 1px solid #ddd;
   padding: 10px;
   border-radius: 5px;
-  width: calc(33.333% - 20px);
+  width: 100px;
   box-sizing: border-box;
 }
 

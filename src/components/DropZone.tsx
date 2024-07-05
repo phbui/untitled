@@ -16,26 +16,30 @@ const DropZone: React.FC<Props_DropZone> = ({
   onDrop,
 }) => {
   const [cssClass, setCssClass] = useState<string>("drop-zone " + type);
-  const [{ isOver, canDrop }, dropRef] = useDrop({
+  const [{ isOver }, dropRef] = useDrop({
     accept: "wardrobe-item",
-    drop: (droppedItem: Interface_Wardrobe_Item) => {
-      if (type === droppedItem.type) {
-        onDrop(type, droppedItem);
+    drop: () => {
+      if (type === currentlyDragging?.type) {
+        onDrop(type, currentlyDragging);
       }
     },
-    canDrop: () => type === currentlyDragging?.type,
     collect: (monitor) => ({
       isOver: monitor.isOver(),
-      canDrop: monitor.canDrop(),
     }),
   });
 
-  const getDropZoneClass = (isOver: boolean, canDrop: boolean) => {
-    return isOver && canDrop ? "drop-zone hover" : "drop-zone";
+  const getDropZoneClass = (isOver: boolean) => {
+    let cssClass = "drop-zone ";
+    let canDrop = type === currentlyDragging?.type;
+
+    if (canDrop && !isOver) cssClass += " correct";
+    if (canDrop && isOver) cssClass += " hover";
+
+    return cssClass;
   };
 
   const setDropZoneClass = () => {
-    setCssClass(getDropZoneClass(isOver, canDrop) + " " + type);
+    setCssClass(getDropZoneClass(isOver) + " " + type);
   };
 
   useEffect(() => {

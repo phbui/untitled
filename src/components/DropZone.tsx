@@ -23,8 +23,7 @@ const DropZone: React.FC<Props_DropZone> = ({
         onDrop(type, droppedItem);
       }
     },
-    canDrop: (droppedItem: Interface_Wardrobe_Item) =>
-      type === droppedItem.type,
+    canDrop: () => type === currentlyDragging?.type,
     collect: (monitor) => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
@@ -32,9 +31,7 @@ const DropZone: React.FC<Props_DropZone> = ({
   });
 
   const getDropZoneClass = (isOver: boolean, canDrop: boolean) => {
-    return isOver && canDrop && type === currentlyDragging?.type
-      ? "drop-zone hover"
-      : "drop-zone";
+    return isOver && canDrop ? "drop-zone hover" : "drop-zone";
   };
 
   const setDropZoneClass = () => {
@@ -43,7 +40,7 @@ const DropZone: React.FC<Props_DropZone> = ({
 
   useEffect(() => {
     setDropZoneClass();
-  }, [isOver, canDrop, currentlyDragging]);
+  }, [isOver, currentlyDragging]);
 
   return (
     <div ref={dropRef} className={cssClass}>

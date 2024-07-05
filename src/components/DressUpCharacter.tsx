@@ -8,6 +8,15 @@ interface Props_DressUpCharacter {
   onDrop: (type: string, item: Interface_Wardrobe_Item) => void;
 }
 
+const clothingTypes = [
+  "hat",
+  "accessories",
+  "shirt",
+  "jacket",
+  "pants",
+  "shoes",
+];
+
 const DressUpCharacter: React.FC<Props_DressUpCharacter> = ({
   currentlyDragging,
   clothingItems,
@@ -20,42 +29,15 @@ const DressUpCharacter: React.FC<Props_DressUpCharacter> = ({
         alt="Base Character"
         className="base-character"
       />
-      <DropZone
-        type="hat"
-        item={clothingItems.hat}
-        currentlyDragging={currentlyDragging}
-        onDrop={onDrop}
-      />
-      <DropZone
-        type="accessories"
-        item={clothingItems.accessories}
-        currentlyDragging={currentlyDragging}
-        onDrop={onDrop}
-      />
-      <DropZone
-        type="shirt"
-        item={clothingItems.shirt}
-        currentlyDragging={currentlyDragging}
-        onDrop={onDrop}
-      />
-      <DropZone
-        type="jacket"
-        item={clothingItems.jacket}
-        currentlyDragging={currentlyDragging}
-        onDrop={onDrop}
-      />
-      <DropZone
-        type="pants"
-        item={clothingItems.pants}
-        currentlyDragging={currentlyDragging}
-        onDrop={onDrop}
-      />
-      <DropZone
-        type="shoes"
-        item={clothingItems.shoes}
-        currentlyDragging={currentlyDragging}
-        onDrop={onDrop}
-      />
+      {clothingTypes.map((type) => (
+        <DropZone
+          key={type}
+          type={type}
+          item={clothingItems[type]}
+          currentlyDragging={currentlyDragging}
+          onDrop={onDrop}
+        />
+      ))}
     </div>
   );
 };

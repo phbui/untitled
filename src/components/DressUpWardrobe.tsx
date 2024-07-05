@@ -133,13 +133,11 @@ const DressUpWardrobe: React.FC<Props_DressUpWardrobe> = ({
 
   const renderItems = () => {
     return wardrobeItems[selectedTab].map((item) => (
-      <div key={item.key} className="wardrobe-item">
-        <DressUpItem
-          item={item}
-          startDrag={() => startDrag(item)}
-          onDrop={() => onDrop(selectedTab, item)}
-        />
-      </div>
+      <DressUpItem
+        item={item}
+        startDrag={() => startDrag(item)}
+        onDrop={() => onDrop(selectedTab, item)}
+      />
     ));
   };
 

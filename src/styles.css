@@ -189,8 +189,21 @@ body {
 
 .sort-buttons {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   margin-bottom: 20px;
+  width: 100%;
+}
+
+.sort-buttons button {
+  width: 60px;
+}
+
+.age-buttons {
+  display: flex;
+}
+
+.like-buttons {
+  display: flex;
 }
 
 .catalog-list {

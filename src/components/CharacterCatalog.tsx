@@ -96,15 +96,18 @@ const CharacterCatalog: React.FC<Props_CharacterCatalog> = ({
 
   return (
     <div className="character-catalog">
+      Sort
       <div className="sort-buttons">
-        <button onClick={() => setSortOrder("newest")}>Sort by Newest</button>
-        <button onClick={() => setSortOrder("oldest")}>Sort by Oldest</button>
-        <button onClick={() => setSortOrder("mostLiked")}>
-          Sort by Most Liked
-        </button>
-        <button onClick={() => setSortOrder("leastLiked")}>
-          Sort by Least Liked
-        </button>
+        <div className="age-buttons">
+          <button onClick={() => setSortOrder("newest")}>Newest</button>
+          <button onClick={() => setSortOrder("oldest")}>Oldest</button>
+        </div>
+        <div className="like-buttons">
+          <button onClick={() => setSortOrder("mostLiked")}>Most Liked</button>
+          <button onClick={() => setSortOrder("leastLiked")}>
+            Least Liked
+          </button>
+        </div>
       </div>
       <div className="catalog-list">
         {sortedCatalog.map((character) => (

@@ -19,7 +19,7 @@ const App: React.FC = () => {
   });
 
   const [characterName, setCharacterName] = useState<string>("");
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<any>();
   const [currentlyDragging, setCurrentlyDragging] =
     useState<Interface_Wardrobe_Item>();
 

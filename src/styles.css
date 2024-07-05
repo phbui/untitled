@@ -240,3 +240,8 @@ body {
   height: 100%;
   width: auto;
 }
+
+.wardrobe-item.selected {
+  border: 2px solid blue;
+  background-color: #e0f7fa;
+}

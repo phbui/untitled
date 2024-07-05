@@ -25,6 +25,7 @@ interface Props_BottomTabs {
   onDrop: (type: string, item: Interface_Wardrobe_Item) => void;
   catalog: Interface_Character[];
   setCatalog: (catalog: Interface_Character[]) => void;
+  selectedItems: { [key: string]: Interface_Wardrobe_Item };
 }
 
 const wardrobeItems: Interface_Wardrobe = {
@@ -170,6 +171,7 @@ const BottomTabs: React.FC<Props_BottomTabs> = ({
   onDrop,
   catalog,
   setCatalog,
+  selectedItems,
 }) => {
   const [openTab, setOpenTab] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -184,13 +186,17 @@ const BottomTabs: React.FC<Props_BottomTabs> = ({
     }
   };
 
-  const renderItems = (items: Interface_Wardrobe_Item[]) => {
+  const renderItems = (
+    items: Interface_Wardrobe_Item[],
+    selectedItem: Interface_Wardrobe_Item | null
+  ) => {
     return items.map((item) => (
       <DressUpItem
         key={item.key}
         item={item}
         startDrag={() => startDrag(item)}
         onDrop={() => onDrop(item.type, item)}
+        selected={selectedItem?.key === item.key}
       />
     ));
   };
@@ -221,7 +227,7 @@ const BottomTabs: React.FC<Props_BottomTabs> = ({
           key={tab}
           className={`tab-content ${openTab === tab ? "open" : ""}`}
         >
-          {renderItems(wardrobeItems[tab].items)}
+          {renderItems(wardrobeItems[tab].items, selectedItems[tab])}
         </div>
       ))}
       <div className={`tab-content ${openTab === "catalog" ? "open" : ""}`}>

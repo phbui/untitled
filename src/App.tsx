@@ -32,16 +32,27 @@ const App: React.FC = () => {
     useState<Interface_Wardrobe_Item>();
   const [catalog, setCatalog] = useState<Interface_Character[]>([]);
 
+  const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+
   const handleDrag = (item: Interface_Wardrobe_Item) => {
-    setCurrentlyDragging(item);
+    if (isMobile) {
+      setSelectedItems((prevItems) => ({
+        ...prevItems,
+        [item.type]: item,
+      }));
+    } else {
+      setCurrentlyDragging(item);
+    }
   };
 
   const handleDrop = (type: string, item: Interface_Wardrobe_Item) => {
-    setSelectedItems((prevItems) => ({
-      ...prevItems,
-      [type]: item,
-    }));
-    setCurrentlyDragging(undefined);
+    if (!isMobile) {
+      setSelectedItems((prevItems) => ({
+        ...prevItems,
+        [type]: item,
+      }));
+      setCurrentlyDragging(undefined);
+    }
   };
 
   const saveCharacter = async () => {
@@ -121,6 +132,7 @@ const App: React.FC = () => {
         user={user}
         startDrag={handleDrag}
         onDrop={handleDrop}
+        selectedItems={selectedItems}
         onSelect={setSelectedItems}
         catalog={catalog}
         setCatalog={setCatalog}

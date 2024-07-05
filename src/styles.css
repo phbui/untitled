@@ -161,17 +161,15 @@ body {
 }
 
 .tab-content {
-  opacity: 0;
-  display: flex;
-  flex-direction: row;
-  transition: opacity 0.3s ease-in-out;
+  display: none;
   overflow-y: auto;
 }
 
 .tab-content.open {
+  display: flex;
+  flex-direction: row;
   max-height: 100%;
   overflow-y: hidden;
-  opacity: 1;
 }
 
 /* Character Catalog Styles */

@@ -22,7 +22,6 @@ const DressUpItem: React.FC<Props_DressUpItem> = ({
   return (
     <div ref={dragRef} className="wardrobe-item" onDrag={startDrag}>
       <img src={item.asset_url} alt={item.description} />
-      <p>{item.description}</p>
     </div>
   );
 };

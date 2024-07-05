@@ -34,7 +34,7 @@ body {
 .character {
   position: relative;
   width: 100%;
-  height: 100%;
+  height: 85%;
 }
 
 .base-character {
@@ -112,7 +112,6 @@ body {
   position: fixed;
   bottom: 55px;
   width: 100%;
-  height: 40%;
   background: white;
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
   transition: transform 0.5s ease-in-out;
@@ -127,17 +126,29 @@ body {
 
 .tab-buttons {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-around; /* Centers the buttons with equal spacing */
   background: #007bff;
-  padding: 10px;
+  height: 55px;
+  width: 100%;
+  flex-direction: row;
 }
 
 .tab-button {
-  padding: 10px;
   background: #007bff;
   color: white;
   border: none;
   cursor: pointer;
+  flex: 1; /* Each button will take up an equal amount of space */
+  text-align: center; /* Center the text and icons */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.tab-button img {
+  width: 24px;
+  height: 24px;
 }
 
 .tab-button:hover {
@@ -150,16 +161,16 @@ body {
 
 .tab-content {
   display: none;
-  padding: 10px;
-  max-height: 400px;
   overflow-y: auto;
-  transition: opacity 0.3s ease-in-out;
   opacity: 0;
 }
 
 .tab-content.open {
-  display: block;
+  display: flex;
+  flex-direction: row;
+  max-height: 100%;
   opacity: 1;
+  overflow-y: hidden;
 }
 
 /* Character Catalog Styles */
@@ -226,4 +237,16 @@ body {
 
 .catalog-item .likes button:hover {
   background: #0056b3;
+}
+
+.wardrobe-item {
+  position: relative;
+  height: 60px;
+  width: auto;
+  margin: 10px;
+}
+
+.wardrobe-item img {
+  height: 100%;
+  width: auto;
 }

@@ -11,8 +11,9 @@ interface Props_DressUpCharacter {
 const clothingTypes = [
   "hat",
   "accessories",
-  "shirt",
   "jacket",
+  "shirt",
+  "handheld",
   "pants",
   "shoes",
 ];

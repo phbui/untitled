@@ -175,21 +175,6 @@ const App: React.FC = () => {
     }
   };
 
-  const sortedCatalog = [...catalog].sort((a, b) => {
-    switch (sortOrder) {
-      case "newest":
-        return b.createdAt - a.createdAt;
-      case "oldest":
-        return a.createdAt - b.createdAt;
-      case "mostLiked":
-        return b.likes - a.likes;
-      case "leastLiked":
-        return a.likes - b.likes;
-      default:
-        return 0;
-    }
-  });
-
   const warnUserOnUnload = (event: BeforeUnloadEvent) => {
     event.preventDefault();
     event.returnValue =
@@ -225,17 +210,12 @@ const App: React.FC = () => {
         onDrop={handleDrop}
       />
       <button onClick={saveCharacter}>Save Character</button>
-      <div className="sort-buttons">
-        <button onClick={() => setSortOrder("newest")}>Sort by Newest</button>
-        <button onClick={() => setSortOrder("oldest")}>Sort by Oldest</button>
-        <button onClick={() => setSortOrder("mostLiked")}>
-          Sort by Most Liked
-        </button>
-        <button onClick={() => setSortOrder("leastLiked")}>
-          Sort by Least Liked
-        </button>
-      </div>
-      <CharacterCatalog catalog={sortedCatalog} onLike={likeCharacter} />
+      <CharacterCatalog
+        catalog={catalog}
+        sortOrder={sortOrder}
+        setSortOrder={setSortOrder}
+        onLike={likeCharacter}
+      />
     </div>
   );
 };

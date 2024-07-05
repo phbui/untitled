@@ -1,6 +1,6 @@
 import React from "react";
 import { useDrag } from "react-dnd";
-import { Interface_Wardrobe_Item } from "./DressUpWardrobe";
+import { Interface_Wardrobe_Item } from "./BottomTabs";
 
 interface Props_DressUpItem {
   item: Interface_Wardrobe_Item;

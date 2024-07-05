@@ -1,6 +1,6 @@
 import React from "react";
 import DropZone from "./DropZone";
-import { Interface_Wardrobe_Item } from "./DressUpWardrobe";
+import { Interface_Wardrobe_Item } from "./BottomTabs";
 
 interface Props_DressUpCharacter {
   clothingItems: { [key: string]: Interface_Wardrobe_Item };

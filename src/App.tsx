@@ -10,10 +10,8 @@ import {
   increment,
 } from "firebase/firestore";
 import DressUpCharacter from "./components/DressUpCharacter";
-import DressUpWardrobe, {
-  Interface_Wardrobe_Item,
-} from "./components/DressUpWardrobe";
-import CharacterCatalog from "./components/CharacterCatalog";
+import BottomTabs from "./components/BottomTabs";
+import { Interface_Wardrobe_Item } from "./components/BottomTabs";
 
 const App: React.FC = () => {
   const [selectedItems, setSelectedItems] = useState<{
@@ -203,19 +201,20 @@ const App: React.FC = () => {
         value={characterName}
         onChange={(e) => setCharacterName(e.target.value)}
       />
-      <DressUpWardrobe startDrag={handleDrag} onDrop={handleDrop} />
+      <BottomTabs
+        startDrag={handleDrag}
+        onDrop={handleDrop}
+        catalog={catalog}
+        sortOrder={sortOrder}
+        setSortOrder={setSortOrder}
+        onLike={likeCharacter}
+      />
       <DressUpCharacter
         clothingItems={selectedItems}
         currentlyDragging={currentlyDragging}
         onDrop={handleDrop}
       />
       <button onClick={saveCharacter}>Save Character</button>
-      <CharacterCatalog
-        catalog={catalog}
-        sortOrder={sortOrder}
-        setSortOrder={setSortOrder}
-        onLike={likeCharacter}
-      />
     </div>
   );
 };

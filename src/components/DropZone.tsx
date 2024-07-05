@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDrop } from "react-dnd";
-import { Interface_Wardrobe_Item } from "./DressUpWardrobe";
+import { Interface_Wardrobe_Item } from "./BottomTabs";
 
 interface Props_DropZone {
   type: string;

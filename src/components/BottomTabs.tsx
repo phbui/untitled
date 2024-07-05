@@ -10,20 +10,10 @@ export interface Interface_Wardrobe_Item {
 }
 
 interface Props_BottomTabs {
+  user: any;
+  onSelect: (items: { [key: string]: Interface_Wardrobe_Item }) => void;
   startDrag: (item: Interface_Wardrobe_Item) => void;
   onDrop: (type: string, item: Interface_Wardrobe_Item) => void;
-  catalog: {
-    id: string;
-    name: string;
-    items: { [key: string]: Interface_Wardrobe_Item };
-    likes: number;
-    createdAt: number;
-  }[];
-  sortOrder: "newest" | "oldest" | "mostLiked" | "leastLiked";
-  setSortOrder: (
-    order: "newest" | "oldest" | "mostLiked" | "leastLiked"
-  ) => void;
-  onLike: (characterId: string) => void;
 }
 
 const wardrobeItems: { [key: string]: Interface_Wardrobe_Item[] } = {
@@ -135,12 +125,10 @@ const wardrobeItems: { [key: string]: Interface_Wardrobe_Item[] } = {
 };
 
 const BottomTabs: React.FC<Props_BottomTabs> = ({
+  user,
+  onSelect,
   startDrag,
   onDrop,
-  catalog,
-  sortOrder,
-  setSortOrder,
-  onLike,
 }) => {
   const [openTab, setOpenTab] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -194,12 +182,7 @@ const BottomTabs: React.FC<Props_BottomTabs> = ({
         </div>
       ))}
       <div className={`tab-content ${openTab === "catalog" ? "open" : ""}`}>
-        <CharacterCatalog
-          catalog={catalog}
-          sortOrder={sortOrder}
-          setSortOrder={setSortOrder}
-          onLike={onLike}
-        />
+        <CharacterCatalog user={user} onSelect={onSelect} />
       </div>
     </div>
   );

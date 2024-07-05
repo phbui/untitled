@@ -55,17 +55,39 @@ const CharacterCatalog: React.FC<Props_CharacterCatalog> = ({
     }
   });
 
+  const getButtonClass = (buttonOrder: string) => {
+    return sortOrder === buttonOrder ? "selected" : "";
+  };
+
   return (
     <div className="character-catalog">
       Sort
       <div className="sort-buttons">
         <div className="age-buttons">
-          <button onClick={() => setSortOrder("newest")}>Newest</button>
-          <button onClick={() => setSortOrder("oldest")}>Oldest</button>
+          <button
+            onClick={() => setSortOrder("newest")}
+            className={getButtonClass("newest")}
+          >
+            Newest
+          </button>
+          <button
+            onClick={() => setSortOrder("oldest")}
+            className={getButtonClass("oldest")}
+          >
+            Oldest
+          </button>
         </div>
         <div className="like-buttons">
-          <button onClick={() => setSortOrder("mostLiked")}>Most Liked</button>
-          <button onClick={() => setSortOrder("leastLiked")}>
+          <button
+            onClick={() => setSortOrder("mostLiked")}
+            className={getButtonClass("mostLiked")}
+          >
+            Most Liked
+          </button>
+          <button
+            onClick={() => setSortOrder("leastLiked")}
+            className={getButtonClass("leastLiked")}
+          >
             Least Liked
           </button>
         </div>

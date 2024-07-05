@@ -164,6 +164,12 @@ body {
   width: 60px;
 }
 
+.sort-buttons button.selected {
+  background-color: #007bff;
+  color: white;
+  border: 1px solid #007bff;
+}
+
 .age-buttons {
   display: flex;
 }

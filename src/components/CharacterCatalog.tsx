@@ -96,7 +96,6 @@ const CharacterCatalog: React.FC<Props_CharacterCatalog> = ({
 
   return (
     <div className="character-catalog">
-      <h2>Character Catalog</h2>
       <div className="sort-buttons">
         <button onClick={() => setSortOrder("newest")}>Sort by Newest</button>
         <button onClick={() => setSortOrder("oldest")}>Sort by Oldest</button>

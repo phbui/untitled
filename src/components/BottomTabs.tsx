@@ -200,6 +200,7 @@ const BottomTabs: React.FC<Props_BottomTabs> = ({
             onClick={() => handleTabClick(tab)}
           >
             <img src={wardrobeItems[tab].icon_url} alt={`${tab} icon`} />
+            <p>{wardrobeItems[tab].label}</p>
           </button>
         ))}
         <button
@@ -207,6 +208,7 @@ const BottomTabs: React.FC<Props_BottomTabs> = ({
           onClick={() => handleTabClick("catalog")}
         >
           <img src="src/assets/catalog.svg" alt="Catalog icon" />
+          <p>Catalog</p>
         </button>
       </div>
       {Object.keys(wardrobeItems).map((tab) => (

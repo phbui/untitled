@@ -53,6 +53,7 @@ const App: React.FC = () => {
       ...prevItems,
       [type]: item,
     }));
+    setCurrentlyDragging(undefined);
   };
 
   const saveCharacter = async () => {

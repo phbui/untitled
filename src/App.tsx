@@ -39,14 +39,12 @@ const App: React.FC = () => {
   };
 
   const handleDrag = (item: Interface_Wardrobe_Item) => {
-    if (isMobile) {
+    if (isMobile)
       setSelectedItems((prevItems) => ({
         ...prevItems,
         [item.type]: item,
       }));
-    } else {
-      setCurrentlyDragging(item);
-    }
+    else setCurrentlyDragging(item);
   };
 
   const handleDrop = (type: string, item: Interface_Wardrobe_Item) => {

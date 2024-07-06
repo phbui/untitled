@@ -22,6 +22,7 @@ interface Props_BottomTabs {
   user: any;
   onSelect: (items: { [key: string]: Interface_Wardrobe_Item }) => void;
   startDrag: (item: Interface_Wardrobe_Item) => void;
+  onUp: () => void;
   onDrop: (type: string, item: Interface_Wardrobe_Item) => void;
   catalog: Interface_Character[];
   setCatalog: (catalog: Interface_Character[]) => void;
@@ -168,6 +169,7 @@ const BottomTabs: React.FC<Props_BottomTabs> = ({
   user,
   onSelect,
   startDrag,
+  onUp,
   onDrop,
   catalog,
   setCatalog,
@@ -195,6 +197,7 @@ const BottomTabs: React.FC<Props_BottomTabs> = ({
         key={item.key}
         item={item}
         startDrag={() => startDrag(item)}
+        onUp={onUp}
         onDrop={() => onDrop(item.type, item)}
         selected={selectedItem?.key === item.key}
       />

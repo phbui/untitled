@@ -34,6 +34,10 @@ const App: React.FC = () => {
 
   const isMobile = /Mobi|Android/i.test(navigator.userAgent);
 
+  const handleUp = () => {
+    setCurrentlyDragging(undefined);
+  };
+
   const handleDrag = (item: Interface_Wardrobe_Item) => {
     if (isMobile) {
       setSelectedItems((prevItems) => ({
@@ -131,6 +135,7 @@ const App: React.FC = () => {
       <BottomTabs
         user={user}
         startDrag={handleDrag}
+        onUp={handleUp}
         onDrop={handleDrop}
         selectedItems={selectedItems}
         onSelect={setSelectedItems}

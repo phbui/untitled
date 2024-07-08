@@ -150,7 +150,7 @@ body {
   top: 0;
   width: 100%;
   height: 100%;
-  transition: transform 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -182,4 +182,73 @@ body {
   z-index: 3;
   color: white;
   height: 30px;
+}
+
+.wardrobe {
+  bottom: 0;
+  width: 100%;
+  background: #333;
+  color: #fff;
+  transition: transform 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+.wardrobe.closed {
+  transform: translateY(90%);
+}
+
+.wardrobe.open {
+  transform: translateY(0);
+}
+
+.wardrobe-tabs {
+  display: flex;
+  justify-content: center;
+  background: #444;
+}
+
+.tab-button {
+  background: none;
+  border: none;
+  color: #fff;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.tab-button.active {
+  background: #555;
+}
+
+.wardrobe-tab-content {
+  display: flex;
+  overflow-x: auto;
+  padding: 20px;
+  gap: 10px;
+}
+
+.wardrobe-item {
+  min-width: 150px;
+  background: #222;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.wardrobe-item img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.zoom-container {
+  position: relative;
+  display: inline-block;
+}
+
+.zoomed-img {
+  display: block;
+}
+
+.zoom-box {
+  position: absolute;
+  border: 2px solid red;
 }

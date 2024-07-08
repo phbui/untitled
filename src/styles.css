@@ -293,7 +293,8 @@ body {
     height: 85%;
   }
 
-  .Home_Buttons .wardrobe,
+  .Home_Buttons,
+  .wardrobe,
   .wardrobe-tabs {
     margin-bottom: 20%;
   }

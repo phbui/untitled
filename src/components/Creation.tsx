@@ -1,19 +1,19 @@
 import { useState } from "react";
 
 export interface Character_Item {
-  key: string;
+  name: string;
   url: string;
   desc: string;
 }
 
 interface Props_Wardrobe_Tab {
-  key: string;
+  name: string;
   items: Character_Item[];
-  onItemSelect?: (item: Character_Item, tabKey: string) => void;
+  onItemSelect?: (item: Character_Item, tabname: string) => void;
 }
 
 const Wardrobe_Tab: React.FC<Props_Wardrobe_Tab> = ({
-  key,
+  name,
   items,
   onItemSelect,
 }) => {
@@ -21,13 +21,13 @@ const Wardrobe_Tab: React.FC<Props_Wardrobe_Tab> = ({
     <div className="wardrobe-tab-content">
       {items.map((item) => (
         <div
-          key={item.key}
+          key={item.name}
           className="wardrobe-item"
           onClick={() => {
-            if (onItemSelect !== undefined) onItemSelect(item, key);
+            if (onItemSelect !== undefined) onItemSelect(item, name);
           }}
         >
-          <img src={item.url} alt={item.key} />
+          <img src={item.url} alt={item.name} />
         </div>
       ))}
     </div>
@@ -35,100 +35,100 @@ const Wardrobe_Tab: React.FC<Props_Wardrobe_Tab> = ({
 };
 
 interface Props_Wardrobe {
-  onItemSelect: (item: Character_Item, tabKey: string) => void;
+  onItemSelect: (item: Character_Item, tabname: string) => void;
 }
 
 const wardrobe_tabs: Props_Wardrobe_Tab[] = [
   {
-    key: "Head",
+    name: "Head",
     items: [
       {
-        key: "Long & Purple Hair",
+        name: "Long & Purple Hair",
         url: "/assets/clothes/head/long-purple-hair.png",
         desc: "",
       },
       {
-        key: "Short & Green Hair",
+        name: "Short & Green Hair",
         url: "/assets/clothes/head/short-green-hair.png",
         desc: "",
       },
     ],
   },
   {
-    key: "Torso",
+    name: "Torso",
     items: [
       {
-        key: "Arcane Polo",
+        name: "Arcane Polo",
         url: "/assets/clothes/torso/arcane-polo.png",
         desc: "",
       },
       {
-        key: "Tank & Tee",
+        name: "Tank & Tee",
         url: "/assets/clothes/torso/green-tank+longsleeve.png",
         desc: "",
       },
       {
-        key: "Mermaid Dress",
+        name: "Mermaid Dress",
         url: "/assets/clothes/torso/water-dress.png",
         desc: "",
       },
     ],
   },
   {
-    key: "Legs",
+    name: "Legs",
     items: [
       {
-        key: "Fish Cargos",
+        name: "Fish Cargos",
         url: "/assets/clothes/legs/fish-cargos.png",
         desc: "",
       },
       {
-        key: "Zig-Zag Jeans",
+        name: "Zig-Zag Jeans",
         url: "/assets/clothes/legs/zig-zag-jeans.png",
         desc: "",
       },
     ],
   },
   {
-    key: "Feet",
+    name: "Feet",
     items: [
       {
-        key: "Bandage Socks",
+        name: "Bandage Socks",
         url: "/assets/clothes/feet/bandage-socks.png",
         desc: "",
       },
       {
-        key: "Purple Kicks",
+        name: "Purple Kicks",
         url: "/assets/clothes/feet/purple-kicks.png",
         desc: "",
       },
     ],
   },
   {
-    key: "Accessory",
+    name: "Accessory",
     items: [
       {
-        key: "Geek Bar",
+        name: "Geek Bar",
         url: "/assets/clothes/accessory/geek-bar.png",
         desc: "",
       },
       {
-        key: "Crazy Eyes",
+        name: "Crazy Eyes",
         url: "/assets/clothes/accessory/crazy-eyes.png",
         desc: "",
       },
       {
-        key: "Grommet Belt",
+        name: "Grommet Belt",
         url: "/assets/clothes/accessory/grommet-belt.png",
         desc: "",
       },
       {
-        key: "Hair Clips",
+        name: "Hair Clips",
         url: "/assets/clothes/accessory/hair-clips.png",
         desc: "",
       },
       {
-        key: "Headphones",
+        name: "Headphones",
         url: "/assets/clothes/accessory/headphones.png",
         desc: "",
       },
@@ -147,9 +147,9 @@ const Wardrobe: React.FC<Props_Wardrobe> = ({ onItemSelect }) => {
     <div className={`wardrobe`}>
       {wardrobe_tabs.map(
         (wardrobe_tab) =>
-          activeTab === wardrobe_tab.key && (
+          activeTab === wardrobe_tab.name && (
             <Wardrobe_Tab
-              key={wardrobe_tab.key}
+              name={wardrobe_tab.name}
               items={wardrobe_tab.items}
               onItemSelect={onItemSelect}
             />
@@ -158,13 +158,13 @@ const Wardrobe: React.FC<Props_Wardrobe> = ({ onItemSelect }) => {
       <div className="wardrobe-tabs">
         {wardrobe_tabs.map((wardrobe_tab) => (
           <button
-            key={wardrobe_tab.key}
+            key={wardrobe_tab.name}
             className={`tab-button ${
-              activeTab === wardrobe_tab.key ? "active" : ""
+              activeTab === wardrobe_tab.name ? "active" : ""
             }`}
-            onClick={() => handleTabClick(wardrobe_tab.key)}
+            onClick={() => handleTabClick(wardrobe_tab.name)}
           >
-            {wardrobe_tab.key}
+            {wardrobe_tab.name}
           </button>
         ))}
       </div>
@@ -196,8 +196,8 @@ const Character: React.FC<Props_Character> = ({ character }) => {
         <img className="feet" src={character.feet.url} />
         {character.accessories.map((accessory: Character_Item) => (
           <img
-            key={accessory.key}
-            className={`accessory ${accessory.key}`}
+            key={accessory.name}
+            className={`accessory ${accessory.name}`}
             src={accessory.url}
           />
         ))}
@@ -216,15 +216,27 @@ const Creation = () => {
     accessories: [],
   });
 
-  const handleItemSelect = (item: Character_Item, tabKey: string) => {
+  const handleItemSelect = (item: Character_Item, name: string) => {
     setCharacter((prevCharacter) => {
       const newCharacter = { ...prevCharacter };
-      if (tabKey === "Head") newCharacter.head = item;
-      else if (tabKey === "Torso") newCharacter.torso = item;
-      else if (tabKey === "Legs") newCharacter.legs = item;
-      else if (tabKey === "Feet") newCharacter.feet = item;
-      else if (tabKey === "Accessory") {
-        newCharacter.accessories = [...newCharacter.accessories, item];
+      switch (name.toLowerCase()) {
+        case "head":
+          newCharacter.head = item;
+          break;
+        case "torso":
+          newCharacter.torso = item;
+          break;
+        case "legs":
+          newCharacter.legs = item;
+          break;
+        case "feet":
+          newCharacter.feet = item;
+          break;
+        case "accessory":
+          newCharacter.accessories = [...newCharacter.accessories, item];
+          break;
+        default:
+          break;
       }
       return newCharacter;
     });

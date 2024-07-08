@@ -9,13 +9,24 @@ export interface Character_Item {
 interface Props_Wardrobe_Tab {
   key: string;
   items: Character_Item[];
+  onItemSelect?: (item: Character_Item, tabKey: string) => void;
 }
 
-const Wardrobe_Tab: React.FC<Props_Wardrobe_Tab> = ({ items }) => {
+const Wardrobe_Tab: React.FC<Props_Wardrobe_Tab> = ({
+  key,
+  items,
+  onItemSelect,
+}) => {
   return (
     <div className="wardrobe-tab-content">
       {items.map((item) => (
-        <div key={item.key} className="wardrobe-item">
+        <div
+          key={item.key}
+          className="wardrobe-item"
+          onClick={() => {
+            if (onItemSelect !== undefined) onItemSelect(item, key);
+          }}
+        >
           <img src={item.url} alt={item.key} />
         </div>
       ))}
@@ -23,7 +34,9 @@ const Wardrobe_Tab: React.FC<Props_Wardrobe_Tab> = ({ items }) => {
   );
 };
 
-interface Props_Wardrobe {}
+interface Props_Wardrobe {
+  onItemSelect: (item: Character_Item, tabKey: string) => void;
+}
 
 const wardrobe_tabs: Props_Wardrobe_Tab[] = [
   {
@@ -123,7 +136,7 @@ const wardrobe_tabs: Props_Wardrobe_Tab[] = [
   },
 ];
 
-const Wardrobe: React.FC<Props_Wardrobe> = ({}) => {
+const Wardrobe: React.FC<Props_Wardrobe> = ({ onItemSelect }) => {
   const [activeTab, setActiveTab] = useState<string | null>(null);
 
   const handleTabClick = (title: string) => {
@@ -131,7 +144,17 @@ const Wardrobe: React.FC<Props_Wardrobe> = ({}) => {
   };
 
   return (
-    <div className={`wardrobe ${activeTab ? "open" : "closed"}`}>
+    <div className={`wardrobe`}>
+      {wardrobe_tabs.map(
+        (wardrobe_tab) =>
+          activeTab === wardrobe_tab.key && (
+            <Wardrobe_Tab
+              key={wardrobe_tab.key}
+              items={wardrobe_tab.items}
+              onItemSelect={onItemSelect}
+            />
+          )
+      )}
       <div className="wardrobe-tabs">
         {wardrobe_tabs.map((wardrobe_tab) => (
           <button
@@ -145,12 +168,6 @@ const Wardrobe: React.FC<Props_Wardrobe> = ({}) => {
           </button>
         ))}
       </div>
-      {wardrobe_tabs.map(
-        (wardrobe_tab) =>
-          activeTab === wardrobe_tab.key && (
-            <Wardrobe_Tab key={wardrobe_tab.key} items={wardrobe_tab.items} />
-          )
-      )}
     </div>
   );
 };
@@ -172,27 +189,51 @@ const Character: React.FC<Props_Character> = ({ character }) => {
   return (
     character && (
       <div className="character">
+        <img className="base" src="assets/clothes/base.png" />
         <img className="head" src={character.head.url} />
-        <img className="torso" src={character.head.url} />
-        <img className="legs" src={character.head.url} />
-        <img className="feet" src={character.head.url} />
-        {character.accessories.map((accessory: Character_Item) => {
-          return (
-            <img className={`accessory ${accessory.key}`} src={accessory.url} />
-          );
-        })}
+        <img className="torso" src={character.torso.url} />
+        <img className="legs" src={character.legs.url} />
+        <img className="feet" src={character.feet.url} />
+        {character.accessories.map((accessory: Character_Item) => (
+          <img
+            key={accessory.key}
+            className={`accessory ${accessory.key}`}
+            src={accessory.url}
+          />
+        ))}
       </div>
     )
   );
 };
 
 const Creation = () => {
-  const [character, setCharacter] = useState<Character>();
+  const [character, setCharacter] = useState<Character>({
+    name: "Default",
+    head: wardrobe_tabs[0].items[0],
+    torso: wardrobe_tabs[1].items[0],
+    legs: wardrobe_tabs[2].items[0],
+    feet: wardrobe_tabs[3].items[0],
+    accessories: [],
+  });
+
+  const handleItemSelect = (item: Character_Item, tabKey: string) => {
+    setCharacter((prevCharacter) => {
+      const newCharacter = { ...prevCharacter };
+      if (tabKey === "Head") newCharacter.head = item;
+      else if (tabKey === "Torso") newCharacter.torso = item;
+      else if (tabKey === "Legs") newCharacter.legs = item;
+      else if (tabKey === "Feet") newCharacter.feet = item;
+      else if (tabKey === "Accessory") {
+        newCharacter.accessories = [...newCharacter.accessories, item];
+      }
+      return newCharacter;
+    });
+  };
 
   return (
-    <div>
+    <div className="section-content">
       <Character character={character} />
-      <Wardrobe />
+      <Wardrobe onItemSelect={handleItemSelect} />
     </div>
   );
 };

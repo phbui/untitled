@@ -1,8 +1,8 @@
 import { FunctionComponent, useState } from "react";
-import Creation from "./Creation";
-import Catalog from "./Catalog";
-import Options from "./Options";
-import Load from "./Load";
+import Creation from "../components/Creation";
+import Catalog from "../components/Catalog";
+import Options from "../components/Options";
+import Load from "../components/Load";
 
 // Scanlines Component
 const Scanlines = () => <div className="scanlines"></div>;
@@ -57,25 +57,25 @@ const Home_Section: React.FC<Props_Home_Section> = ({
 
 const sections = [
   {
-    id: "section1",
+    id: "create",
     title: "Character Creator",
     imageId: "573bfb4a05fa691f74c6b77f263327c4",
     component: "create",
   },
   {
-    id: "section2",
+    id: "load",
     title: "Section 2 Content",
     imageId: "45a1cea5d95969b309795bea796a559b",
     component: "load",
   },
   {
-    id: "section3",
+    id: "catalog",
     title: "Character Catalog",
     imageId: "5417248dd165247176733799b1f8507d",
     component: "catalog",
   },
   {
-    id: "section4",
+    id: "options",
     title: "Options",
     imageId: "6454b5c45e742493313517467e602d59",
     component: "options",
@@ -102,10 +102,14 @@ const Home: React.FC<Props_Home> = () => {
     <div className="Home">
       {scanlinesToggled && <Scanlines />}
 
-      <div className="Home_Title_Container">
+      <div
+        className={`Home_Title_Container ${
+          activeSection ? "slide-out" : "slide-in"
+        }`}
+      >
         <img
           className="Home_Title"
-          src="src/assets/untitled_title.png"
+          src="/assets/untitled_title.png"
           alt="title"
         />
       </div>

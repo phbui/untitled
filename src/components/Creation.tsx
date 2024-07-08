@@ -29,8 +29,6 @@ const Wardrobe_Item: React.FC<Props_Wardrobe_Item> = ({
       return false;
     }
 
-    console.log(category);
-
     switch (category) {
       case "accessory":
         return equippedItems.accessories.some((acc) => acc.name === item.name);
@@ -250,12 +248,12 @@ export interface Props_Character {
 }
 
 const Character: React.FC<Props_Character> = ({ character }) => {
-  const defaultImage = "assets/clothes/empty.png";
+  const defaultImage = "/assets/clothes/empty.png";
 
   return (
     character && (
       <div className="character">
-        <img className="base" src="assets/clothes/base.png" alt="base" />
+        <img className="base" src="/assets/clothes/base.png" alt="base" />
         <img
           className="head"
           src={character.head?.url || defaultImage}

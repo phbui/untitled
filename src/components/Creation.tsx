@@ -250,19 +250,38 @@ export interface Props_Character {
 }
 
 const Character: React.FC<Props_Character> = ({ character }) => {
+  const defaultImage = "assets/clothes/empty.png";
+
   return (
     character && (
       <div className="character">
-        <img className="base" src="assets/clothes/base.png" />
-        <img className="head" src={character.head?.url} />
-        <img className="torso" src={character.torso?.url} />
-        <img className="legs" src={character.legs?.url} />
-        <img className="feet" src={character.feet?.url} />
+        <img className="base" src="assets/clothes/base.png" alt="base" />
+        <img
+          className="head"
+          src={character.head?.url || defaultImage}
+          alt="head"
+        />
+        <img
+          className="torso"
+          src={character.torso?.url || defaultImage}
+          alt="torso"
+        />
+        <img
+          className="legs"
+          src={character.legs?.url || defaultImage}
+          alt="legs"
+        />
+        <img
+          className="feet"
+          src={character.feet?.url || defaultImage}
+          alt="feet"
+        />
         {character.accessories.map((accessory: Character_Item) => (
           <img
             key={accessory.name}
             className={`accessory ${accessory.name}`}
-            src={accessory.url}
+            src={accessory.url || defaultImage}
+            alt={accessory.name}
           />
         ))}
       </div>

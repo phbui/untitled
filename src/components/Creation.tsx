@@ -10,32 +10,53 @@ interface Props_Wardrobe_Tab {
   name: string;
   items: Character_Item[];
   onItemSelect?: (item: Character_Item, tabname: string) => void;
+  equippedItems?: Character;
 }
 
 const Wardrobe_Tab: React.FC<Props_Wardrobe_Tab> = ({
   name,
   items,
   onItemSelect,
+  equippedItems,
 }) => {
+  const isEquipped = (
+    item: Character_Item,
+    category: WardrobeCategory
+  ): boolean => {
+    if (equippedItems) {
+      if (category === "accessory") {
+        return equippedItems.accessories.some((acc) => acc.name === item.name);
+      } else {
+        return equippedItems[category]?.name === item.name;
+      }
+    }
+    return false;
+  };
+
   return (
     <div className="wardrobe-tab-content">
-      {items.map((item) => (
-        <div
-          key={item.name}
-          className="wardrobe-item"
-          onClick={() => {
-            if (onItemSelect !== undefined) onItemSelect(item, name);
-          }}
-        >
-          <img src={item.url} alt={item.name} />
-        </div>
-      ))}
+      {items.map((item) => {
+        const equipped = isEquipped(item, name as WardrobeCategory);
+        console.log(equipped);
+        return (
+          <div
+            key={item.name}
+            className={`wardrobe-item ${equipped ? "equipped" : ""}`}
+            onClick={() => {
+              if (onItemSelect !== undefined) onItemSelect(item, name);
+            }}
+          >
+            <img src={item.url} alt={item.name} />
+          </div>
+        );
+      })}
     </div>
   );
 };
 
 interface Props_Wardrobe {
   onItemSelect: (item: Character_Item, tabname: string) => void;
+  character: Character;
 }
 
 const wardrobe_tabs: Props_Wardrobe_Tab[] = [
@@ -136,7 +157,7 @@ const wardrobe_tabs: Props_Wardrobe_Tab[] = [
   },
 ];
 
-const Wardrobe: React.FC<Props_Wardrobe> = ({ onItemSelect }) => {
+const Wardrobe: React.FC<Props_Wardrobe> = ({ onItemSelect, character }) => {
   const [activeTab, setActiveTab] = useState<string | null>(null);
 
   const handleTabClick = (title: string) => {
@@ -149,9 +170,11 @@ const Wardrobe: React.FC<Props_Wardrobe> = ({ onItemSelect }) => {
         (wardrobe_tab) =>
           activeTab === wardrobe_tab.name && (
             <Wardrobe_Tab
+              key={wardrobe_tab.name}
               name={wardrobe_tab.name}
               items={wardrobe_tab.items}
               onItemSelect={onItemSelect}
+              equippedItems={character}
             />
           )
       )}
@@ -172,12 +195,14 @@ const Wardrobe: React.FC<Props_Wardrobe> = ({ onItemSelect }) => {
   );
 };
 
+type WardrobeCategory = "head" | "torso" | "legs" | "feet" | "accessory";
+
 export interface Character {
   name: string;
-  head: Character_Item;
-  torso: Character_Item;
-  legs: Character_Item;
-  feet: Character_Item;
+  head: Character_Item | null;
+  torso: Character_Item | null;
+  legs: Character_Item | null;
+  feet: Character_Item | null;
   accessories: Character_Item[];
 }
 
@@ -190,10 +215,10 @@ const Character: React.FC<Props_Character> = ({ character }) => {
     character && (
       <div className="character">
         <img className="base" src="assets/clothes/base.png" />
-        <img className="head" src={character.head.url} />
-        <img className="torso" src={character.torso.url} />
-        <img className="legs" src={character.legs.url} />
-        <img className="feet" src={character.feet.url} />
+        <img className="head" src={character.head?.url} />
+        <img className="torso" src={character.torso?.url} />
+        <img className="legs" src={character.legs?.url} />
+        <img className="feet" src={character.feet?.url} />
         {character.accessories.map((accessory: Character_Item) => (
           <img
             key={accessory.name}
@@ -219,21 +244,32 @@ const Creation = () => {
   const handleItemSelect = (item: Character_Item, name: string) => {
     setCharacter((prevCharacter) => {
       const newCharacter = { ...prevCharacter };
+
       switch (name.toLowerCase()) {
         case "head":
-          newCharacter.head = item;
+          newCharacter.head =
+            newCharacter.head?.name === item.name ? null : item;
           break;
         case "torso":
-          newCharacter.torso = item;
+          newCharacter.torso =
+            newCharacter.torso?.name === item.name ? null : item;
           break;
         case "legs":
-          newCharacter.legs = item;
+          newCharacter.legs =
+            newCharacter.legs?.name === item.name ? null : item;
           break;
         case "feet":
-          newCharacter.feet = item;
+          newCharacter.feet =
+            newCharacter.feet?.name === item.name ? null : item;
           break;
         case "accessory":
-          newCharacter.accessories = [...newCharacter.accessories, item];
+          if (newCharacter.accessories.some((acc) => acc.name === item.name)) {
+            newCharacter.accessories = newCharacter.accessories.filter(
+              (acc) => acc.name !== item.name
+            );
+          } else {
+            newCharacter.accessories = [...newCharacter.accessories, item];
+          }
           break;
         default:
           break;
@@ -245,7 +281,7 @@ const Creation = () => {
   return (
     <div className="section-content">
       <Character character={character} />
-      <Wardrobe onItemSelect={handleItemSelect} />
+      <Wardrobe onItemSelect={handleItemSelect} character={character} />
     </div>
   );
 };

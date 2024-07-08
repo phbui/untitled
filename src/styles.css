@@ -258,3 +258,7 @@ body {
   height: 100%;
   width: auto;
 }
+
+.wardrobe-item.equipped {
+  background-color: pink;
+}

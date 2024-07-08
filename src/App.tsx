@@ -1,158 +1,24 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { db } from "./firebaseConfig";
-import { addDoc, collection, getDocs } from "firebase/firestore";
-import DressUpCharacter from "./components/DressUpCharacter";
-import BottomTabs from "./components/BottomTabs";
-import SignIn from "./components/SignIn";
-import { Interface_Wardrobe_Item } from "./components/BottomTabs";
-
-export interface Interface_Character {
-  id: string;
-  name: string;
-  items: { [key: string]: Interface_Wardrobe_Item };
-  likes: number;
-  createdAt: number;
-}
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Catalog from "./pages/Catalog";
+import Creation from "./pages/Creation";
+import Game from "./pages/Game";
+import Home from "./pages/Home";
+import Options from "./pages/Options";
 
 const App: React.FC = () => {
-  const [selectedItems, setSelectedItems] = useState<{
-    [key: string]: Interface_Wardrobe_Item;
-  }>({
-    hat: {} as Interface_Wardrobe_Item,
-    accessories: {} as Interface_Wardrobe_Item,
-    shirt: {} as Interface_Wardrobe_Item,
-    jacket: {} as Interface_Wardrobe_Item,
-    pants: {} as Interface_Wardrobe_Item,
-    shoes: {} as Interface_Wardrobe_Item,
-  });
-
-  const [characterName, setCharacterName] = useState<string>("");
-  const [user, setUser] = useState<any>(null);
-  const [currentlyDragging, setCurrentlyDragging] =
-    useState<Interface_Wardrobe_Item>();
-  const [catalog, setCatalog] = useState<Interface_Character[]>([]);
-
-  const isMobile = /Mobi|Android/i.test(navigator.userAgent);
-
-  const handleUp = () => {
-    setCurrentlyDragging(undefined);
-  };
-
-  const handleDrag = (item: Interface_Wardrobe_Item) => {
-    if (isMobile)
-      setSelectedItems((prevItems) => ({
-        ...prevItems,
-        [item.type]: item,
-      }));
-    else setCurrentlyDragging(item);
-  };
-
-  const handleDrop = (type: string, item: Interface_Wardrobe_Item) => {
-    if (!isMobile) {
-      setSelectedItems((prevItems) => ({
-        ...prevItems,
-        [type]: item,
-      }));
-      setCurrentlyDragging(undefined);
-    }
-  };
-
-  const saveCharacter = async () => {
-    if (!user) {
-      console.error("User not authenticated");
-      alert("Please sign in to save your character.");
-      return;
-    }
-    if (!characterName) {
-      alert("Please enter a name for your character.");
-      return;
-    }
-    try {
-      const newCharacter = {
-        name: characterName,
-        items: selectedItems,
-        userId: user.uid,
-        likes: 0,
-        createdAt: Date.now(),
-      };
-      console.log("Attempting to add document...");
-      const docRef = await addDoc(collection(db, "characters"), newCharacter);
-      console.log("Document written with ID: ", docRef.id);
-      setCharacterName(""); // Clear the input field after saving
-      loadCatalog(); // Reload catalog after saving
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
-  };
-
-  const loadCatalog = useCallback(async () => {
-    try {
-      console.log("Attempting to load documents...");
-      const querySnapshot = await getDocs(collection(db, "characters"));
-      const loadedCatalog = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        name: doc.data().name as string,
-        items: doc.data().items as { [key: string]: Interface_Wardrobe_Item },
-        likes: doc.data().likes as number,
-        createdAt: doc.data().createdAt as number,
-      }));
-      console.log("Loaded catalog: ", loadedCatalog);
-      setCatalog(loadedCatalog);
-      if (loadedCatalog.length > 0) {
-        setSelectedItems(
-          loadedCatalog.reduce((oldest, current) =>
-            oldest.createdAt < current.createdAt ? oldest : current
-          ).items
-        );
-      }
-    } catch (e) {
-      console.error("Error loading documents: ", e);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadCatalog();
-  }, [loadCatalog]);
-
-  const warnUserOnUnload = (event: BeforeUnloadEvent) => {
-    event.preventDefault();
-    event.returnValue =
-      "You have unsaved changes, are you sure you want to leave?";
-  };
-
-  useEffect(() => {
-    window.addEventListener("beforeunload", warnUserOnUnload);
-    return () => {
-      window.removeEventListener("beforeunload", warnUserOnUnload);
-    };
-  }, []);
-
   return (
-    <div className="App">
-      <SignIn user={user} setUser={setUser} />
-      <BottomTabs
-        user={user}
-        startDrag={handleDrag}
-        onUp={handleUp}
-        onDrop={handleDrop}
-        selectedItems={selectedItems}
-        onSelect={setSelectedItems}
-        catalog={catalog}
-        setCatalog={setCatalog}
-      />
-      <DressUpCharacter
-        clothingItems={selectedItems}
-        currentlyDragging={currentlyDragging}
-        onDrop={handleDrop}
-      />
-      <input
-        type="text"
-        placeholder="Enter character name"
-        value={characterName}
-        onChange={(e) => setCharacterName(e.target.value)}
-      />
-      <button onClick={saveCharacter}>Save Character</button>
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/create" element={<Creation />} />
+          <Route path="/browse" element={<Catalog />} />
+          <Route path="/play" element={<Game />} />
+          <Route path="/options" element={<Options />} />
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </div>
+    </Router>
   );
 };
 

@@ -5,8 +5,8 @@
 
 /* General Styles */
 html {
-  height: 100%;
-  width: 100%;
+  height: 100vh;
+  width: 100vw;
 }
 
 body {
@@ -32,216 +32,44 @@ body {
   position: relative;
 }
 
-.character {
-  position: relative;
-  width: 100%;
-  height: 85%;
-}
-
-.base-character {
-  width: 100%;
-  height: auto;
-}
-
-.clothing {
-  width: auto;
+/* App.css */
+.Home {
   height: 100%;
-  pointer-events: none;
-}
-
-.drop-zone-container {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  width: 120px;
-}
-
-.drop-zone {
-  transition: border-color 0.2s, background-color 0.2s;
-  border-color: transparent;
-  height: 100px;
-  padding: 5px;
-}
-
-.drop-zone.correct {
-  border-color: black;
-  border: 2px dashed;
-  background-color: rgba(0, 0, 255, 0.1);
-}
-
-.drop-zone.hover {
-  border-color: black;
-  border: 2px solid;
-  background-color: rgba(0, 0, 255, 0.1);
-}
-
-/* Bottom Tabs Styles */
-.bottom-tabs {
-  position: fixed;
-  bottom: 55px;
-  width: 100%;
-  height: 200px;
-  background: white;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
-  transition: all 0.2s ease-in;
-  z-index: 1000;
-  transform: translateY(100%);
-}
-
-.bottom-tabs.open {
-  bottom: 0px;
-  transform: translateY(0%);
-}
-
-.tab-buttons {
-  display: flex;
-  justify-content: space-around; /* Centers the buttons with equal spacing */
-  background: #007bff;
-  height: 55px;
-  width: 100%;
-  flex-direction: row;
-}
-
-.tab-button {
-  background: #007bff;
-  color: white;
-  border: none;
-  cursor: pointer;
-  flex: 1; /* Each button will take up an equal amount of space */
-  text-align: center; /* Center the text and icons */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 50px;
-}
-
-.tab-button p {
-  margin: 5px 0 0 0;
-  font-size: 0.65rem;
-}
-
-.tab-button img {
-  width: 24px;
-  height: 24px;
-}
-
-.tab-button:hover {
-  background: #0056b3;
-}
-
-.tab-button.active {
-  background: #0056b3;
-}
-
-.tab-content {
-  display: none;
-  overflow-y: auto;
-}
-
-.tab-content.open {
-  display: flex;
-  flex-direction: row;
-  height: 100%;
-  overflow-y: hidden;
-}
-
-/* Character Catalog Styles */
-.character-catalog {
-  width: 100%;
-}
-
-.catalog-content {
-  padding: 20px;
-}
-
-.sort-buttons {
-  display: flex;
   justify-content: space-between;
+  align-items: center;
+  font-size: 24px;
+  background: url("assets//desktop_background.png") no-repeat center center
+    fixed;
+  background-size: cover;
+  padding: 10% 5% 0 5%;
+}
+
+.Home_Title {
   width: 100%;
-}
-
-.sort-buttons button {
-  width: 60px;
-}
-
-.sort-buttons button.selected {
-  background-color: #007bff;
-  color: white;
-  border: 1px solid #007bff;
-}
-
-.age-buttons {
-  display: flex;
-}
-
-.like-buttons {
-  display: flex;
-}
-
-.catalog-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-.catalog-item {
-  background: #f9f9f9;
-  border: 1px solid #ddd;
-  padding: 10px;
-  border-radius: 5px;
-  width: 100px;
-  box-sizing: border-box;
-}
-
-.catalog-item h3 {
-  margin: 0 0 10px;
-}
-
-.catalog-item .character {
-  position: relative;
-  width: 100%;
-  height: 200px;
-}
-
-.catalog-item .character img {
-  position: absolute;
-  max-width: 100%;
   max-height: 100%;
+  object-fit: contain;
 }
 
-.catalog-item .likes {
+.Home_Buttons {
+  height: 40%;
+  width: 100%;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 10px;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
-.catalog-item .likes button {
-  background: #007bff;
+.Home_Buttons button {
+  text-align: left;
   color: white;
+  background-color: transparent;
   border: none;
-  padding: 5px 10px;
-  border-radius: 3px;
+  padding: 10px;
+  font-size: 40px;
+  height: fit-content;
+  width: 200px;
   cursor: pointer;
-}
-
-.catalog-item .likes button:hover {
-  background: #0056b3;
-}
-
-.wardrobe-item {
-  position: relative;
-  height: 80px;
-  width: auto;
-  margin: 20px;
-}
-
-.wardrobe-item img {
-  height: 100%;
-  width: auto;
-}
-
-.wardrobe-item.selected {
-  border: 2px solid blue;
-  background-color: #e0f7fa;
+  user-select: none;
 }

@@ -152,11 +152,19 @@ body {
   height: 100%;
   transition: transform 0.5s ease-in-out;
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
   justify-content: center;
   padding: 20px;
   transform: translateX(-100%);
   color: white;
+}
+
+.section-header {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  font-size: 24px;
 }
 
 .section.visible {
@@ -173,4 +181,5 @@ body {
   font-size: 24px;
   z-index: 3;
   color: white;
+  height: 30px;
 }

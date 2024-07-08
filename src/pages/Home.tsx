@@ -49,7 +49,8 @@ const Home_Section: React.FC<Props_Home_Section> = ({
       <button className="arrow-button" onClick={onBackClick}>
         ←
       </button>
-      <h1>{title}</h1>
+      <div className="section-header">{title}</div>
+
       <Component_Rendered />
     </div>
   );
@@ -64,7 +65,7 @@ const sections = [
   },
   {
     id: "load",
-    title: "Section 2 Content",
+    title: "Saved Characters",
     imageId: "45a1cea5d95969b309795bea796a559b",
     component: "load",
   },

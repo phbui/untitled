@@ -1,63 +1,92 @@
-import { useState } from "react";
+import { FunctionComponent, useState } from "react";
+import Creation from "./Creation";
+import Catalog from "./Catalog";
+import Options from "./Options";
+import Load from "./Load";
+
 // Scanlines Component
 const Scanlines = () => <div className="scanlines"></div>;
 
-// Button Component
-const Home_Button = ({
-  src,
-  onClick,
-}: {
+// Define props for Home_Button
+interface Props_Home_Button {
   src: string;
   onClick: () => void;
-}) => (
+}
+
+// Button Component
+const Home_Button: React.FC<Props_Home_Button> = ({ src, onClick }) => (
   <button onClick={onClick}>
     <img src={src} alt="button" />
   </button>
 );
 
-// Section Component
-const Home_Section = ({
-  content,
-  onBackClick,
-  isVisible,
-}: {
-  content: string;
+const Component_Map: Record<string, FunctionComponent> = {
+  catalog: Catalog,
+  create: Creation,
+  load: Load,
+  options: Options,
+};
+
+// Define props for Home_Section
+interface Props_Home_Section {
+  title: string;
   onBackClick: () => void;
   isVisible: boolean;
-}) => (
-  <div className={`section ${isVisible ? "visible" : ""}`}>
-    <button className="arrow-button" onClick={onBackClick}>
-      ←
-    </button>
-    <div>{content}</div>
-  </div>
-);
+  component: string;
+}
+
+// Section Component
+const Home_Section: React.FC<Props_Home_Section> = ({
+  title,
+  onBackClick,
+  isVisible,
+  component,
+}) => {
+  let Component_Rendered = Component_Map[component];
+
+  return (
+    <div className={`section ${isVisible ? "visible" : ""}`}>
+      <button className="arrow-button" onClick={onBackClick}>
+        ←
+      </button>
+      <h1>{title}</h1>
+      <Component_Rendered />
+    </div>
+  );
+};
 
 const sections = [
   {
     id: "section1",
-    content: "Section 1 Content",
+    title: "Character Creator",
     imageId: "573bfb4a05fa691f74c6b77f263327c4",
+    component: "create",
   },
   {
     id: "section2",
-    content: "Section 2 Content",
+    title: "Section 2 Content",
     imageId: "45a1cea5d95969b309795bea796a559b",
+    component: "load",
   },
   {
     id: "section3",
-    content: "Section 3 Content",
+    title: "Character Catalog",
     imageId: "5417248dd165247176733799b1f8507d",
+    component: "catalog",
   },
   {
     id: "section4",
-    content: "Section 4 Content",
+    title: "Options",
     imageId: "6454b5c45e742493313517467e602d59",
+    component: "options",
   },
 ];
 
+// Define props for Home
+interface Props_Home {}
+
 // Home Component
-const Home = () => {
+const Home: React.FC<Props_Home> = () => {
   const [scanlinesToggled, setScanlinesToggled] = useState<boolean>(true);
   const [activeSection, setActiveSection] = useState<string | null>(null);
 
@@ -96,9 +125,10 @@ const Home = () => {
       {sections.map((section) => (
         <Home_Section
           key={section.id}
-          content={section.content}
+          title={section.title}
           onBackClick={handleBackClick}
           isVisible={activeSection === section.id}
+          component={section.component}
         />
       ))}
     </div>

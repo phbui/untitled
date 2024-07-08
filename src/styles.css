@@ -154,7 +154,6 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: center;
   padding: 20px;
   transform: translateX(-100%);
   color: white;
@@ -166,6 +165,7 @@ body {
   top: 24px;
   right: 24px;
   font-size: 24px;
+  z-index: 1000;
 }
 
 .section.visible {
@@ -181,7 +181,7 @@ body {
   border: none;
   cursor: pointer;
   font-size: 24px;
-  z-index: 3;
+  z-index: 1000;
   color: white;
   height: 30px;
 }
@@ -282,4 +282,19 @@ body {
 .wardrobe-item.equipped {
   background: #222;
   box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+}
+
+@media only screen and (min-width: 768px) {
+}
+
+@media only screen and (max-width: 768px) {
+  .section-content,
+  .character img {
+    height: 85%;
+  }
+
+  .Home_Buttons .wardrobe,
+  .wardrobe-tabs {
+    margin-bottom: 20%;
+  }
 }

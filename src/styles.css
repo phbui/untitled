@@ -228,10 +228,10 @@ body {
 
 .wardrobe-item {
   width: 150px;
-  background: #222;
+  background: #111;
   border-radius: 8px;
   padding: 10px;
-  margin: 4px;
+  margin: 8px;
   box-shadow: 0 0 6px rgba(255, 255, 255, 0.25);
 }
 
@@ -260,5 +260,6 @@ body {
 }
 
 .wardrobe-item.equipped {
-  background-color: pink;
+  background: #222;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
 }

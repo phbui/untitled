@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export interface Character_Item {
   name: string;
@@ -6,48 +6,86 @@ export interface Character_Item {
   desc: string;
 }
 
-interface Props_Wardrobe_Tab {
-  name: string;
-  items: Character_Item[];
-  onItemSelect?: (item: Character_Item, tabname: string) => void;
+interface Props_Wardrobe_Item {
+  type: WardrobeCategory;
+  item: Character_Item;
   equippedItems?: Character;
+  onClick: () => void;
 }
 
-const Wardrobe_Tab: React.FC<Props_Wardrobe_Tab> = ({
-  name,
-  items,
-  onItemSelect,
+const Wardrobe_Item: React.FC<Props_Wardrobe_Item> = ({
+  type,
+  item,
   equippedItems,
+  onClick,
 }) => {
-  const isEquipped = (
+  const [isEquipped, setIsEquipped] = useState<boolean>(false);
+
+  const checkEquipped = (
     item: Character_Item,
     category: WardrobeCategory
   ): boolean => {
-    if (equippedItems) {
-      if (category === "accessory") {
-        return equippedItems.accessories.some((acc) => acc.name === item.name);
-      } else {
-        return equippedItems[category]?.name === item.name;
-      }
+    if (!equippedItems) {
+      return false;
     }
-    return false;
+
+    console.log(category);
+
+    switch (category) {
+      case "accessory":
+        return equippedItems.accessories.some((acc) => acc.name === item.name);
+      case "head":
+        console.log(equippedItems.head?.name);
+        return equippedItems.head?.name === item.name;
+      case "torso":
+        return equippedItems.torso?.name === item.name;
+      case "legs":
+        return equippedItems.legs?.name === item.name;
+      case "feet":
+        return equippedItems.feet?.name === item.name;
+      default:
+        return false;
+    }
   };
 
+  useEffect(() => {
+    setIsEquipped(checkEquipped(item, type));
+  }, [item, equippedItems]);
+
+  return (
+    <div
+      className={`wardrobe-item ${isEquipped ? "equipped" : ""}`}
+      onClick={onClick}
+    >
+      <img src={item.url} alt={item.name} />
+    </div>
+  );
+};
+
+interface Props_Wardrobe_Tab {
+  type: WardrobeCategory;
+  items: Character_Item[];
+  equippedItems?: Character;
+  onItemSelect?: (item: Character_Item, tabname: string) => void;
+}
+
+const Wardrobe_Tab: React.FC<Props_Wardrobe_Tab> = ({
+  type,
+  items,
+  equippedItems,
+  onItemSelect,
+}) => {
   return (
     <div className="wardrobe-tab-content">
       {items.map((item) => {
-        const equipped = isEquipped(item, name as WardrobeCategory);
-        console.log(equipped);
         return (
-          <div
+          <Wardrobe_Item
             key={item.name}
-            className={`wardrobe-item ${equipped ? "equipped" : ""}`}
-            onClick={() => {
-              if (onItemSelect !== undefined) onItemSelect(item, name);
-            }}
-          >
-            <img src={item.url} alt={item.name} />
-          </div>
+            type={type}
+            item={item}
+            equippedItems={equippedItems}
+            onClick={() => onItemSelect && onItemSelect(item, type)}
+          />
         );
       })}
     </div>
@@ -61,7 +99,7 @@ interface Props_Wardrobe {
 
 const wardrobe_tabs: Props_Wardrobe_Tab[] = [
   {
-    name: "Head",
+    type: "head",
     items: [
       {
         name: "Long & Purple Hair",
@@ -76,7 +114,7 @@ const wardrobe_tabs: Props_Wardrobe_Tab[] = [
     ],
   },
   {
-    name: "Torso",
+    type: "torso",
     items: [
       {
         name: "Arcane Polo",
@@ -96,7 +134,7 @@ const wardrobe_tabs: Props_Wardrobe_Tab[] = [
     ],
   },
   {
-    name: "Legs",
+    type: "legs",
     items: [
       {
         name: "Fish Cargos",
@@ -111,7 +149,7 @@ const wardrobe_tabs: Props_Wardrobe_Tab[] = [
     ],
   },
   {
-    name: "Feet",
+    type: "feet",
     items: [
       {
         name: "Bandage Socks",
@@ -126,7 +164,7 @@ const wardrobe_tabs: Props_Wardrobe_Tab[] = [
     ],
   },
   {
-    name: "Accessory",
+    type: "accessory",
     items: [
       {
         name: "Geek Bar",
@@ -168,10 +206,10 @@ const Wardrobe: React.FC<Props_Wardrobe> = ({ onItemSelect, character }) => {
     <div className={`wardrobe`}>
       {wardrobe_tabs.map(
         (wardrobe_tab) =>
-          activeTab === wardrobe_tab.name && (
+          activeTab === wardrobe_tab.type && (
             <Wardrobe_Tab
-              key={wardrobe_tab.name}
-              name={wardrobe_tab.name}
+              key={wardrobe_tab.type}
+              type={wardrobe_tab.type}
               items={wardrobe_tab.items}
               onItemSelect={onItemSelect}
               equippedItems={character}
@@ -181,13 +219,14 @@ const Wardrobe: React.FC<Props_Wardrobe> = ({ onItemSelect, character }) => {
       <div className="wardrobe-tabs">
         {wardrobe_tabs.map((wardrobe_tab) => (
           <button
-            key={wardrobe_tab.name}
+            key={wardrobe_tab.type}
             className={`tab-button ${
-              activeTab === wardrobe_tab.name ? "active" : ""
+              activeTab === wardrobe_tab.type ? "active" : ""
             }`}
-            onClick={() => handleTabClick(wardrobe_tab.name)}
+            onClick={() => handleTabClick(wardrobe_tab.type)}
           >
-            {wardrobe_tab.name}
+            {wardrobe_tab.type.charAt(0).toUpperCase() +
+              wardrobe_tab.type.slice(1)}
           </button>
         ))}
       </div>
@@ -245,7 +284,7 @@ const Creation = () => {
     setCharacter((prevCharacter) => {
       const newCharacter = { ...prevCharacter };
 
-      switch (name.toLowerCase()) {
+      switch (name) {
         case "head":
           newCharacter.head =
             newCharacter.head?.name === item.name ? null : item;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ImageMapper from "react-image-mapper"; //ignore this lol
 import { MAP, wardrobe_tabs } from "../dummydata";
 
@@ -22,6 +22,8 @@ const Wardrobe_Item: React.FC<Props_Wardrobe_Item> = ({
   onClick,
 }) => {
   const [isEquipped, setIsEquipped] = useState<boolean>(false);
+  const [zoomedSrc, setZoomedSrc] = useState<string>(item.url);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const checkEquipped = (
     item: Character_Item,
@@ -53,12 +55,76 @@ const Wardrobe_Item: React.FC<Props_Wardrobe_Item> = ({
     setIsEquipped(checkEquipped(item, type));
   }, [item, equippedItems]);
 
+  useEffect(() => {
+    const img = new Image();
+    img.src = item.url;
+    img.onload = () => {
+      const canvas = canvasRef.current;
+      if (canvas) {
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx.drawImage(img, 0, 0);
+
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const { data } = imageData;
+
+          let minX = canvas.width;
+          let minY = canvas.height;
+          let maxX = 0;
+          let maxY = 0;
+
+          for (let y = 0; y < canvas.height; y++) {
+            for (let x = 0; x < canvas.width; x++) {
+              const index = (y * canvas.width + x) * 4;
+              const alpha = data[index + 3];
+
+              if (alpha > 0) {
+                if (x < minX) minX = x;
+                if (y < minY) minY = y;
+                if (x > maxX) maxX = x;
+                if (y > maxY) maxY = y;
+              }
+            }
+          }
+
+          const contentWidth = maxX - minX;
+          const contentHeight = maxY - minY;
+
+          const zoomCanvas = document.createElement("canvas");
+          const zoomCtx = zoomCanvas.getContext("2d");
+
+          if (zoomCtx) {
+            zoomCanvas.width = contentWidth;
+            zoomCanvas.height = contentHeight;
+            zoomCtx.drawImage(
+              canvas,
+              minX,
+              minY,
+              contentWidth,
+              contentHeight,
+              0,
+              0,
+              contentWidth,
+              contentHeight
+            );
+
+            const zoomedImageURL = zoomCanvas.toDataURL();
+            setZoomedSrc(zoomedImageURL);
+          }
+        }
+      }
+    };
+  }, [item.url]);
+
   return (
     <div
       className={`wardrobe-item ${isEquipped ? "equipped" : ""}`}
       onClick={onClick}
     >
-      <img src={item.url} alt={item.name} />
+      <img src={zoomedSrc} alt={item.name} />
+      <canvas ref={canvasRef} style={{ display: "none" }} />
     </div>
   );
 };

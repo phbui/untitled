@@ -186,6 +186,18 @@ export const MAP = {
       ],
     },
     {
+      name: "back",
+      shape: "poly",
+      fillColor: "d3a345",
+      strokeColor: "black",
+      coords: [187, 450, 144, 475, 184, 503],
+      polygon: [
+        [187, 450],
+        [144, 475],
+        [184, 503],
+      ],
+    },
+    {
       name: "next",
       shape: "poly",
       fillColor: "#d3a345",

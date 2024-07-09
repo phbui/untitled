@@ -193,6 +193,19 @@ const Phone: React.FC<Props_Phone> = ({ onItemSelect, character }) => {
     switch (area.name) {
       case "screen":
         break;
+      case "back":
+        const totalPages = Math.ceil(wardrobe_tabs.length / itemsPerPage);
+        const prevPage = (currentPage - 1 + totalPages) % totalPages;
+        const prevDisplayedItems = wardrobe_tabs
+          .filter((wardrobe_tab) => wardrobe_tab.type === activeTab)
+          .flatMap((wardrobe_tab) => wardrobe_tab.items)
+          .slice(prevPage * itemsPerPage, (prevPage + 1) * itemsPerPage);
+
+        if (prevDisplayedItems.length > 0) {
+          setCurrentPage(prevPage);
+        }
+        break;
+        break;
       case "next":
         const nextPage =
           (currentPage + 1) % Math.ceil(wardrobe_tabs.length / itemsPerPage);
@@ -346,7 +359,7 @@ const Creation = () => {
   const [character, setCharacter] = useState<Character>({
     name: "Default",
     hair: wardrobe_tabs[0].items[0],
-    eyes: wardrobe_tabs[1].items[0],
+    eyes: null,
     torso: [wardrobe_tabs[2].items[0]],
     legs: wardrobe_tabs[3].items[0],
     feet: wardrobe_tabs[4].items[0],

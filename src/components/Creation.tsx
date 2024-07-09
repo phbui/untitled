@@ -92,11 +92,6 @@ const Wardrobe_Tab: React.FC<Props_Wardrobe_Tab> = ({
   );
 };
 
-interface Props_Wardrobe {
-  onItemSelect: (item: Character_Item, tabname: string) => void;
-  character: Character;
-}
-
 const wardrobe_tabs: Props_Wardrobe_Tab[] = [
   {
     type: "hair",
@@ -266,22 +261,50 @@ const wardrobe_tabs: Props_Wardrobe_Tab[] = [
 ];
 
 interface Props_Phone {
-  click: (title: string) => void;
+  character?: Character;
+  onItemSelect?: (item: Character_Item, tabname: string) => void;
 }
 
-const Phone: React.FC<Props_Phone> = ({ click }) => {
+const Phone: React.FC<Props_Phone> = ({ onItemSelect, character }) => {
+  const [scalingFactor, setScalingFactor] = useState<number>(1);
+  const [topOffset, setTopOffset] = useState<number>(1);
+  const [activeTab, setActiveTab] = useState<string | null>(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 600) {
+        setScalingFactor(-2.4);
+        setTopOffset(8);
+      } else {
+        setScalingFactor(40);
+        setTopOffset(2);
+      }
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const handleAreaClick = (area: any) => {
-    console.log(area);
-    click(area.name);
+    setActiveTab(area.name);
   };
 
   const firstArea = MAP.areas[0];
-  const left = Math.min(...firstArea.coords.filter((_, idx) => idx % 2 === 0));
-  const top = Math.min(...firstArea.coords.filter((_, idx) => idx % 2 === 1));
+  const left =
+    Math.min(...firstArea.coords.filter((_, idx) => idx % 2 === 0)) /
+    scalingFactor;
+  const top =
+    Math.min(...firstArea.coords.filter((_, idx) => idx % 2 === 1)) /
+      scalingFactor +
+    topOffset;
   const width =
-    Math.max(...firstArea.coords.filter((_, idx) => idx % 2 === 0)) - left;
+    Math.max(...firstArea.coords.filter((_, idx) => idx % 2 === 0)) -
+    Math.min(...firstArea.coords.filter((_, idx) => idx % 2 === 0));
   const height =
-    Math.max(...firstArea.coords.filter((_, idx) => idx % 2 === 1)) - top;
+    Math.max(...firstArea.coords.filter((_, idx) => idx % 2 === 1)) -
+    Math.min(...firstArea.coords.filter((_, idx) => idx % 2 === 1));
 
   return (
     <div className="phone-container">
@@ -290,32 +313,41 @@ const Phone: React.FC<Props_Phone> = ({ click }) => {
         map={MAP}
         onClick={(area: any) => handleAreaClick(area)}
       />
+      <div
+        className="item-menu"
+        style={{
+          top: `${top}px`,
+          left: `${left}px`,
+          width: `${width}px`,
+          height: `${height}px`,
+        }}
+      >
+        {wardrobe_tabs.map(
+          (wardrobe_tab) =>
+            activeTab === wardrobe_tab.type && (
+              <Wardrobe_Tab
+                key={wardrobe_tab.type}
+                type={wardrobe_tab.type}
+                items={wardrobe_tab.items}
+                onItemSelect={onItemSelect}
+                equippedItems={character}
+              />
+            )
+        )}
+      </div>
     </div>
   );
 };
 
-const Wardrobe: React.FC<Props_Wardrobe> = ({ onItemSelect, character }) => {
-  const [activeTab, setActiveTab] = useState<string | null>(null);
+interface Props_Wardrobe {
+  character?: Character;
+  onItemSelect?: (item: Character_Item, tabname: string) => void;
+}
 
-  const handleTabClick = (title: string) => {
-    setActiveTab((prevTab) => (prevTab === title ? null : title));
-  };
-
+const Wardrobe: React.FC<Props_Wardrobe> = ({ character, onItemSelect }) => {
   return (
     <div className="wardrobe">
-      <Phone click={handleTabClick} />
-      {wardrobe_tabs.map(
-        (wardrobe_tab) =>
-          activeTab === wardrobe_tab.type && (
-            <Wardrobe_Tab
-              key={wardrobe_tab.type}
-              type={wardrobe_tab.type}
-              items={wardrobe_tab.items}
-              onItemSelect={onItemSelect}
-              equippedItems={character}
-            />
-          )
-      )}
+      <Phone character={character} onItemSelect={onItemSelect} />
     </div>
   );
 };

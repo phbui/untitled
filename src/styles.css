@@ -181,14 +181,15 @@ body {
   border: none;
   cursor: pointer;
   font-size: 24px;
-  z-index: 1000;
+  z-index: 1001;
   color: white;
   height: 30px;
 }
 
 .wardrobe {
   position: absolute;
-  width: calc(100% - 40px);
+  width: 100%;
+  height: 100%;
   bottom: 10px;
   color: #fff;
   transition: all 0.3s ease-in-out;
@@ -196,6 +197,8 @@ body {
   overflow-x: auto;
   display: flex;
   flex-direction: column;
+  justify-content: end;
+  align-items: center;
 }
 
 .wardrobe-tabs {
@@ -205,18 +208,6 @@ body {
   position: fixed;
   bottom: 20px;
   left: 0;
-}
-
-.tab-button {
-  background: none;
-  border: none;
-  color: #fff;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.tab-button.active {
-  background: #555;
 }
 
 .wardrobe-tab-content {
@@ -248,7 +239,7 @@ body {
 }
 
 .section-content {
-  height: 100%;
+  height: 70%;
   width: 100%;
 }
 
@@ -262,7 +253,7 @@ body {
 
 .character img {
   position: absolute;
-  height: 100%;
+  height: 75%;
   width: auto;
 }
 
@@ -290,6 +281,28 @@ body {
   z-index: 5;
 }
 
+.phone-container {
+  position: absolute;
+  height: 400px;
+  width: 100%;
+  max-width: 600px; /* Adjust as needed */
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.overlay {
+  position: absolute;
+  background-color: pink;
+}
+
+.phone-container > div {
+  transform: scale(0.4);
+}
+
 .wardrobe-item.equipped {
   background: #222;
   box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
@@ -301,12 +314,20 @@ body {
 @media only screen and (max-width: 768px) {
   .section-content,
   .character img {
-    height: 85%;
+    height: 70%;
   }
 
   .Home_Buttons,
   .wardrobe,
   .wardrobe-tabs {
     margin-bottom: 20%;
+  }
+
+  .phone-container {
+    height: 320px;
+  }
+
+  .phone-container > div {
+    transform: scale(0.3);
   }
 }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import ImageMapper from "react-image-mapper"; //ignore this lol
 
 export interface Character_Item {
   name: string;
@@ -264,6 +265,35 @@ const wardrobe_tabs: Props_Wardrobe_Tab[] = [
   },
 ];
 
+interface Props_Phone {
+  click: (title: string) => void;
+}
+
+const Phone: React.FC<Props_Phone> = ({ click }) => {
+  const handleAreaClick = (area: any) => {
+    console.log(area);
+    click(area.name);
+  };
+
+  const firstArea = MAP.areas[0];
+  const left = Math.min(...firstArea.coords.filter((_, idx) => idx % 2 === 0));
+  const top = Math.min(...firstArea.coords.filter((_, idx) => idx % 2 === 1));
+  const width =
+    Math.max(...firstArea.coords.filter((_, idx) => idx % 2 === 0)) - left;
+  const height =
+    Math.max(...firstArea.coords.filter((_, idx) => idx % 2 === 1)) - top;
+
+  return (
+    <div className="phone-container">
+      <ImageMapper
+        src={"/assets/phone.png"}
+        map={MAP}
+        onClick={(area: any) => handleAreaClick(area)}
+      />
+    </div>
+  );
+};
+
 const Wardrobe: React.FC<Props_Wardrobe> = ({ onItemSelect, character }) => {
   const [activeTab, setActiveTab] = useState<string | null>(null);
 
@@ -272,7 +302,8 @@ const Wardrobe: React.FC<Props_Wardrobe> = ({ onItemSelect, character }) => {
   };
 
   return (
-    <div className={`wardrobe`}>
+    <div className="wardrobe">
+      <Phone click={handleTabClick} />
       {wardrobe_tabs.map(
         (wardrobe_tab) =>
           activeTab === wardrobe_tab.type && (
@@ -285,20 +316,6 @@ const Wardrobe: React.FC<Props_Wardrobe> = ({ onItemSelect, character }) => {
             />
           )
       )}
-      <div className="wardrobe-tabs">
-        {wardrobe_tabs.map((wardrobe_tab) => (
-          <button
-            key={wardrobe_tab.type}
-            className={`tab-button ${
-              activeTab === wardrobe_tab.type ? "active" : ""
-            }`}
-            onClick={() => handleTabClick(wardrobe_tab.type)}
-          >
-            {wardrobe_tab.type.charAt(0).toUpperCase() +
-              wardrobe_tab.type.slice(1)}
-          </button>
-        ))}
-      </div>
     </div>
   );
 };
@@ -439,3 +456,181 @@ const Creation = () => {
 };
 
 export default Creation;
+
+const MAP = {
+  name: "my-map",
+  // GET JSON FROM BELOW URL AS AN EXAMPLE
+  areas: [
+    {
+      name: "screen",
+      shape: "rect",
+      fillColor: "#eab54d4d",
+      strokeColor: "black",
+      coords: [216, 118, 682, 657],
+      polygon: [
+        [216, 118],
+        [682, 118],
+        [682, 657],
+        [216, 657],
+      ],
+    },
+    {
+      name: "next",
+      shape: "poly",
+      fillColor: "#eab54d4d",
+      strokeColor: "black",
+      coords: [
+        700, 304, 772, 307, 779, 327, 779, 409, 775, 438, 761, 450, 711, 450,
+        701, 438, 701, 319,
+      ],
+      polygon: [
+        [700, 304],
+        [772, 307],
+        [779, 327],
+        [779, 409],
+        [775, 438],
+        [761, 450],
+        [711, 450],
+        [701, 438],
+        [701, 319],
+      ],
+    },
+    {
+      name: "hair",
+      shape: "poly",
+      fillColor: "#eab54d4d",
+      strokeColor: "black",
+      coords: [
+        812, 175, 823, 163, 885, 163, 903, 166, 922, 186, 925, 219, 927, 274,
+        906, 288, 870, 291, 828, 269, 812, 213,
+      ],
+      polygon: [
+        [812, 175],
+        [823, 163],
+        [885, 163],
+        [903, 166],
+        [922, 186],
+        [925, 219],
+        [927, 274],
+        [906, 288],
+        [870, 291],
+        [828, 269],
+        [812, 213],
+      ],
+    },
+    {
+      name: "torso",
+      shape: "poly",
+      fillColor: "#eab54d4d",
+      strokeColor: "black",
+      coords: [
+        832, 339, 870, 320, 904, 320, 928, 334, 932, 413, 928, 438, 911, 454,
+        862, 454, 833, 445, 817, 406, 818, 365,
+      ],
+      polygon: [
+        [832, 339],
+        [870, 320],
+        [904, 320],
+        [928, 334],
+        [932, 413],
+        [928, 438],
+        [911, 454],
+        [862, 454],
+        [833, 445],
+        [817, 406],
+        [818, 365],
+      ],
+    },
+    {
+      name: "pants",
+      shape: "poly",
+      fillColor: "#eab54d4d",
+      strokeColor: "black",
+      coords: [
+        959, 312, 985, 309, 1018, 321, 1054, 330, 1065, 350, 1067, 405, 1051,
+        444, 985, 457, 959, 461, 948, 446, 946, 370, 954, 331,
+      ],
+      polygon: [
+        [959, 312],
+        [985, 309],
+        [1018, 321],
+        [1054, 330],
+        [1065, 350],
+        [1067, 405],
+        [1051, 444],
+        [985, 457],
+        [959, 461],
+        [948, 446],
+        [946, 370],
+        [954, 331],
+      ],
+    },
+    {
+      name: "eyes",
+      shape: "poly",
+      fillColor: "#eab54d4d",
+      strokeColor: "black",
+      coords: [
+        940, 163, 956, 154, 999, 152, 1039, 164, 1054, 191, 1062, 251, 1055,
+        279, 1029, 288, 966, 274, 945, 253, 939, 201,
+      ],
+      polygon: [
+        [940, 163],
+        [956, 154],
+        [999, 152],
+        [1039, 164],
+        [1054, 191],
+        [1062, 251],
+        [1055, 279],
+        [1029, 288],
+        [966, 274],
+        [945, 253],
+        [939, 201],
+      ],
+    },
+    {
+      name: "feet",
+      shape: "poly",
+      fillColor: "#eab54d4d",
+      strokeColor: "black",
+      coords: [
+        909, 489, 851, 489, 821, 508, 803, 565, 802, 608, 828, 625, 890, 629,
+        907, 614, 922, 593, 923, 509,
+      ],
+      polygon: [
+        [909, 489],
+        [851, 489],
+        [821, 508],
+        [803, 565],
+        [802, 608],
+        [828, 625],
+        [890, 629],
+        [907, 614],
+        [922, 593],
+        [923, 509],
+      ],
+    },
+    {
+      name: "accessories",
+      shape: "poly",
+      fillColor: "#eab54d4d",
+      strokeColor: "black",
+      coords: [
+        945, 514, 1017, 483, 1046, 484, 1056, 503, 1060, 549, 1052, 586, 1022,
+        610, 966, 620, 940, 610, 935, 549,
+      ],
+      polygon: [
+        [945, 514],
+        [1017, 483],
+        [1046, 484],
+        [1056, 503],
+        [1060, 549],
+        [1052, 586],
+        [1022, 610],
+        [966, 620],
+        [940, 610],
+        [935, 549],
+      ],
+    },
+  ],
+};

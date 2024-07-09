@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import ImageMapper from "react-image-mapper"; //ignore this lol
+import { MAP, wardrobe_tabs } from "../dummydata";
 
 export interface Character_Item {
   name: string;
@@ -62,7 +63,7 @@ const Wardrobe_Item: React.FC<Props_Wardrobe_Item> = ({
   );
 };
 
-interface Props_Wardrobe_Tab {
+export interface Props_Wardrobe_Tab {
   type: WardrobeCategory;
   items: Character_Item[];
   equippedItems?: Character;
@@ -76,7 +77,7 @@ const Wardrobe_Tab: React.FC<Props_Wardrobe_Tab> = ({
   onItemSelect,
 }) => {
   return (
-    <div className="wardrobe-tab-content">
+    <>
       {items.map((item) => {
         return (
           <Wardrobe_Item
@@ -88,177 +89,9 @@ const Wardrobe_Tab: React.FC<Props_Wardrobe_Tab> = ({
           />
         );
       })}
-    </div>
+    </>
   );
 };
-
-const wardrobe_tabs: Props_Wardrobe_Tab[] = [
-  {
-    type: "hair",
-    items: [
-      {
-        name: "Long & Purple Hair",
-        url: "/assets/clothes/hair/long-purple.png",
-        desc: "",
-      },
-      {
-        name: "Short & Green Hair",
-        url: "/assets/clothes/hair/short-green.png",
-        desc: "",
-      },
-      {
-        name: "Curly & Blue Hair",
-        url: "/assets/clothes/hair/curly-blue.png",
-        desc: "",
-      },
-    ],
-  },
-  {
-    type: "eyes",
-    items: [
-      {
-        name: "Crazy Eyes",
-        url: "/assets/clothes/eyes/crazy-eyes.png",
-        desc: "",
-      },
-      {
-        name: "Cute Eyes",
-        url: "/assets/clothes/eyes/cute-eyes.png",
-        desc: "",
-      },
-      {
-        name: "Dead Eyes",
-        url: "/assets/clothes/eyes/dead-eyes.png",
-        desc: "",
-      },
-    ],
-  },
-  {
-    type: "torso",
-    items: [
-      {
-        name: "Arcane Polo",
-        url: "/assets/clothes/torso/arcane-polo.png",
-        desc: "",
-      },
-      {
-        name: "Tank & Tee",
-        url: "/assets/clothes/torso/green-tank+longsleeve.png",
-        desc: "",
-      },
-      {
-        name: "Mermaid Dress",
-        url: "/assets/clothes/torso/water-dress.png",
-        desc: "",
-      },
-      {
-        name: "Dotted Dress",
-        url: "/assets/clothes/torso/dotted-dress.png",
-        desc: "",
-      },
-      {
-        name: "Striped Top",
-        url: "/assets/clothes/torso/striped-top.png",
-        desc: "",
-      },
-    ],
-  },
-  {
-    type: "legs",
-    items: [
-      {
-        name: "Fish Cargos",
-        url: "/assets/clothes/legs/fish-cargos.png",
-        desc: "",
-      },
-      {
-        name: "Zig-Zag Jeans",
-        url: "/assets/clothes/legs/zig-zag-jeans.png",
-        desc: "",
-      },
-      {
-        name: "Red Skirt",
-        url: "/assets/clothes/legs/red-skirt.png",
-        desc: "",
-      },
-    ],
-  },
-  {
-    type: "feet",
-    items: [
-      {
-        name: "Purple Kicks",
-        url: "/assets/clothes/feet/purple-kicks.png",
-        desc: "",
-      },
-      {
-        name: "Red Heels",
-        url: "/assets/clothes/feet/red-heels.png",
-        desc: "",
-      },
-      {
-        name: "Buckle Boots",
-        url: "/assets/clothes/feet/buckle-boots.png",
-        desc: "",
-      },
-    ],
-  },
-  {
-    type: "accessory",
-    items: [
-      {
-        name: "Geek Bar",
-        url: "/assets/clothes/accessory/geek-bar.png",
-        desc: "",
-      },
-      {
-        name: "Grommet Belt",
-        url: "/assets/clothes/accessory/grommet-belt.png",
-        desc: "",
-      },
-      {
-        name: "Hair Clips",
-        url: "/assets/clothes/accessory/hair-clips.png",
-        desc: "",
-      },
-      {
-        name: "Headphones",
-        url: "/assets/clothes/accessory/headphones.png",
-        desc: "",
-      },
-      {
-        name: "Bandage Socks",
-        url: "/assets/clothes/accessory/bandage-socks.png",
-        desc: "",
-      },
-      {
-        name: "Eye Tie",
-        url: "/assets/clothes/accessory/eye-tie.png",
-        desc: "",
-      },
-      {
-        name: "Just a Fish",
-        url: "/assets/clothes/accessory/fish.png",
-        desc: "",
-      },
-      {
-        name: "Goggles",
-        url: "/assets/clothes/accessory/goggles.png",
-        desc: "",
-      },
-      {
-        name: "Lobster Cap",
-        url: "/assets/clothes/accessory/lobster-cap.png",
-        desc: "",
-      },
-      {
-        name: "Sweatband",
-        url: "/assets/clothes/accessory/sweatband.png",
-        desc: "",
-      },
-    ],
-  },
-];
 
 interface Props_Phone {
   character?: Character;
@@ -268,7 +101,10 @@ interface Props_Phone {
 const Phone: React.FC<Props_Phone> = ({ onItemSelect, character }) => {
   const [scalingFactor, setScalingFactor] = useState<number>(1);
   const [topOffset, setTopOffset] = useState<number>(1);
-  const [activeTab, setActiveTab] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<string>("hair");
+  const [currentPage, setCurrentPage] = useState<number>(0);
+
+  const itemsPerPage = 4;
 
   useEffect(() => {
     const handleResize = () => {
@@ -288,7 +124,27 @@ const Phone: React.FC<Props_Phone> = ({ onItemSelect, character }) => {
   }, []);
 
   const handleAreaClick = (area: any) => {
-    setActiveTab(area.name);
+    switch (area.name) {
+      case "screen":
+        break;
+      case "next":
+        const nextPage =
+          (currentPage + 1) % Math.ceil(wardrobe_tabs.length / itemsPerPage);
+        const displayedItems = wardrobe_tabs
+          .filter((wardrobe_tab) => wardrobe_tab.type === activeTab)
+          .flatMap((wardrobe_tab) => wardrobe_tab.items)
+          .slice(nextPage * itemsPerPage, (nextPage + 1) * itemsPerPage);
+
+        if (displayedItems.length > 0) {
+          setCurrentPage(nextPage);
+        }
+        break;
+      default:
+        console.log(area.name);
+        setActiveTab(area.name);
+        setCurrentPage(0); // Reset to first page when changing tabs
+        break;
+    }
   };
 
   const firstArea = MAP.areas[0];
@@ -306,6 +162,11 @@ const Phone: React.FC<Props_Phone> = ({ onItemSelect, character }) => {
     Math.max(...firstArea.coords.filter((_, idx) => idx % 2 === 1)) -
     Math.min(...firstArea.coords.filter((_, idx) => idx % 2 === 1));
 
+  const displayedItems = wardrobe_tabs
+    .filter((wardrobe_tab) => wardrobe_tab.type === activeTab)
+    .flatMap((wardrobe_tab) => wardrobe_tab.items)
+    .slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
+
   return (
     <div className="phone-container">
       <ImageMapper
@@ -322,23 +183,16 @@ const Phone: React.FC<Props_Phone> = ({ onItemSelect, character }) => {
           height: `${height}px`,
         }}
       >
-        {wardrobe_tabs.map(
-          (wardrobe_tab) =>
-            activeTab === wardrobe_tab.type && (
-              <Wardrobe_Tab
-                key={wardrobe_tab.type}
-                type={wardrobe_tab.type}
-                items={wardrobe_tab.items}
-                onItemSelect={onItemSelect}
-                equippedItems={character}
-              />
-            )
-        )}
+        <Wardrobe_Tab
+          type={activeTab as WardrobeCategory}
+          items={displayedItems}
+          onItemSelect={onItemSelect}
+          equippedItems={character}
+        />
       </div>
     </div>
   );
 };
-
 interface Props_Wardrobe {
   character?: Character;
   onItemSelect?: (item: Character_Item, tabname: string) => void;
@@ -488,181 +342,3 @@ const Creation = () => {
 };
 
 export default Creation;
-
-const MAP = {
-  name: "my-map",
-  // GET JSON FROM BELOW URL AS AN EXAMPLE
-  areas: [
-    {
-      name: "screen",
-      shape: "rect",
-      fillColor: "#eab54d4d",
-      strokeColor: "black",
-      coords: [216, 118, 682, 657],
-      polygon: [
-        [216, 118],
-        [682, 118],
-        [682, 657],
-        [216, 657],
-      ],
-    },
-    {
-      name: "next",
-      shape: "poly",
-      fillColor: "#eab54d4d",
-      strokeColor: "black",
-      coords: [
-        700, 304, 772, 307, 779, 327, 779, 409, 775, 438, 761, 450, 711, 450,
-        701, 438, 701, 319,
-      ],
-      polygon: [
-        [700, 304],
-        [772, 307],
-        [779, 327],
-        [779, 409],
-        [775, 438],
-        [761, 450],
-        [711, 450],
-        [701, 438],
-        [701, 319],
-      ],
-    },
-    {
-      name: "hair",
-      shape: "poly",
-      fillColor: "#eab54d4d",
-      strokeColor: "black",
-      coords: [
-        812, 175, 823, 163, 885, 163, 903, 166, 922, 186, 925, 219, 927, 274,
-        906, 288, 870, 291, 828, 269, 812, 213,
-      ],
-      polygon: [
-        [812, 175],
-        [823, 163],
-        [885, 163],
-        [903, 166],
-        [922, 186],
-        [925, 219],
-        [927, 274],
-        [906, 288],
-        [870, 291],
-        [828, 269],
-        [812, 213],
-      ],
-    },
-    {
-      name: "torso",
-      shape: "poly",
-      fillColor: "#eab54d4d",
-      strokeColor: "black",
-      coords: [
-        832, 339, 870, 320, 904, 320, 928, 334, 932, 413, 928, 438, 911, 454,
-        862, 454, 833, 445, 817, 406, 818, 365,
-      ],
-      polygon: [
-        [832, 339],
-        [870, 320],
-        [904, 320],
-        [928, 334],
-        [932, 413],
-        [928, 438],
-        [911, 454],
-        [862, 454],
-        [833, 445],
-        [817, 406],
-        [818, 365],
-      ],
-    },
-    {
-      name: "pants",
-      shape: "poly",
-      fillColor: "#eab54d4d",
-      strokeColor: "black",
-      coords: [
-        959, 312, 985, 309, 1018, 321, 1054, 330, 1065, 350, 1067, 405, 1051,
-        444, 985, 457, 959, 461, 948, 446, 946, 370, 954, 331,
-      ],
-      polygon: [
-        [959, 312],
-        [985, 309],
-        [1018, 321],
-        [1054, 330],
-        [1065, 350],
-        [1067, 405],
-        [1051, 444],
-        [985, 457],
-        [959, 461],
-        [948, 446],
-        [946, 370],
-        [954, 331],
-      ],
-    },
-    {
-      name: "eyes",
-      shape: "poly",
-      fillColor: "#eab54d4d",
-      strokeColor: "black",
-      coords: [
-        940, 163, 956, 154, 999, 152, 1039, 164, 1054, 191, 1062, 251, 1055,
-        279, 1029, 288, 966, 274, 945, 253, 939, 201,
-      ],
-      polygon: [
-        [940, 163],
-        [956, 154],
-        [999, 152],
-        [1039, 164],
-        [1054, 191],
-        [1062, 251],
-        [1055, 279],
-        [1029, 288],
-        [966, 274],
-        [945, 253],
-        [939, 201],
-      ],
-    },
-    {
-      name: "feet",
-      shape: "poly",
-      fillColor: "#eab54d4d",
-      strokeColor: "black",
-      coords: [
-        909, 489, 851, 489, 821, 508, 803, 565, 802, 608, 828, 625, 890, 629,
-        907, 614, 922, 593, 923, 509,
-      ],
-      polygon: [
-        [909, 489],
-        [851, 489],
-        [821, 508],
-        [803, 565],
-        [802, 608],
-        [828, 625],
-        [890, 629],
-        [907, 614],
-        [922, 593],
-        [923, 509],
-      ],
-    },
-    {
-      name: "accessories",
-      shape: "poly",
-      fillColor: "#eab54d4d",
-      strokeColor: "black",
-      coords: [
-        945, 514, 1017, 483, 1046, 484, 1056, 503, 1060, 549, 1052, 586, 1022,
-        610, 966, 620, 940, 610, 935, 549,
-      ],
-      polygon: [
-        [945, 514],
-        [1017, 483],
-        [1046, 484],
-        [1056, 503],
-        [1060, 549],
-        [1052, 586],
-        [1022, 610],
-        [966, 620],
-        [940, 610],
-        [935, 549],
-      ],
-    },
-  ],
-};

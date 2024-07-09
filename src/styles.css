@@ -210,27 +210,15 @@ body {
   left: 0;
 }
 
-.wardrobe-tab-content {
-  display: flex;
-  width: fit-content;
-  gap: 10px;
-  padding-bottom: 40px;
-}
-
-.wardrobe-tab-content > .wardrobe-item:first-child {
-  margin-left: 40px;
-}
-
-.wardrobe-tab-content > .wardrobe-item:last-child {
-  margin-right: 40px;
-}
 .wardrobe-item {
-  width: 100px;
+  width: 200px;
+  height: 240px;
   background: #111;
   border-radius: 8px;
   padding: 10px;
-  margin: 8px;
+  margin: 12px;
   box-shadow: 0 0 6px rgba(255, 255, 255, 0.25);
+  cursor: pointer;
 }
 
 .wardrobe-item img {
@@ -297,6 +285,10 @@ body {
 .item-menu {
   position: absolute;
   background-color: transparent;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  padding: 10px;
 }
 
 .phone-container > div {
@@ -306,6 +298,10 @@ body {
 .wardrobe-item.equipped {
   background: #222;
   box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+}
+
+canvas {
+  opacity: 0.3;
 }
 
 @media only screen and (min-width: 600px) {

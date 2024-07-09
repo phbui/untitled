@@ -30,17 +30,18 @@ const Wardrobe_Item: React.FC<Props_Wardrobe_Item> = ({
     }
 
     switch (category) {
-      case "accessory":
-        return equippedItems.accessories.some((acc) => acc.name === item.name);
-      case "head":
-        console.log(equippedItems.head?.name);
-        return equippedItems.head?.name === item.name;
+      case "hair":
+        return equippedItems.hair?.name === item.name;
+      case "eyes":
+        return equippedItems.eyes?.name === item.name;
       case "torso":
-        return equippedItems.torso?.name === item.name;
+        return equippedItems.torso.some((tor) => tor.name === item.name);
       case "legs":
         return equippedItems.legs?.name === item.name;
       case "feet":
         return equippedItems.feet?.name === item.name;
+      case "accessory":
+        return equippedItems.accessories.some((acc) => acc.name === item.name);
       default:
         return false;
     }
@@ -97,16 +98,41 @@ interface Props_Wardrobe {
 
 const wardrobe_tabs: Props_Wardrobe_Tab[] = [
   {
-    type: "head",
+    type: "hair",
     items: [
       {
         name: "Long & Purple Hair",
-        url: "/assets/clothes/head/long-purple-hair.png",
+        url: "/assets/clothes/hair/long-purple.png",
         desc: "",
       },
       {
         name: "Short & Green Hair",
-        url: "/assets/clothes/head/short-green-hair.png",
+        url: "/assets/clothes/hair/short-green.png",
+        desc: "",
+      },
+      {
+        name: "Curly & Blue Hair",
+        url: "/assets/clothes/hair/curly-blue.png",
+        desc: "",
+      },
+    ],
+  },
+  {
+    type: "eyes",
+    items: [
+      {
+        name: "Crazy Eyes",
+        url: "/assets/clothes/eyes/crazy-eyes.png",
+        desc: "",
+      },
+      {
+        name: "Cute Eyes",
+        url: "/assets/clothes/eyes/cute-eyes.png",
+        desc: "",
+      },
+      {
+        name: "Dead Eyes",
+        url: "/assets/clothes/eyes/dead-eyes.png",
         desc: "",
       },
     ],
@@ -129,6 +155,16 @@ const wardrobe_tabs: Props_Wardrobe_Tab[] = [
         url: "/assets/clothes/torso/water-dress.png",
         desc: "",
       },
+      {
+        name: "Dotted Dress",
+        url: "/assets/clothes/torso/dotted-dress.png",
+        desc: "",
+      },
+      {
+        name: "Striped Top",
+        url: "/assets/clothes/torso/striped-top.png",
+        desc: "",
+      },
     ],
   },
   {
@@ -144,19 +180,29 @@ const wardrobe_tabs: Props_Wardrobe_Tab[] = [
         url: "/assets/clothes/legs/zig-zag-jeans.png",
         desc: "",
       },
+      {
+        name: "Red Skirt",
+        url: "/assets/clothes/legs/red-skirt.png",
+        desc: "",
+      },
     ],
   },
   {
     type: "feet",
     items: [
       {
-        name: "Bandage Socks",
-        url: "/assets/clothes/feet/bandage-socks.png",
+        name: "Purple Kicks",
+        url: "/assets/clothes/feet/purple-kicks.png",
         desc: "",
       },
       {
-        name: "Purple Kicks",
-        url: "/assets/clothes/feet/purple-kicks.png",
+        name: "Red Heels",
+        url: "/assets/clothes/feet/red-heels.png",
+        desc: "",
+      },
+      {
+        name: "Buckle Boots",
+        url: "/assets/clothes/feet/buckle-boots.png",
         desc: "",
       },
     ],
@@ -167,11 +213,6 @@ const wardrobe_tabs: Props_Wardrobe_Tab[] = [
       {
         name: "Geek Bar",
         url: "/assets/clothes/accessory/geek-bar.png",
-        desc: "",
-      },
-      {
-        name: "Crazy Eyes",
-        url: "/assets/clothes/accessory/crazy-eyes.png",
         desc: "",
       },
       {
@@ -187,6 +228,36 @@ const wardrobe_tabs: Props_Wardrobe_Tab[] = [
       {
         name: "Headphones",
         url: "/assets/clothes/accessory/headphones.png",
+        desc: "",
+      },
+      {
+        name: "Bandage Socks",
+        url: "/assets/clothes/accessory/bandage-socks.png",
+        desc: "",
+      },
+      {
+        name: "Eye Tie",
+        url: "/assets/clothes/accessory/eye-tie.png",
+        desc: "",
+      },
+      {
+        name: "Just a Fish",
+        url: "/assets/clothes/accessory/fish.png",
+        desc: "",
+      },
+      {
+        name: "Goggles",
+        url: "/assets/clothes/accessory/goggles.png",
+        desc: "",
+      },
+      {
+        name: "Lobster Cap",
+        url: "/assets/clothes/accessory/lobster-cap.png",
+        desc: "",
+      },
+      {
+        name: "Sweatband",
+        url: "/assets/clothes/accessory/sweatband.png",
         desc: "",
       },
     ],
@@ -232,12 +303,19 @@ const Wardrobe: React.FC<Props_Wardrobe> = ({ onItemSelect, character }) => {
   );
 };
 
-type WardrobeCategory = "head" | "torso" | "legs" | "feet" | "accessory";
+type WardrobeCategory =
+  | "hair"
+  | "eyes"
+  | "torso"
+  | "legs"
+  | "feet"
+  | "accessory";
 
 export interface Character {
   name: string;
-  head: Character_Item | null;
-  torso: Character_Item | null;
+  hair: Character_Item | null;
+  eyes: Character_Item | null;
+  torso: Character_Item[];
   legs: Character_Item | null;
   feet: Character_Item | null;
   accessories: Character_Item[];
@@ -255,15 +333,23 @@ const Character: React.FC<Props_Character> = ({ character }) => {
       <div className="character">
         <img className="base" src="/assets/clothes/base.png" alt="base" />
         <img
-          className="head"
-          src={character.head?.url || defaultImage}
-          alt="head"
+          className="hair"
+          src={character.hair?.url || defaultImage}
+          alt="hair"
         />
         <img
-          className="torso"
-          src={character.torso?.url || defaultImage}
-          alt="torso"
+          className="eyes"
+          src={character.eyes?.url || defaultImage}
+          alt="eyes"
         />
+        {character.torso.map((torso: Character_Item) => (
+          <img
+            key={torso.name}
+            className={`torso ${torso.name}`}
+            src={torso.url || defaultImage}
+            alt={torso.name}
+          />
+        ))}
         <img
           className="legs"
           src={character.legs?.url || defaultImage}
@@ -290,10 +376,11 @@ const Character: React.FC<Props_Character> = ({ character }) => {
 const Creation = () => {
   const [character, setCharacter] = useState<Character>({
     name: "Default",
-    head: wardrobe_tabs[0].items[0],
-    torso: wardrobe_tabs[1].items[0],
-    legs: wardrobe_tabs[2].items[0],
-    feet: wardrobe_tabs[3].items[0],
+    hair: wardrobe_tabs[0].items[0],
+    eyes: wardrobe_tabs[1].items[0],
+    torso: [wardrobe_tabs[2].items[0]],
+    legs: wardrobe_tabs[3].items[0],
+    feet: wardrobe_tabs[4].items[0],
     accessories: [],
   });
 
@@ -302,13 +389,22 @@ const Creation = () => {
       const newCharacter = { ...prevCharacter };
 
       switch (name) {
-        case "head":
-          newCharacter.head =
-            newCharacter.head?.name === item.name ? null : item;
+        case "hair":
+          newCharacter.hair =
+            newCharacter.hair?.name === item.name ? null : item;
+          break;
+        case "eyes":
+          newCharacter.eyes =
+            newCharacter.eyes?.name === item.name ? null : item;
           break;
         case "torso":
-          newCharacter.torso =
-            newCharacter.torso?.name === item.name ? null : item;
+          if (newCharacter.torso.some((tor) => tor.name === item.name)) {
+            newCharacter.torso = newCharacter.torso.filter(
+              (tor) => tor.name !== item.name
+            );
+          } else {
+            newCharacter.torso = [...newCharacter.torso, item];
+          }
           break;
         case "legs":
           newCharacter.legs =

@@ -266,8 +266,12 @@ body {
   width: auto;
 }
 
-.character img.head {
+.character img.hair {
   z-index: 4;
+}
+
+.character img.eyes {
+  z-index: 3;
 }
 
 .character img.torso {

@@ -3,6 +3,7 @@ import Creation from "../components/Creation";
 import Catalog from "../components/Catalog";
 import Options from "../components/Options";
 import Load from "../components/Load";
+import { useNavigate } from "react-router-dom";
 
 // Scanlines Component
 const Scanlines = () => <div className="scanlines"></div>;
@@ -105,7 +106,7 @@ const Home: React.FC<Props_Home> = () => {
 
     setTimeout(() => {
       navigate("/play");
-    }, 2000);
+    }, 3000);
   };
 
   const handleButtonClick = (section: string) => {
@@ -118,6 +119,14 @@ const Home: React.FC<Props_Home> = () => {
 
   return (
     <div className="Home">
+      <div className="wall-left" />
+      <div className="wall-right" />
+      <img
+        className="start-logo"
+        src="/assets/untitled_title.png"
+        alt="title"
+      />
+
       {scanlinesToggled && <Scanlines />}
 
       <div

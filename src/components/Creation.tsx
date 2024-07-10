@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import ImageMapper from "react-image-mapper"; //ignore this lol
 import { MAP, wardrobe_tabs } from "../dummydata";
+import { User } from "../App";
 
 export interface Character_Item {
   name: string;
@@ -356,6 +357,7 @@ const Character: React.FC<Props_Character> = ({ character }) => {
 };
 
 const Creation = () => {
+  const user = useContext(User);
   const [character, setCharacter] = useState<Character>({
     name: "Default",
     hair: wardrobe_tabs[0].items[0],
@@ -412,8 +414,15 @@ const Creation = () => {
     });
   };
 
+  const startGame = () => {
+    user.setCharacter(character);
+  };
+
   return (
     <div className="section-content">
+      <div className="button-container">
+        <button onClick={startGame}>start</button>
+      </div>
       <Character character={character} />
       <Wardrobe onItemSelect={handleItemSelect} character={character} />
     </div>

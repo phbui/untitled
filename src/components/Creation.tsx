@@ -161,12 +161,16 @@ const Wardrobe_Tab: React.FC<Props_Wardrobe_Tab> = ({
 };
 
 interface Props_Phone {
+  openModal: () => void;
   character?: Character;
   onItemSelect?: (item: Character_Item, tabname: string) => void;
 }
 
-const Phone: React.FC<Props_Phone> = ({ onItemSelect, character }) => {
-  const user = useContext(User);
+const Phone: React.FC<Props_Phone> = ({
+  onItemSelect,
+  character,
+  openModal,
+}) => {
   const [scalingFactor, setScalingFactor] = useState<number>(1);
   const [topOffset, setTopOffset] = useState<number>(1);
   const [activeTab, setActiveTab] = useState<string>("hair");
@@ -175,7 +179,7 @@ const Phone: React.FC<Props_Phone> = ({ onItemSelect, character }) => {
   const itemsPerPage = 4;
 
   const startGame = () => {
-    user.setCharacter(character);
+    openModal();
   };
 
   useEffect(() => {
@@ -280,18 +284,6 @@ const Phone: React.FC<Props_Phone> = ({ onItemSelect, character }) => {
     </div>
   );
 };
-interface Props_Wardrobe {
-  character?: Character;
-  onItemSelect?: (item: Character_Item, tabname: string) => void;
-}
-
-const Wardrobe: React.FC<Props_Wardrobe> = ({ character, onItemSelect }) => {
-  return (
-    <div className="wardrobe">
-      <Phone character={character} onItemSelect={onItemSelect} />
-    </div>
-  );
-};
 
 type WardrobeCategory =
   | "hair"
@@ -364,6 +356,8 @@ const Character: React.FC<Props_Character> = ({ character }) => {
 };
 
 const Creation = () => {
+  const user = useContext(User);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [character, setCharacter] = useState<Character>({
     name: "Default",
     hair: wardrobe_tabs[0].items[0],
@@ -373,6 +367,18 @@ const Creation = () => {
     feet: wardrobe_tabs[4].items[0],
     accessories: [],
   });
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleYes = () => {
+    user.setCharacter(character);
+  };
+
+  const handleNo = () => {
+    setIsModalOpen(false);
+  };
 
   const handleItemSelect = (item: Character_Item, name: string) => {
     setCharacter((prevCharacter) => {
@@ -423,7 +429,29 @@ const Creation = () => {
   return (
     <div className="section-content">
       <Character character={character} />
-      <Wardrobe onItemSelect={handleItemSelect} character={character} />
+      <div className="wardrobe">
+        <Phone
+          onItemSelect={handleItemSelect}
+          character={character}
+          openModal={openModal}
+        />
+      </div>
+      {isModalOpen && (
+        <div id="modal" className="modal">
+          <div className="modal-content">
+            <p>Are you sure you want to start the game?</p>
+            <p>You can't change your character after you start.</p>
+            <div className="modal-buttons">
+              <button id="noButton" onClick={handleNo}>
+                No
+              </button>
+              <button id="yesButton" onClick={handleYes}>
+                Yes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

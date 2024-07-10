@@ -2,7 +2,6 @@ import { useContext, useEffect, useRef, useState } from "react";
 import ImageMapper from "react-image-mapper"; //ignore this lol
 import { MAP, wardrobe_tabs } from "../dummydata";
 import { User } from "../App";
-import { useNavigate } from "react-router-dom";
 
 export interface Character_Item {
   name: string;
@@ -356,8 +355,11 @@ const Character: React.FC<Props_Character> = ({ character }) => {
   );
 };
 
-const Creation = () => {
-  const navigate = useNavigate();
+export interface Props_Creation {
+  startGame?: () => void;
+}
+
+const Creation: React.FC<Props_Creation> = ({ startGame }) => {
   const user = useContext(User);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [character, setCharacter] = useState<Character>({
@@ -376,7 +378,7 @@ const Creation = () => {
 
   const handleYes = () => {
     user.setCharacter(character);
-    navigate("/play");
+    if (startGame) startGame();
   };
 
   const handleNo = () => {

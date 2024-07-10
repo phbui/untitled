@@ -20,7 +20,11 @@ const Home_Button: React.FC<Props_Home_Button> = ({ src, onClick }) => (
   </button>
 );
 
-const Component_Map: Record<string, FunctionComponent> = {
+interface Props_Rendered {
+  startGame?: () => void;
+}
+
+const Component_Map: Record<string, FunctionComponent<Props_Rendered>> = {
   catalog: Catalog,
   create: Creation,
   load: Load,
@@ -33,6 +37,7 @@ interface Props_Home_Section {
   onBackClick: () => void;
   isVisible: boolean;
   component: string;
+  startGame: () => void;
 }
 
 // Section Component
@@ -41,6 +46,7 @@ const Home_Section: React.FC<Props_Home_Section> = ({
   onBackClick,
   isVisible,
   component,
+  startGame,
 }) => {
   let Component_Rendered = Component_Map[component];
 
@@ -51,7 +57,7 @@ const Home_Section: React.FC<Props_Home_Section> = ({
       </button>
       <div className="section-header">{title}</div>
 
-      <Component_Rendered />
+      <Component_Rendered startGame={startGame} />
     </div>
   );
 };
@@ -88,8 +94,19 @@ interface Props_Home {}
 
 // Home Component
 const Home: React.FC<Props_Home> = () => {
+  const navigate = useNavigate();
   const [scanlinesToggled, setScanlinesToggled] = useState<boolean>(true);
   const [activeSection, setActiveSection] = useState<string | null>(null);
+
+  const startGame = () => {
+    setTimeout(() => {
+      setScanlinesToggled(false);
+    }, 1000);
+
+    setTimeout(() => {
+      navigate("/play");
+    }, 2000);
+  };
 
   const handleButtonClick = (section: string) => {
     setActiveSection(section);
@@ -134,6 +151,7 @@ const Home: React.FC<Props_Home> = () => {
           onBackClick={handleBackClick}
           isVisible={activeSection === section.id}
           component={section.component}
+          startGame={startGame}
         />
       ))}
     </div>

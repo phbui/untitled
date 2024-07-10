@@ -33,5 +33,17 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      function setFullHeight() {
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty("--vh", `${vh}px`);
+      }
+
+      // Initial call to set the height
+      setFullHeight();
+
+      // Recalculate on resize
+      window.addEventListener("resize", setFullHeight);
+    </script>
   </body>
 </html>

@@ -22,7 +22,7 @@ body {
 }
 
 #root {
-  height: 100%;
+  height: calc(var(--vh, 1vh) * 100);
   width: 100%;
   overflow: hidden;
   position: relative;
@@ -311,13 +311,13 @@ canvas {
 @media only screen and (max-width: 600px) {
   .section-content,
   .character img {
-    height: 65%;
+    height: 70%;
   }
 
   .Home_Buttons,
   .phone-container,
   .wardrobe-tabs {
-    margin-bottom: 20%;
+    margin-bottom: 2.5%;
   }
 
   .phone-container {

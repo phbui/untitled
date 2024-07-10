@@ -166,12 +166,17 @@ interface Props_Phone {
 }
 
 const Phone: React.FC<Props_Phone> = ({ onItemSelect, character }) => {
+  const user = useContext(User);
   const [scalingFactor, setScalingFactor] = useState<number>(1);
   const [topOffset, setTopOffset] = useState<number>(1);
   const [activeTab, setActiveTab] = useState<string>("hair");
   const [currentPage, setCurrentPage] = useState<number>(0);
 
   const itemsPerPage = 4;
+
+  const startGame = () => {
+    user.setCharacter(character);
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -194,6 +199,9 @@ const Phone: React.FC<Props_Phone> = ({ onItemSelect, character }) => {
     switch (area.name) {
       case "screen":
         break;
+      case "play":
+        startGame();
+        break;
       case "back":
         const totalPages = Math.ceil(wardrobe_tabs.length / itemsPerPage);
         const prevPage = (currentPage - 1 + totalPages) % totalPages;
@@ -205,7 +213,6 @@ const Phone: React.FC<Props_Phone> = ({ onItemSelect, character }) => {
         if (prevDisplayedItems.length > 0) {
           setCurrentPage(prevPage);
         }
-        break;
         break;
       case "next":
         const nextPage =
@@ -357,7 +364,6 @@ const Character: React.FC<Props_Character> = ({ character }) => {
 };
 
 const Creation = () => {
-  const user = useContext(User);
   const [character, setCharacter] = useState<Character>({
     name: "Default",
     hair: wardrobe_tabs[0].items[0],
@@ -414,15 +420,8 @@ const Creation = () => {
     });
   };
 
-  const startGame = () => {
-    user.setCharacter(character);
-  };
-
   return (
     <div className="section-content">
-      <div className="button-container">
-        <button onClick={startGame}>start</button>
-      </div>
       <Character character={character} />
       <Wardrobe onItemSelect={handleItemSelect} character={character} />
     </div>

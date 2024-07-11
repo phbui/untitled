@@ -3,6 +3,7 @@ import { User } from "../App";
 import { Chapter, Dialogue, Dialogue_Option } from "../dialogue/Interfaces";
 import { story } from "../dialogue/Chatpers";
 import { Character } from "../components/Creation";
+import { useNavigate } from "react-router-dom";
 
 export interface Save_Data {
   chapter_index: number;
@@ -11,8 +12,8 @@ export interface Save_Data {
 }
 
 const Game = () => {
+  const navigate = useNavigate();
   const user = useContext(User);
-
   const [currentChapter, setCurrentChapter] = useState<number>(0);
   const [currentScene, setCurrentScene] = useState<number>(0);
   const [backgroundURL, setBackgroundURL] = useState<string>("");
@@ -28,6 +29,8 @@ const Game = () => {
   };
 
   useEffect(() => {
+    if (user.character === undefined) navigate("/Home");
+
     const saveData = {
       chapter_index: 0,
       scene_index: 0,

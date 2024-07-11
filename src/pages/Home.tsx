@@ -113,8 +113,8 @@ const Home: React.FC<Props_Home> = () => {
     }, 2000);
 
     setTimeout(() => {
-      //navigate("/play");
-    }, 5000);
+      navigate("/play");
+    }, 6000);
   };
 
   const handleButtonClick = (section: string) => {
@@ -127,11 +127,9 @@ const Home: React.FC<Props_Home> = () => {
 
   return (
     <div className="Home">
-      <div className={`wall-left ${startAnimation ? "slide-in" : ""}`} />
-      <div className={`wall-right ${startAnimation ? "slide-in" : ""}`} />
-      <div
-        className={`start-logo-container ${startAnimation ? "slide-in" : ""}`}
-      >
+      <div className={`wall-left ${startAnimation && "slide-in"}`} />
+      <div className={`wall-right ${startAnimation && "slide-in"}`} />
+      <div className={`start-logo-container ${startAnimation && "slide-in"}`}>
         <img
           className={"start-logo"}
           src="/assets/untitled_title.png"

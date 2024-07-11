@@ -422,7 +422,10 @@ canvas {
     height: 70%;
   }
 
-  .Home_Buttons,
+  .Home_Buttons {
+    margin-bottom: 10%;
+  }
+
   .phone-container,
   .wardrobe-tabs {
     margin-bottom: 2.5%;

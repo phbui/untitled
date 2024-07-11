@@ -307,7 +307,7 @@ export interface Props_Character {
   character?: Character;
 }
 
-const Character: React.FC<Props_Character> = ({ character }) => {
+export const Character: React.FC<Props_Character> = ({ character }) => {
   const defaultImage = "/assets/clothes/empty.png";
 
   return (

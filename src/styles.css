@@ -387,7 +387,7 @@ canvas {
 }
 
 .start-logo-container.slide-in {
-  transform: translateY(50%);
+  transform: translateY(10%);
 }
 
 .start-logo {
@@ -411,6 +411,66 @@ canvas {
   to {
     opacity: 1;
   }
+}
+
+.game {
+  height: 100%;
+  width: 100%;
+  background-color: pink;
+}
+
+.game-background {
+  height: 100%;
+  width: auto;
+}
+
+.game-buttons {
+  /* Add styles for the game buttons container */
+}
+
+.game-characters {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0% 20%;
+}
+
+.pc {
+  width: 120px;
+  margin-bottom: 10%;
+}
+
+.npc {
+  width: 120px;
+  margin-bottom: 10%;
+}
+
+.dialogue-container {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20%;
+}
+
+.dialogue {
+  width: 100%;
+  height: 250px;
+  padding: 10px;
+  text-align: left;
+  background-color: white;
+  z-index: 10;
+  margin-top: 20%;
+}
+
+.dialogue-options {
+  position: absolute;
+  z-index: 11;
 }
 
 @media only screen and (min-width: 600px) {
@@ -438,5 +498,22 @@ canvas {
 
   .phone-container > div {
     transform: scale(0.3);
+  }
+
+  .start-logo-container.slide-in {
+    transform: translateY(50%);
+  }
+
+  .game-characters {
+    padding: 0% 10%;
+  }
+
+  .dialogue-container {
+    padding: 10%;
+  }
+
+  .dialogue {
+    height: 150px;
+    margin-top: 40%;
   }
 }

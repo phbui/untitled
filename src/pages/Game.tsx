@@ -62,23 +62,29 @@ const Game = () => {
   }, [currentDialogueId]);
 
   const getNextChapter = () => {
-    if (story.length === currentChapter - 1)
+    if (story.length === currentChapter - 1) {
       setCurrentChapter((prev) => prev + 1);
+      setCurrentScene(0);
+      setCurrentDialogueId("start");
+    }
   };
 
   const getNextScene = () => {
     if (getChapter(currentChapter).scenes.length === currentScene - 1)
       getNextChapter();
-    else setCurrentScene((prev) => prev + 1);
+    else {
+      setCurrentScene((prev) => prev + 1);
+      setCurrentDialogueId("start");
+    }
   };
 
-  const summonOptions = () => {
+  const summonOptions = () =>
     setDialogueOptions(getDialogue(currentDialogueId).options);
-    setInOptions(true);
-  };
 
-  const chooseOption = (option: Dialogue_Option) =>
+  const chooseOption = (option: Dialogue_Option) => {
     setCurrentDialogueId(option.nextId);
+    setDialogueOptions([]);
+  };
 
   const getNextDialoge = () => {
     if (dialogue?.nextId) setCurrentDialogueId(dialogue?.nextId);
@@ -91,15 +97,19 @@ const Game = () => {
       <img className="game-background" src={backgroundURL} />
       <div className="game-buttons"></div>
       <div className="game-characters">
-        <Character character={user.character} />
+        <div className="pc">
+          <Character character={user.character} />
+        </div>
+        <div className="npc">
+          <Character character={user.character} />
+        </div>
       </div>
-      <div
-        className={`dialogue ${inOptions && "in-options"}`}
-        onClick={getNextDialoge}
-      >
-        {dialogue?.text}
+      <div className="dialogue-container">
+        <div className="dialogue" onClick={getNextDialoge}>
+          {dialogue?.characterName} : {dialogue?.text}
+        </div>
       </div>
-      <div className={`dialogue-options ${inOptions && "in-options"}`}>
+      <div className="dialogue-options">
         {dialogueOptions?.map((option: Dialogue_Option) => {
           return <div onClick={() => chooseOption(option)}>{option.text}</div>;
         })}

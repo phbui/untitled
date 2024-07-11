@@ -65,6 +65,12 @@ export const chapter1_scenes: Scene[] = [
     name: "encounter_jeff",
     background: "",
     dialogue: {
+      start: {
+        characterName: "unknown...",
+        characterId: "jeff",
+        text: "Hold up!",
+        nextId: "encounter_jeff_1",
+      },
       encounter_jeff_1: {
         characterName: "Jeff",
         characterId: "jeff",
@@ -98,6 +104,12 @@ export const chapter1_scenes: Scene[] = [
     name: "school_intro",
     background: "",
     dialogue: {
+      start: {
+        characterName: "Teacher",
+        characterId: "teacher",
+        text: "Settle down, y'all",
+        nextId: "school_intro_1",
+      },
       school_intro_1: {
         characterName: "Teacher",
         characterId: "teacher",

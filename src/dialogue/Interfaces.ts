@@ -15,6 +15,7 @@ export interface Dialogue {
 
 export interface Scene {
   name: string;
+  background: string;
   dialogue: { [key: string]: Dialogue };
 }
 

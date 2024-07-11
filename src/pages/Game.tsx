@@ -7,6 +7,7 @@ const Game = () => {
   const user = useContext(User);
   const [currentChapter, setCurrentChapter] = useState<number>(0);
   const [currentScene, setCurrentScene] = useState<number>(0);
+  const [backgroundURL, setBackgroundURL] = useState<string>("");
   const [currentDialogueId, setCurrentDialogueId] = useState<string>("start");
   const [dialogue, setDialogue] = useState<Dialogue>();
   const [dialogueOptions, setDialogueOptions] = useState<Dialogue_Option[]>();
@@ -19,6 +20,10 @@ const Game = () => {
   const getScene = (index: number) => {
     return getChapter(currentChapter).scenes[index];
   };
+
+  useEffect(() => {
+    setBackgroundURL(getScene(currentScene).background);
+  }, [currentScene]);
 
   const getDialogue = (id: string) => {
     return getScene(currentScene).dialogue[id];
@@ -49,17 +54,17 @@ const Game = () => {
   };
 
   const chooseOption = (option: Dialogue_Option) =>
-    setDialogue(getDialogue(option.nextId));
+    setCurrentDialogueId(option.nextId);
 
   const getNextDialoge = () => {
-    if (dialogue?.nextId) setDialogue(getDialogue(dialogue?.nextId));
+    if (dialogue?.nextId) setCurrentDialogueId(dialogue?.nextId);
     else if (dialogue?.options) summonOptions();
     else if (dialogue?.end) getNextScene();
   };
 
   return (
     <div className="game">
-      <img className="game-background" />
+      <img className="game-background" src={backgroundURL} />
       <div className="game-buttons"></div>
       <div className="game-characters"></div>
       <div

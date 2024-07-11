@@ -3,6 +3,7 @@ import { Chapter, Scene } from "./Interfaces";
 export const chapter1_scenes: Scene[] = [
   {
     name: "breakfast",
+    background: "",
     dialogue: {
       breakfast_0: {
         id: "breakfast_1",
@@ -70,6 +71,7 @@ export const chapter1_scenes: Scene[] = [
   },
   {
     name: "encounter_jeff",
+    background: "",
     dialogue: {
       encounter_jeff_1: {
         id: "encounter_jeff_1",
@@ -106,6 +108,7 @@ export const chapter1_scenes: Scene[] = [
   },
   {
     name: "school_intro",
+    background: "",
     dialogue: {
       school_intro_1: {
         id: "school_intro_1",

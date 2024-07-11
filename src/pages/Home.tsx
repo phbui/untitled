@@ -98,15 +98,23 @@ const Home: React.FC<Props_Home> = () => {
   const navigate = useNavigate();
   const [scanlinesToggled, setScanlinesToggled] = useState<boolean>(true);
   const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [startAnimation, setStartAnimation] = useState<boolean>(false);
+  const [startRender, setStartRender] = useState<boolean>(false);
 
   const startGame = () => {
+    setStartAnimation(true);
+
     setTimeout(() => {
       setScanlinesToggled(false);
     }, 1000);
 
     setTimeout(() => {
-      navigate("/play");
-    }, 3000);
+      setStartRender(true);
+    }, 2000);
+
+    setTimeout(() => {
+      //navigate("/play");
+    }, 5000);
   };
 
   const handleButtonClick = (section: string) => {
@@ -119,16 +127,23 @@ const Home: React.FC<Props_Home> = () => {
 
   return (
     <div className="Home">
-      <div className="wall-left" />
-      <div className="wall-right" />
-      <img
-        className="start-logo"
-        src="/assets/untitled_title.png"
-        alt="title"
-      />
-
+      <div className={`wall-left ${startAnimation ? "slide-in" : ""}`} />
+      <div className={`wall-right ${startAnimation ? "slide-in" : ""}`} />
+      <div
+        className={`start-logo-container ${startAnimation ? "slide-in" : ""}`}
+      >
+        <img
+          className={"start-logo"}
+          src="/assets/untitled_title.png"
+          alt="title"
+        />
+        <img
+          className={`dating-game-logo ${startRender ? "render" : ""}`}
+          src="/assets/dating-game-logo.png"
+          alt="title"
+        />
+      </div>
       {scanlinesToggled && <Scanlines />}
-
       <div
         className={`Home_Title_Container ${
           activeSection ? "slide-out" : "slide-in"
@@ -140,7 +155,6 @@ const Home: React.FC<Props_Home> = () => {
           alt="title"
         />
       </div>
-
       <div
         className={`Home_Buttons ${activeSection ? "slide-out" : "slide-in"}`}
       >
@@ -152,7 +166,6 @@ const Home: React.FC<Props_Home> = () => {
           />
         ))}
       </div>
-
       {sections.map((section) => (
         <Home_Section
           key={section.id}

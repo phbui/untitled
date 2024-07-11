@@ -4,7 +4,6 @@ export interface Dialogue_Option {
 }
 
 export interface Dialogue {
-  id: string;
   characterName: string;
   characterId: string;
   text: string;

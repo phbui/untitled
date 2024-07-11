@@ -2,16 +2,40 @@ import { useContext, useEffect, useState } from "react";
 import { User } from "../App";
 import { Chapter, Dialogue, Dialogue_Option } from "../dialogue/Interfaces";
 import { story } from "../dialogue/Chatpers";
+import { Character } from "../components/Creation";
+
+export interface Save_Data {
+  chapter_index: number;
+  scene_index: number;
+  dialogue_id: string;
+}
 
 const Game = () => {
   const user = useContext(User);
+
   const [currentChapter, setCurrentChapter] = useState<number>(0);
   const [currentScene, setCurrentScene] = useState<number>(0);
   const [backgroundURL, setBackgroundURL] = useState<string>("");
-  const [currentDialogueId, setCurrentDialogueId] = useState<string>("start");
+  const [currentDialogueId, setCurrentDialogueId] = useState<string>("");
   const [dialogue, setDialogue] = useState<Dialogue>();
   const [dialogueOptions, setDialogueOptions] = useState<Dialogue_Option[]>();
   const [inOptions, setInOptions] = useState<boolean>(false);
+
+  const parseSaveData = (saveData: Save_Data) => {
+    setCurrentChapter(saveData.chapter_index);
+    setCurrentScene(saveData.scene_index);
+    setCurrentDialogueId(saveData.dialogue_id);
+  };
+
+  useEffect(() => {
+    const saveData = {
+      chapter_index: 0,
+      scene_index: 0,
+      dialogue_id: "start",
+    };
+
+    parseSaveData(saveData);
+  }, []);
 
   const getChapter = (index: number) => {
     return story[index];
@@ -66,7 +90,9 @@ const Game = () => {
     <div className="game">
       <img className="game-background" src={backgroundURL} />
       <div className="game-buttons"></div>
-      <div className="game-characters"></div>
+      <div className="game-characters">
+        <Character character={user.character} />
+      </div>
       <div
         className={`dialogue ${inOptions && "in-options"}`}
         onClick={getNextDialoge}

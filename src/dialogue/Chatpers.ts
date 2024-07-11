@@ -5,15 +5,13 @@ export const chapter1_scenes: Scene[] = [
     name: "breakfast",
     background: "",
     dialogue: {
-      breakfast_0: {
-        id: "breakfast_1",
+      start: {
         characterName: "Anon",
         characterId: "Anon",
         text: "Today's going to be my first day at Untitled High, I can't wait :)",
         nextId: "breakfast_1",
       },
       breakfast_1: {
-        id: "breakfast_1",
         characterName: "Mom",
         characterId: "mom",
         text: "Good morning! Did you sleep well?",
@@ -23,21 +21,18 @@ export const chapter1_scenes: Scene[] = [
         ],
       },
       breakfast_2: {
-        id: "breakfast_2",
         characterName: "Mom",
         characterId: "mom",
         text: "That's good to hear! Let's have breakfast.",
         nextId: "breakfast_4",
       },
       breakfast_3: {
-        id: "breakfast_3",
         characterName: "Mom",
         characterId: "mom",
         text: "I'm sorry to hear that. Maybe a good breakfast will help.",
         nextId: "breakfast_4",
       },
       breakfast_4: {
-        id: "breakfast_4",
         characterName: "Mom",
         characterId: "mom",
         text: "What would you like to eat?",
@@ -47,21 +42,18 @@ export const chapter1_scenes: Scene[] = [
         ],
       },
       breakfast_5: {
-        id: "breakfast_5",
         characterName: "Mom",
         characterId: "mom",
         text: "Pancakes it is! I'll get them ready.",
         nextId: "breakfast_end",
       },
       breakfast_6: {
-        id: "breakfast_6",
         characterName: "Mom",
         characterId: "mom",
         text: "Eggs and bacon coming right up!",
         nextId: "breakfast_end",
       },
       breakfast_end: {
-        id: "breakfast_end",
         characterName: "Narrator",
         characterId: "narrator",
         text: "You enjoyed a lovely breakfast with your mom.",
@@ -74,7 +66,6 @@ export const chapter1_scenes: Scene[] = [
     background: "",
     dialogue: {
       encounter_jeff_1: {
-        id: "encounter_jeff_1",
         characterName: "Jeff",
         characterId: "jeff",
         text: "Hey there! Long time no see.",
@@ -84,21 +75,18 @@ export const chapter1_scenes: Scene[] = [
         ],
       },
       encounter_jeff_2: {
-        id: "encounter_jeff_2",
         characterName: "Jeff",
         characterId: "jeff",
         text: "I've been great, thanks for asking! How about you?",
         nextId: "encounter_jeff_4",
       },
       encounter_jeff_3: {
-        id: "encounter_jeff_3",
         characterName: "Jeff",
         characterId: "jeff",
         text: "You seem a bit off. Is everything okay?",
         nextId: "encounter_jeff_4",
       },
       encounter_jeff_4: {
-        id: "encounter_jeff_4",
         characterName: "Narrator",
         characterId: "narrator",
         text: "You and Jeff chat for a while before heading to class.",
@@ -111,7 +99,6 @@ export const chapter1_scenes: Scene[] = [
     background: "",
     dialogue: {
       school_intro_1: {
-        id: "school_intro_1",
         characterName: "Teacher",
         characterId: "teacher",
         text: "Welcome to the first day of school, everyone!",
@@ -121,21 +108,18 @@ export const chapter1_scenes: Scene[] = [
         ],
       },
       school_intro_2: {
-        id: "school_intro_2",
         characterName: "Teacher",
         characterId: "teacher",
         text: "I'm glad you're all here and ready to learn.",
         nextId: "school_intro_4",
       },
       school_intro_3: {
-        id: "school_intro_3",
         characterName: "Teacher",
         characterId: "teacher",
         text: "Please pay attention, this is important.",
         nextId: "school_intro_4",
       },
       school_intro_4: {
-        id: "school_intro_4",
         characterName: "Narrator",
         characterId: "narrator",
         text: "The first day of school continues with various introductions.",

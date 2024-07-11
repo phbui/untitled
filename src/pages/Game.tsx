@@ -20,7 +20,14 @@ const Game = () => {
   const [currentDialogueId, setCurrentDialogueId] = useState<string>("");
   const [dialogue, setDialogue] = useState<Dialogue>();
   const [dialogueOptions, setDialogueOptions] = useState<Dialogue_Option[]>();
-  const [inOptions, setInOptions] = useState<boolean>(false);
+
+  const saveGame = () => {
+    const saveData = {
+      chapter_index: currentChapter,
+      scene_index: currentScene,
+      dialogue_id: currentDialogueId,
+    };
+  };
 
   const parseSaveData = (saveData: Save_Data) => {
     setCurrentChapter(saveData.chapter_index);

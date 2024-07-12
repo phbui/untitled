@@ -27,8 +27,12 @@ const Typewriter: React.FC<Props_Typewriter> = ({ dialogue, getNext }) => {
         setIndex((prev) => prev + 1);
       }, 35); // Adjust typing speed here
       return () => clearTimeout(timeout);
-    } else if (dialogue?.next.dialog_options) getNext(dialogue?.next);
+    }
   }, [index, dialogue]);
+
+  useEffect(() => {
+    if (!isTyping() && dialogue?.next.dialog_options) getNext(dialogue?.next);
+  }, [index]);
 
   const handleClick = () => {
     if (isTyping()) {

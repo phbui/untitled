@@ -1,37 +1,41 @@
 import { useContext, useEffect, useState } from "react";
 import { User } from "../App";
-import { Chapter, Dialogue, Dialogue_Option } from "../dialogue/Interfaces";
-import { story } from "../dialogue/Chatpers";
+import {
+  Dialogue,
+  Dialogue_Next,
+  Dialogue_Option,
+} from "../components/dialogue/Interfaces";
+import { story } from "../components/dialogue/Story";
 import { Character } from "../components/Creation";
 import { useNavigate } from "react-router-dom";
 
 export interface Save_Data {
-  chapter_index: number;
-  scene_index: number;
+  chapter_id: string;
+  scene_id: string;
   dialogue_id: string;
 }
 
 const Game = () => {
   const navigate = useNavigate();
   const user = useContext(User);
-  const [currentChapter, setCurrentChapter] = useState<number>(0);
-  const [currentScene, setCurrentScene] = useState<number>(0);
+  const [currentChapterId, setCurrentChapterId] = useState<string>("");
+  const [currentSceneId, setCurrentSceneId] = useState<string>("");
   const [backgroundURL, setBackgroundURL] = useState<string>("");
   const [currentDialogueId, setCurrentDialogueId] = useState<string>("");
   const [dialogue, setDialogue] = useState<Dialogue>();
   const [dialogueOptions, setDialogueOptions] = useState<Dialogue_Option[]>();
 
   const saveGame = () => {
-    const saveData = {
-      chapter_index: currentChapter,
-      scene_index: currentScene,
+    const saveData: Save_Data = {
+      chapter_id: currentChapterId,
+      scene_id: currentSceneId,
       dialogue_id: currentDialogueId,
     };
   };
 
   const parseSaveData = (saveData: Save_Data) => {
-    setCurrentChapter(saveData.chapter_index);
-    setCurrentScene(saveData.scene_index);
+    setCurrentChapterId(saveData.chapter_id);
+    setCurrentSceneId(saveData.scene_id);
     setCurrentDialogueId(saveData.dialogue_id);
   };
 
@@ -39,67 +43,73 @@ const Game = () => {
     if (user.character === undefined) navigate("/Home");
 
     const saveData = {
-      chapter_index: 0,
-      scene_index: 0,
+      chapter_id: "start",
+      scene_id: "start",
       dialogue_id: "start",
     };
 
     parseSaveData(saveData);
   }, []);
 
-  const getChapter = (index: number) => {
-    return story[index];
+  const getChapter = (id: string) => {
+    return story[id];
   };
 
-  const getScene = (index: number) => {
-    return getChapter(currentChapter).scenes[index];
+  const getNextChapter = (next: Dialogue_Next) => {
+    if (next.chapter_id === undefined) return;
+
+    setCurrentChapterId(next.chapter_id);
+    getNextScene(next);
+  };
+
+  const getScene = (id: string) => {
+    return getChapter(currentChapterId).scenes[id];
+  };
+
+  const getNextScene = (next: Dialogue_Next) => {
+    if (next.scene_id === undefined) return;
+
+    setCurrentSceneId(next.scene_id);
+    getNextDialogue(next);
   };
 
   useEffect(() => {
-    setBackgroundURL(getScene(currentScene).background);
-  }, [currentScene]);
+    setBackgroundURL(getScene(currentSceneId).background);
+  }, [currentSceneId]);
 
   const getDialogue = (id: string) => {
-    return getScene(currentScene).dialogue[id];
+    return getScene(currentSceneId).dialogue[id];
   };
 
   const getCurrentDialogue = () => {
     setDialogue(getDialogue(currentDialogueId));
   };
 
+  const getNextDialogue = (next: Dialogue_Next) => {
+    if (next.dialoge_id === undefined) return;
+
+    setCurrentDialogueId(next.dialoge_id);
+  };
+
   useEffect(() => {
     getCurrentDialogue();
   }, [currentDialogueId]);
 
-  const getNextChapter = () => {
-    if (story.length === currentChapter - 1) {
-      setCurrentChapter((prev) => prev + 1);
-      setCurrentScene(0);
-      setCurrentDialogueId("start");
-    }
-  };
-
-  const getNextScene = () => {
-    if (getChapter(currentChapter).scenes.length === currentScene - 1)
-      getNextChapter();
-    else {
-      setCurrentScene((prev) => prev + 1);
-      setCurrentDialogueId("start");
-    }
-  };
-
   const summonOptions = () =>
-    setDialogueOptions(getDialogue(currentDialogueId).options);
+    setDialogueOptions(getDialogue(currentDialogueId).next.dialog_options);
 
   const chooseOption = (option: Dialogue_Option) => {
-    setCurrentDialogueId(option.nextId);
     setDialogueOptions([]);
+    getNext(option.next);
   };
 
-  const getNextDialoge = () => {
-    if (dialogue?.nextId) setCurrentDialogueId(dialogue?.nextId);
-    else if (dialogue?.options) summonOptions();
-    else if (dialogue?.end) getNextScene();
+  const getNext = (next: Dialogue_Next | undefined) => {
+    if (next === undefined) return;
+
+    if (next.chapter_id) getNextChapter(next);
+    else if (next.scene_id) getNextScene(next);
+    else if (next.dialog_options) summonOptions();
+    else if (next.dialoge_id) setCurrentDialogueId(next.dialoge_id);
   };
 
   return (
@@ -115,8 +125,8 @@ const Game = () => {
         </div>
       </div>
       <div className="dialogue-container">
-        <div className="dialogue" onClick={getNextDialoge}>
-          {dialogue?.characterName} : {dialogue?.text}
+        <div className="dialogue" onClick={() => getNext(dialogue?.next)}>
+          {dialogue?.character_name} : {dialogue?.text}
         </div>
       </div>
       <div className="dialogue-options">

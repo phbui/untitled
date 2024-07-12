@@ -1,24 +1,41 @@
+export interface Dialogue_Next {
+  dialoge_id?: string;
+  dialog_options?: Dialogue_Option[];
+  scene_id?: string;
+  chapter_id?: string;
+}
+
 export interface Dialogue_Option {
   text: string;
-  nextId: string;
+  next: Dialogue_Next;
 }
 
 export interface Dialogue {
-  characterName: string;
-  characterId: string;
+  character_name: string;
+  character_id: string;
   text: string;
-  nextId?: string;
-  options?: Dialogue_Option[];
-  end?: boolean;
+  next: Dialogue_Next;
+}
+
+export interface Dialogues {
+  [key: string]: Dialogue;
 }
 
 export interface Scene {
   name: string;
   background: string;
-  dialogue: { [key: string]: Dialogue };
+  dialogue: Dialogues;
+}
+
+export interface Scenes {
+  [key: string]: Scene;
 }
 
 export interface Chapter {
   name: string;
-  scenes: Scene[];
+  scenes: Scenes;
+}
+
+export interface Story {
+  [key: string]: Chapter;
 }

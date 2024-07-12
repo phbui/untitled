@@ -526,10 +526,11 @@ canvas {
 .cursor {
   display: inline-block;
   width: 10px;
-  height: 23px;
+  height: 16px;
   background-color: black;
   animation: blink-animation 0.5s steps(2, start) infinite;
   vertical-align: bottom;
+  transform: translateY(-2px);
 }
 
 .blink {
@@ -656,6 +657,6 @@ canvas {
 
   .dialogue p,
   .option p {
-    font-size: 12px;
+    font-size: 16px;
   }
 }

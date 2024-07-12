@@ -553,13 +553,14 @@ canvas {
   display: inline-block;
   width: 10px;
   height: 16px;
-  background-color: black;
+  background-color: rgb(218, 82, 122);
   animation: blink-animation 0.5s steps(2, start) infinite;
   vertical-align: bottom;
   transform: translateY(-2px);
 }
 
 .blink {
+  color: rgb(218, 82, 122);
   position: absolute;
   bottom: 15px;
   right: 20px;

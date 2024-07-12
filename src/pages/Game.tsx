@@ -141,6 +141,7 @@ const Game = () => {
         )}
       </div>
       <div className="dialogue-container">
+        <div>{NPC?.name}</div>
         <Typewriter dialogue={dialogue} getNext={getNext} />
         <div className="dialogue-options">
           {dialogueOptions?.map((option: Dialogue_Option) => {

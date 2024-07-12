@@ -8,6 +8,7 @@ import {
 import { story } from "../dialogue/Story";
 import { Character } from "../components/Creation";
 import { useNavigate } from "react-router-dom";
+import Typewriter from "../components/Typewriter";
 
 export interface Save_Data {
   chapter_id: string;
@@ -40,7 +41,7 @@ const Game = () => {
   };
 
   useEffect(() => {
-    if (user.character === undefined) navigate("/Home");
+    // if (user.character === undefined) navigate("/Home");
 
     const saveData = {
       chapter_id: "start",
@@ -110,6 +111,7 @@ const Game = () => {
 
   return (
     <div className="game">
+      <div className="halftone" />
       <img className="game-background" src={backgroundURL} />
       <div className="game-buttons"></div>
       <div className="game-characters">
@@ -121,11 +123,7 @@ const Game = () => {
         </div>
       </div>
       <div className="dialogue-container">
-        <div className="dialogue" onClick={() => getNext(dialogue?.next)}>
-          <p>
-            {dialogue?.character_name} : {dialogue?.text}
-          </p>
-        </div>
+        <Typewriter dialogue={dialogue} getNext={getNext} />
         <div className="dialogue-options">
           {dialogueOptions?.map((option: Dialogue_Option) => {
             return (

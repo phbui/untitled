@@ -4,7 +4,7 @@ const start_dialogues: Dialogues = {
   start: {
     character_name: "Anon",
     character_id: "Anon",
-    text: "Today's going to be my first day at Untitled High, I can't wait :)",
+    text: "...",
     next: { dialogue_id: "start_1" },
   },
   start_1: {
@@ -15,6 +15,8 @@ const start_dialogues: Dialogues = {
       dialog_options: [
         { text: "Yes, I did!", next: { dialogue_id: "start_2" } },
         { text: "No, not really.", next: { dialogue_id: "start_3" } },
+        { text: "Sure.", next: { dialogue_id: "start_2" } },
+        { text: "Frick yeah!", next: { dialogue_id: "start_2" } },
       ],
     },
   },

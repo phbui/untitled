@@ -496,7 +496,7 @@ canvas {
   justify-content: center;
   align-items: center;
   opacity: 0;
-  transition: opacity ease-in-out 0.25s;
+
   animation: new-character 0.5s forwards;
 }
 
@@ -515,6 +515,7 @@ canvas {
   height: auto;
   width: 360px;
   opacity: 0.5;
+  transition: opacity ease-in-out 0.25s;
 }
 
 .npc.active img {
@@ -609,6 +610,17 @@ canvas {
   border-radius: 10px;
   padding: 10px;
   cursor: pointer;
+  opacity: 0;
+  animation: spawn 0.25s forwards;
+}
+
+@keyframes spawn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .option p {

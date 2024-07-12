@@ -114,7 +114,7 @@ const Game = () => {
           <Character character={user.character} />
         </div>
         <div className="npc">
-          <Character character={user.character} />
+          <img src="/assets/characters/dude.png" />
         </div>
       </div>
       <div className="dialogue-container">

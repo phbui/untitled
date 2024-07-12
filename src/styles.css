@@ -483,8 +483,17 @@ canvas {
 }
 
 .npc {
+  height: 100%;
   width: 120px;
   margin-bottom: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.npc img {
+  height: auto;
+  width: 360px;
 }
 
 .dialogue-container {

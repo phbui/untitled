@@ -51,9 +51,7 @@ const Game = () => {
     parseSaveData(saveData);
   }, []);
 
-  const getChapter = (id: string) => {
-    return story[id];
-  };
+  const getChapter = (id: string) => story[id];
 
   const getNextChapter = (next: Dialogue_Next) => {
     if (next.chapter_id === undefined) return;
@@ -62,9 +60,7 @@ const Game = () => {
     getNextScene(next);
   };
 
-  const getScene = (id: string) => {
-    return getChapter(currentChapterId).scenes[id];
-  };
+  const getScene = (id: string) => getChapter(currentChapterId).scenes[id];
 
   const getNextScene = (next: Dialogue_Next) => {
     if (next.scene_id === undefined) return;
@@ -73,17 +69,9 @@ const Game = () => {
     getNextDialogue(next);
   };
 
-  useEffect(() => {
-    setBackgroundURL(getScene(currentSceneId).background);
-  }, [currentSceneId]);
+  const getDialogue = (id: string) => getScene(currentSceneId).dialogue[id];
 
-  const getDialogue = (id: string) => {
-    return getScene(currentSceneId).dialogue[id];
-  };
-
-  const getCurrentDialogue = () => {
-    setDialogue(getDialogue(currentDialogueId));
-  };
+  const getCurrentDialogue = () => setDialogue(getDialogue(currentDialogueId));
 
   const getNextDialogue = (next: Dialogue_Next) => {
     if (next.dialoge_id === undefined) return;
@@ -91,9 +79,17 @@ const Game = () => {
     setCurrentDialogueId(next.dialoge_id);
   };
 
+  const getInitialized = () =>
+    currentChapterId.length > 0 &&
+    currentSceneId.length > 0 &&
+    currentChapterId.length > 0;
+
   useEffect(() => {
-    getCurrentDialogue();
-  }, [currentDialogueId]);
+    if (getInitialized()) {
+      getCurrentDialogue();
+      setBackgroundURL(getScene(currentSceneId).background);
+    }
+  }, [currentDialogueId, currentSceneId, currentDialogueId]);
 
   const summonOptions = () =>
     setDialogueOptions(getDialogue(currentDialogueId).next.dialog_options);

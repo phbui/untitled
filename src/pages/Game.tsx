@@ -74,9 +74,9 @@ const Game = () => {
   const getCurrentDialogue = () => setDialogue(getDialogue(currentDialogueId));
 
   const getNextDialogue = (next: Dialogue_Next) => {
-    if (next.dialoge_id === undefined) return;
+    if (next.dialogue_id === undefined) return;
 
-    setCurrentDialogueId(next.dialoge_id);
+    setCurrentDialogueId(next.dialogue_id);
   };
 
   const getInitialized = () =>
@@ -105,7 +105,7 @@ const Game = () => {
     if (next.chapter_id) getNextChapter(next);
     else if (next.scene_id) getNextScene(next);
     else if (next.dialog_options) summonOptions();
-    else if (next.dialoge_id) setCurrentDialogueId(next.dialoge_id);
+    else if (next.dialogue_id) setCurrentDialogueId(next.dialogue_id);
   };
 
   return (
@@ -122,13 +122,19 @@ const Game = () => {
       </div>
       <div className="dialogue-container">
         <div className="dialogue" onClick={() => getNext(dialogue?.next)}>
-          {dialogue?.character_name} : {dialogue?.text}
+          <p>
+            {dialogue?.character_name} : {dialogue?.text}
+          </p>
         </div>
-      </div>
-      <div className="dialogue-options">
-        {dialogueOptions?.map((option: Dialogue_Option) => {
-          return <div onClick={() => chooseOption(option)}>{option.text}</div>;
-        })}
+        <div className="dialogue-options">
+          {dialogueOptions?.map((option: Dialogue_Option) => {
+            return (
+              <div className="option" onClick={() => chooseOption(option)}>
+                <p>{option.text}</p>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

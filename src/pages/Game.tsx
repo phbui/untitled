@@ -17,7 +17,7 @@ const Game = () => {
   const user = useContext(User);
   const [currentChapterId, setCurrentChapterId] = useState<string>("");
   const [currentSceneId, setCurrentSceneId] = useState<string>("");
-  const [backgroundURL, setBackgroundURL] = useState<string>("");
+  const [backgroundURL, setBackgroundURL] = useState<string>();
   const [currentDialogueId, setCurrentDialogueId] = useState<string>("");
   const [dialogue, setDialogue] = useState<Dialogue>();
   const [dialogueOptions, setDialogueOptions] = useState<Dialogue_Option[]>();
@@ -107,7 +107,7 @@ const Game = () => {
 
   return (
     <div className="game">
-      <img className="game-background" src={backgroundURL} />
+      {backgroundURL && <img className="game-background" src={backgroundURL} />}
       <div className="game-buttons"></div>
       <div className="game-characters">
         <div className="pc">

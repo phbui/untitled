@@ -4,8 +4,8 @@ import {
   Dialogue,
   Dialogue_Next,
   Dialogue_Option,
-} from "../components/dialogue/Interfaces";
-import { story } from "../components/dialogue/Story";
+} from "../dialogue/Interfaces";
+import { story } from "../dialogue/Story";
 import { Character } from "../components/Creation";
 import { useNavigate } from "react-router-dom";
 

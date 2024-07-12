@@ -2,13 +2,11 @@ import { Chapter, Dialogues, Scenes, Story } from "./Interfaces";
 
 const start_dialogues: Dialogues = {
   start: {
-    character_name: "Anon",
-    character_id: "Anon",
+    character_id: "anon",
     text: "...",
     next: { dialogue_id: "start_1" },
   },
   start_1: {
-    character_name: "Mom",
     character_id: "mom",
     text: "Good morning! Did you sleep well?",
     next: {
@@ -21,19 +19,16 @@ const start_dialogues: Dialogues = {
     },
   },
   start_2: {
-    character_name: "Mom",
     character_id: "mom",
     text: "That's good to hear! Let's have breakfast.",
     next: { dialogue_id: "start_4" },
   },
   start_3: {
-    character_name: "Mom",
     character_id: "mom",
     text: "I'm sorry to hear that. Maybe a good breakfast will help.",
     next: { dialogue_id: "start_4" },
   },
   start_4: {
-    character_name: "Mom",
     character_id: "mom",
     text: "What would you like to eat?",
     next: {
@@ -44,7 +39,6 @@ const start_dialogues: Dialogues = {
     },
   },
   start_5: {
-    character_name: "Mom",
     character_id: "mom",
     text: "Pancakes it is! I'll get them ready.",
     next: {
@@ -53,7 +47,6 @@ const start_dialogues: Dialogues = {
     },
   },
   start_6: {
-    character_name: "Mom",
     character_id: "mom",
     text: "Eggs and bacon coming right up!",
     next: {
@@ -65,13 +58,11 @@ const start_dialogues: Dialogues = {
 
 const jeff_encounter_dialogues: Dialogues = {
   start: {
-    character_name: "unknown...",
     character_id: "jeff",
     text: "Hold up!",
     next: { dialogue_id: "encounter_jeff_1" },
   },
   encounter_jeff_1: {
-    character_name: "Jeff",
     character_id: "jeff",
     text: "Hey there! Long time no see.",
     next: {
@@ -85,19 +76,16 @@ const jeff_encounter_dialogues: Dialogues = {
     },
   },
   encounter_jeff_2: {
-    character_name: "Jeff",
     character_id: "jeff",
     text: "I've been great, thanks for asking! How about you?",
     next: { dialogue_id: "encounter_jeff_4" },
   },
   encounter_jeff_3: {
-    character_name: "Jeff",
     character_id: "jeff",
     text: "You seem a bit off. Is everything okay?",
     next: { dialogue_id: "encounter_jeff_4" },
   },
   encounter_jeff_4: {
-    character_name: "Narrator",
     character_id: "narrator",
     text: "You and Jeff chat for a while before heading to class.",
     next: {
@@ -109,13 +97,11 @@ const jeff_encounter_dialogues: Dialogues = {
 
 const classroom_dialogues: Dialogues = {
   start: {
-    character_name: "Teacher",
     character_id: "teacher",
     text: "Settle down, y'all",
     next: { dialogue_id: "school_intro_1" },
   },
   school_intro_1: {
-    character_name: "Teacher",
     character_id: "teacher",
     text: "Welcome to the first day of school, everyone!",
     next: {
@@ -129,19 +115,16 @@ const classroom_dialogues: Dialogues = {
     },
   },
   school_intro_2: {
-    character_name: "Teacher",
     character_id: "teacher",
     text: "I'm glad you're all here and ready to learn.",
     next: { dialogue_id: "school_intro_4" },
   },
   school_intro_3: {
-    character_name: "Teacher",
     character_id: "teacher",
     text: "Please pay attention, this is important.",
     next: { dialogue_id: "school_intro_4" },
   },
   school_intro_4: {
-    character_name: "Narrator",
     character_id: "narrator",
     text: "The first day of school continues with various introductions.",
     next: { chapter_id: "test", scene_id: "test", dialogue_id: "test" },
@@ -173,8 +156,7 @@ const day_one: Chapter = {
 
 const test_dialogues: Dialogues = {
   test: {
-    character_name: "Anon",
-    character_id: "Anon",
+    character_id: "anon",
     text: "Test",
     next: {},
   },

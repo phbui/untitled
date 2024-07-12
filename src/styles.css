@@ -446,7 +446,7 @@ canvas {
   background-size: 1rem 2rem; /* Increased width to add horizontal space */
   background-repeat: repeat;
   animation: move-background 12s linear infinite;
-  opacity: 0.05;
+  opacity: 0.085;
 }
 
 @keyframes move-background {
@@ -480,6 +480,12 @@ canvas {
 .pc {
   width: 120px;
   margin-bottom: 10%;
+  transition: opacity ease-in-out 0.25s;
+  opacity: 0.5;
+}
+
+.pc.active {
+  opacity: 1;
 }
 
 .npc {
@@ -489,11 +495,30 @@ canvas {
   display: flex;
   justify-content: center;
   align-items: center;
+  opacity: 0;
+  transition: opacity ease-in-out 0.25s;
+  animation: new-character 0.5s forwards;
+}
+
+@keyframes new-character {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 .npc img {
   height: auto;
   width: 360px;
+  opacity: 0.5;
+}
+
+.npc.active img {
+  opacity: 1;
 }
 
 .dialogue-container {

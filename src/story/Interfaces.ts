@@ -11,7 +11,6 @@ export interface Dialogue_Option {
 }
 
 export interface Dialogue {
-  character_name: string;
   character_id: string;
   text: string;
   next: Dialogue_Next;

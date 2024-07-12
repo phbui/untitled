@@ -5,6 +5,7 @@ import { story } from "../story/Story";
 import { Character } from "../components/Creation";
 import { useNavigate } from "react-router-dom";
 import Typewriter from "../components/Typewriter";
+import { characters, Game_Character } from "../story/Characters";
 
 export interface Save_Data {
   chapter_id: string;
@@ -21,6 +22,8 @@ const Game = () => {
   const [currentDialogueId, setCurrentDialogueId] = useState<string>("");
   const [dialogue, setDialogue] = useState<Dialogue>();
   const [dialogueOptions, setDialogueOptions] = useState<Dialogue_Option[]>();
+  const [NPC, setNPC] = useState<Game_Character>();
+  const [playerTurn, setPlayerTurn] = useState<boolean>(true);
 
   const saveGame = () => {
     const saveData: Save_Data = {
@@ -47,6 +50,8 @@ const Game = () => {
 
     parseSaveData(saveData);
   }, []);
+
+  const getNPC = (id: string) => characters[id];
 
   const getChapter = (id: string) => story[id];
 
@@ -81,17 +86,28 @@ const Game = () => {
     currentSceneId.length > 0 &&
     currentChapterId.length > 0;
 
+  const prepCharacters = (dialogue_id: string) => {
+    const chapter_id: string = getDialogue(dialogue_id).character_id;
+
+    setPlayerTurn(chapter_id === "anon");
+    setNPC(getNPC(chapter_id) ?? getNPC(chapter_id));
+  };
+
   useEffect(() => {
     if (getInitialized()) {
       getCurrentDialogue();
       setBackgroundURL(getScene(currentSceneId).background);
+      prepCharacters(currentDialogueId);
     }
   }, [currentDialogueId, currentSceneId, currentDialogueId]);
 
-  const summonOptions = () =>
+  const summonOptions = () => {
     setDialogueOptions(getDialogue(currentDialogueId).next.dialog_options);
+    setPlayerTurn(true);
+  };
 
   const chooseOption = (option: Dialogue_Option) => {
+    setPlayerTurn(false);
     setDialogueOptions([]);
     getNext(option.next);
   };
@@ -105,24 +121,35 @@ const Game = () => {
     else if (next.dialogue_id) setCurrentDialogueId(next.dialogue_id);
   };
 
+  useEffect(() => {});
+
   return (
     <div className="game">
       {backgroundURL && <img className="game-background" src={backgroundURL} />}
       <div className="game-buttons"></div>
       <div className="game-characters">
-        <div className="pc">
+        <div className={`pc ${playerTurn ? "active" : ""}`}>
           <Character character={user.character} />
         </div>
-        <div className="npc">
-          <img src="/assets/characters/dude.png" />
-        </div>
+        {NPC && (
+          <div
+            className={`npc ${playerTurn ? "" : "active"}`}
+            key={dialogue?.character_id}
+          >
+            <img src={NPC.url} />
+          </div>
+        )}
       </div>
       <div className="dialogue-container">
         <Typewriter dialogue={dialogue} getNext={getNext} />
         <div className="dialogue-options">
           {dialogueOptions?.map((option: Dialogue_Option) => {
             return (
-              <div className="option" onClick={() => chooseOption(option)}>
+              <div
+                key={option.text}
+                className="option"
+                onClick={() => chooseOption(option)}
+              >
                 <div className="halftone" />
                 <p>{option.text}</p>
               </div>

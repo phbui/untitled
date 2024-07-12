@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Dialogue, Dialogue_Next } from "../dialogue/Interfaces";
+import { Dialogue, Dialogue_Next } from "../story/Interfaces";
 
 interface Props_Typewriter {
   dialogue?: Dialogue;
@@ -45,6 +45,7 @@ const Typewriter: React.FC<Props_Typewriter> = ({ dialogue, getNext }) => {
 
   return (
     <div className="dialogue" onClick={handleClick}>
+      <div className="halftone" />
       <p>
         {displayedText}
         {<span className="cursor" />}

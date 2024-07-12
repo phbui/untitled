@@ -1,11 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { User } from "../App";
-import {
-  Dialogue,
-  Dialogue_Next,
-  Dialogue_Option,
-} from "../dialogue/Interfaces";
-import { story } from "../dialogue/Story";
+import { Dialogue, Dialogue_Next, Dialogue_Option } from "../story/Interfaces";
+import { story } from "../story/Story";
 import { Character } from "../components/Creation";
 import { useNavigate } from "react-router-dom";
 import Typewriter from "../components/Typewriter";
@@ -41,7 +37,7 @@ const Game = () => {
   };
 
   useEffect(() => {
-    // if (user.character === undefined) navigate("/Home");
+    // if (user.character === undefined) navigate("/Home"); // uncomment for prod
 
     const saveData = {
       chapter_id: "start",
@@ -111,7 +107,6 @@ const Game = () => {
 
   return (
     <div className="game">
-      <div className="halftone" />
       <img className="game-background" src={backgroundURL} />
       <div className="game-buttons"></div>
       <div className="game-characters">
@@ -128,6 +123,7 @@ const Game = () => {
           {dialogueOptions?.map((option: Dialogue_Option) => {
             return (
               <div className="option" onClick={() => chooseOption(option)}>
+                <div className="halftone" />
                 <p>{option.text}</p>
               </div>
             );

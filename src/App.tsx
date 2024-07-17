@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Game from "./pages/Game";
 import Home from "./pages/Home";
 import UserContext from "./UserContext";
+import Editor from "./pages/Editor";
 
 export const User = createContext(
   {} as unknown as ReturnType<typeof UserContext>
@@ -17,6 +18,7 @@ const App: React.FC = () => {
         <div className="App">
           <Routes>
             <Route path="/play" element={<Game />} />
+            <Route path="/edit" element={<Editor />} />
             <Route path="/*" element={<Home />} />
           </Routes>
         </div>

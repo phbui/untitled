@@ -667,6 +667,11 @@ canvas {
   padding: 10px;
 }
 
+.block-dialogue button.active {
+  background-color: #007bff;
+  color: white;
+}
+
 @media only screen and (min-width: 600px) {
 }
 

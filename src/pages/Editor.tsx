@@ -41,7 +41,6 @@ const Dialogue_Next_Block: React.FC<{
   next: Dialogue_Next;
   onNextChange: (next: Dialogue_Next) => void;
 }> = ({ dialogueId, next, onNextChange }) => {
-  const [isCollapsed, setIsCollapsed] = useState(true);
   const [nextType, setNextType] = useState<
     "chapter" | "scene" | "dialogue" | "choice"
   >();
@@ -66,20 +65,13 @@ const Dialogue_Next_Block: React.FC<{
   const clearNextFields = (
     type: "chapter" | "scene" | "dialogue" | "choice"
   ) => {
-    let clearedNext: Dialogue_Next = {};
-    if (type === "chapter") {
-      clearedNext = {
-        chapter_id: next.chapter_id,
-        scene_id: next.scene_id,
-        dialogue_id: next.dialogue_id,
-      };
-    } else if (type === "scene") {
-      clearedNext = { scene_id: next.scene_id, dialogue_id: next.dialogue_id };
-    } else if (type === "dialogue") {
-      clearedNext = { dialogue_id: next.dialogue_id };
-    } else if (type === "choice") {
-      clearedNext = { dialog_options: next.dialog_options || [] };
-    }
+    let clearedNext: Dialogue_Next = {
+      chapter_id: "",
+      scene_id: "",
+      dialogue_id: "",
+      dialog_options: [],
+    };
+
     onNextChange(clearedNext);
     setNextType(type);
   };
@@ -121,166 +113,170 @@ const Dialogue_Next_Block: React.FC<{
 
   return (
     <div className="block-next">
-      <h5
-        onClick={() => setIsCollapsed(!isCollapsed)}
-        style={{ cursor: "pointer" }}
-      >
+      <h5 style={{ cursor: "pointer" }}>
         Next Options for Dialogue: {dialogueId}
       </h5>
-      {!isCollapsed && (
-        <div>
-          <button onClick={() => clearNextFields("chapter")}>
-            Next Chapter?
-          </button>
-          <button onClick={() => clearNextFields("scene")}>Next Scene?</button>
-          <button onClick={() => clearNextFields("dialogue")}>
-            Next Dialogue?
-          </button>
-          <button onClick={() => clearNextFields("choice")}>
-            Next Choice?
-          </button>
-          <br />
-          {nextType === "chapter" && (
-            <>
-              <label>
-                Next Chapter ID:
-                <input
-                  type="text"
-                  value={next.chapter_id || ""}
-                  onChange={(e) =>
-                    handleNextChange("chapter_id", e.target.value)
-                  }
-                />
-              </label>
-              <br />
-              <label>
-                Next Scene ID:
-                <input
-                  type="text"
-                  value={next.scene_id || ""}
-                  onChange={(e) => handleNextChange("scene_id", e.target.value)}
-                />
-              </label>
-              <br />
-              <label>
-                Next Dialogue ID:
-                <input
-                  type="text"
-                  value={next.dialogue_id || ""}
-                  onChange={(e) =>
-                    handleNextChange("dialogue_id", e.target.value)
-                  }
-                />
-              </label>
-            </>
-          )}
-          {nextType === "scene" && (
-            <>
-              <label>
-                Next Scene ID:
-                <input
-                  type="text"
-                  value={next.scene_id || ""}
-                  onChange={(e) => handleNextChange("scene_id", e.target.value)}
-                />
-              </label>
-              <br />
-              <label>
-                Next Dialogue ID:
-                <input
-                  type="text"
-                  value={next.dialogue_id || ""}
-                  onChange={(e) =>
-                    handleNextChange("dialogue_id", e.target.value)
-                  }
-                />
-              </label>
-            </>
-          )}
-          {nextType === "dialogue" && (
-            <>
-              <label>
-                Next Dialogue ID:
-                <input
-                  type="text"
-                  value={next.dialogue_id || ""}
-                  onChange={(e) =>
-                    handleNextChange("dialogue_id", e.target.value)
-                  }
-                />
-              </label>
-            </>
-          )}
-          {nextType === "choice" && (
-            <>
-              {next.dialog_options?.map((option, index) => (
-                <div key={index} style={{ marginBottom: "10px" }}>
-                  <label>
-                    Option Text:
-                    <input
-                      type="text"
-                      value={option.text}
-                      onChange={(e) =>
-                        handleOptionChange(index, "text", e.target.value)
-                      }
-                    />
-                  </label>
-                  <br />
-                  <label>
-                    Next Dialogue ID:
-                    <input
-                      type="text"
-                      value={option.next.dialogue_id || ""}
-                      onChange={(e) =>
-                        handleNextOptionChange(
-                          index,
-                          "dialogue_id",
-                          e.target.value
-                        )
-                      }
-                    />
-                  </label>
-                  <br />
-                  <label>
-                    Next Scene ID:
-                    <input
-                      type="text"
-                      value={option.next.scene_id || ""}
-                      onChange={(e) =>
-                        handleNextOptionChange(
-                          index,
-                          "scene_id",
-                          e.target.value
-                        )
-                      }
-                    />
-                  </label>
-                  <br />
-                  <label>
-                    Next Chapter ID:
-                    <input
-                      type="text"
-                      value={option.next.chapter_id || ""}
-                      onChange={(e) =>
-                        handleNextOptionChange(
-                          index,
-                          "chapter_id",
-                          e.target.value
-                        )
-                      }
-                    />
-                  </label>
-                  <br />
-                  <button onClick={() => handleRemoveOption(index)}>
-                    Remove Option
-                  </button>
-                </div>
-              ))}
-              <button onClick={handleAddOption}>Add Option</button>
-            </>
-          )}
-        </div>
-      )}
+
+      <div>
+        <button
+          onClick={() => clearNextFields("chapter")}
+          className={nextType === "chapter" ? "active" : ""}
+        >
+          Next Chapter?
+        </button>
+        <button
+          onClick={() => clearNextFields("scene")}
+          className={nextType === "scene" ? "active" : ""}
+        >
+          Next Scene?
+        </button>
+        <button
+          onClick={() => clearNextFields("dialogue")}
+          className={nextType === "dialogue" ? "active" : ""}
+        >
+          Next Dialogue?
+        </button>
+        <button
+          onClick={() => clearNextFields("choice")}
+          className={nextType === "choice" ? "active" : ""}
+        >
+          Next Choice?
+        </button>
+        <br />
+        {nextType === "chapter" && (
+          <>
+            <label>
+              Next Chapter ID:
+              <input
+                type="text"
+                value={next.chapter_id || ""}
+                onChange={(e) => handleNextChange("chapter_id", e.target.value)}
+              />
+            </label>
+            <br />
+            <label>
+              Next Scene ID:
+              <input
+                type="text"
+                value={next.scene_id || ""}
+                onChange={(e) => handleNextChange("scene_id", e.target.value)}
+              />
+            </label>
+            <br />
+            <label>
+              Next Dialogue ID:
+              <input
+                type="text"
+                value={next.dialogue_id || ""}
+                onChange={(e) =>
+                  handleNextChange("dialogue_id", e.target.value)
+                }
+              />
+            </label>
+          </>
+        )}
+        {nextType === "scene" && (
+          <>
+            <label>
+              Next Scene ID:
+              <input
+                type="text"
+                value={next.scene_id || ""}
+                onChange={(e) => handleNextChange("scene_id", e.target.value)}
+              />
+            </label>
+            <br />
+            <label>
+              Next Dialogue ID:
+              <input
+                type="text"
+                value={next.dialogue_id || ""}
+                onChange={(e) =>
+                  handleNextChange("dialogue_id", e.target.value)
+                }
+              />
+            </label>
+          </>
+        )}
+        {nextType === "dialogue" && (
+          <>
+            <label>
+              Next Dialogue ID:
+              <input
+                type="text"
+                value={next.dialogue_id || ""}
+                onChange={(e) =>
+                  handleNextChange("dialogue_id", e.target.value)
+                }
+              />
+            </label>
+          </>
+        )}
+        {nextType === "choice" && (
+          <>
+            {next.dialog_options?.map((option, index) => (
+              <div key={index} style={{ marginBottom: "10px" }}>
+                <label>
+                  Option Text:
+                  <input
+                    type="text"
+                    value={option.text}
+                    onChange={(e) =>
+                      handleOptionChange(index, "text", e.target.value)
+                    }
+                  />
+                </label>
+                <br />
+                <label>
+                  Next Dialogue ID:
+                  <input
+                    type="text"
+                    value={option.next.dialogue_id || ""}
+                    onChange={(e) =>
+                      handleNextOptionChange(
+                        index,
+                        "dialogue_id",
+                        e.target.value
+                      )
+                    }
+                  />
+                </label>
+                <br />
+                <label>
+                  Next Scene ID:
+                  <input
+                    type="text"
+                    value={option.next.scene_id || ""}
+                    onChange={(e) =>
+                      handleNextOptionChange(index, "scene_id", e.target.value)
+                    }
+                  />
+                </label>
+                <br />
+                <label>
+                  Next Chapter ID:
+                  <input
+                    type="text"
+                    value={option.next.chapter_id || ""}
+                    onChange={(e) =>
+                      handleNextOptionChange(
+                        index,
+                        "chapter_id",
+                        e.target.value
+                      )
+                    }
+                  />
+                </label>
+                <br />
+                <button onClick={() => handleRemoveOption(index)}>
+                  Remove Option
+                </button>
+              </div>
+            ))}
+            <button onClick={handleAddOption}>Add Option</button>
+          </>
+        )}
+      </div>
     </div>
   );
 };

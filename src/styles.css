@@ -649,6 +649,9 @@ canvas {
   flex-direction: row;
   margin: 10px;
   padding: 10px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 95%;
 }
 
 .block-scene {
@@ -657,6 +660,9 @@ canvas {
   flex-direction: column;
   margin: 10px;
   padding: 10px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 100%;
 }
 
 .block-dialogue {
@@ -665,11 +671,42 @@ canvas {
   flex-direction: column;
   margin: 10px;
   padding: 10px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 100%;
 }
 
 .block-dialogue button.active {
   background-color: #007bff;
   color: white;
+}
+
+.editor-blocks {
+  height: 100%;
+  width: 60%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.editor-preview {
+  height: 100%;
+  width: 40%;
+}
+
+.editor-content {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.block-dialogue-container {
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 @media only screen and (min-width: 600px) {

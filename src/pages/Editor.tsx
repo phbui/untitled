@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
-import { Block_Chapter } from "../components/blocks/Chapter_Block";
+import { Block_Chapter } from "../components/blocks/Chapter";
 import Preview from "../components/Preview";
 import { Story, Scene } from "../story/Interfaces";
 
@@ -33,7 +33,7 @@ const updateStory = async (story: Story): Promise<void> => {
 
 const Editor = () => {
   const [story, setStory] = useState<Story | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const [currentChapterId, setCurrentChapterId] = useState<string>("");
   const [currentSceneId, setCurrentSceneId] = useState<string>("");
   const [currentDialogueId, setCurrentDialogueId] = useState<string>("");
@@ -108,13 +108,29 @@ const Editor = () => {
   };
 
   const handleItemClick = (
-    chapterId: string,
-    sceneId?: string,
-    dialogueId?: string
+    event: React.MouseEvent,
+    input: {
+      chapterId?: string;
+      sceneId?: string;
+      dialogueId?: string;
+    }
   ) => {
-    setCurrentChapterId(chapterId);
-    if (sceneId) setCurrentSceneId(sceneId);
-    if (dialogueId) setCurrentDialogueId(dialogueId);
+    event.stopPropagation();
+
+    if (input.chapterId) {
+      setCurrentChapterId(input.chapterId);
+      setCurrentSceneId("");
+      setCurrentDialogueId("");
+    }
+
+    if (input.sceneId) {
+      setCurrentSceneId(input.sceneId);
+      setCurrentDialogueId("");
+    }
+
+    console.log(input.dialogueId);
+
+    if (input.dialogueId) setCurrentDialogueId(input.dialogueId);
   };
 
   if (loading) {

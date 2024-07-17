@@ -1,4 +1,6 @@
-import { Scene } from "../../story/Interfaces";
+import { useState } from "react";
+import { Scene, Dialogue, Dialogue_Next } from "../../story/Interfaces";
+import { Dialogue_Block } from "./Dialogue";
 
 export const Block_Scene: React.FC<{
   chapterId: string;
@@ -11,6 +13,14 @@ export const Block_Scene: React.FC<{
     sceneId: string,
     dialogueId: string
   ) => void;
+  onItemClick: (
+    event: React.MouseEvent,
+    input: {
+      chapterId?: string;
+      sceneId?: string;
+      dialogueId?: string;
+    }
+  ) => void;
 }> = ({
   chapterId,
   sceneId,
@@ -18,6 +28,7 @@ export const Block_Scene: React.FC<{
   onRemove,
   onSceneChange,
   onAddDialogue,
+  onItemClick,
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
 
@@ -56,9 +67,15 @@ export const Block_Scene: React.FC<{
   };
 
   return (
-    <div className="block-scene">
+    <div
+      className="block-scene"
+      onClick={(e) => onItemClick(e, { sceneId: sceneId })}
+    >
       <h3
-        onClick={() => setIsCollapsed(!isCollapsed)}
+        onClick={(e) => {
+          if (!isCollapsed) e.stopPropagation();
+          setIsCollapsed(!isCollapsed);
+        }}
         style={{ cursor: "pointer" }}
       >
         {sceneId}
@@ -74,21 +91,24 @@ export const Block_Scene: React.FC<{
             />
           </label>
           <br />
-          {Object.entries(scene.dialogue)
-            .sort(([a], [b]) => {
-              if (a === "start") return -1;
-              if (b === "start") return 1;
-              return a.localeCompare(b);
-            })
-            .map(([dialogueId, dialogue]) => (
-              <Dialogue_Block
-                key={dialogueId}
-                dialogueId={dialogueId}
-                dialogue={dialogue}
-                onChange={handleDialogueChange}
-                onNextChange={handleNextChange}
-              />
-            ))}
+          <div className="block-dialogue-container">
+            {Object.entries(scene.dialogue)
+              .sort(([a], [b]) => {
+                if (a === "start") return -1;
+                if (b === "start") return 1;
+                return a.localeCompare(b);
+              })
+              .map(([dialogueId, dialogue]) => (
+                <Dialogue_Block
+                  key={dialogueId}
+                  dialogueId={dialogueId}
+                  dialogue={dialogue}
+                  onChange={handleDialogueChange}
+                  onNextChange={handleNextChange}
+                  onItemClick={onItemClick}
+                />
+              ))}
+          </div>
           <button onClick={handleAddDialogue}>Add Dialogue</button>
           <button onClick={onRemove}>Remove Scene</button>
         </div>

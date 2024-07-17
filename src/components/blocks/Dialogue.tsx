@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { Dialogue, Dialogue_Next } from "../../story/Interfaces";
 import { Dialogue_Next_Block } from "./Dialogue_Next_Block";
 
 export const Dialogue_Block: React.FC<{
@@ -5,17 +7,33 @@ export const Dialogue_Block: React.FC<{
   dialogue: Dialogue;
   onChange: (dialogueId: string, field: keyof Dialogue, value: string) => void;
   onNextChange: (dialogueId: string, next: Dialogue_Next) => void;
-}> = ({ dialogueId, dialogue, onChange, onNextChange }) => {
+  onItemClick: (
+    event: React.MouseEvent,
+    input: {
+      chapterId?: string;
+      sceneId?: string;
+      dialogueId?: string;
+    }
+  ) => void;
+}> = ({ dialogueId, dialogue, onChange, onNextChange, onItemClick }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
 
   return (
-    <div className="block-dialogue">
-      <h4
-        onClick={() => setIsCollapsed(!isCollapsed)}
-        style={{ cursor: "pointer" }}
+    <>
+      <div
+        className="block-dialogue"
+        onClick={(e) => onItemClick(e, { dialogueId: dialogueId })}
       >
-        Dialogue: {dialogueId}
-      </h4>
+        <h4
+          onClick={(e) => {
+            if (!isCollapsed) e.stopPropagation();
+            setIsCollapsed(!isCollapsed);
+          }}
+          style={{ cursor: "pointer" }}
+        >
+          Dialogue: {dialogueId}
+        </h4>
+      </div>
       {!isCollapsed && (
         <div>
           <label>
@@ -45,6 +63,6 @@ export const Dialogue_Block: React.FC<{
           />
         </div>
       )}
-    </div>
+    </>
   );
 };

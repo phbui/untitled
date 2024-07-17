@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Chapter, Scene } from "../../story/Interfaces";
-import { Block_Scene } from "./Scene_Block";
+import { Block_Scene } from "./Scene";
 
 export const Block_Chapter: React.FC<{
   chapterId: string;
@@ -13,6 +13,14 @@ export const Block_Chapter: React.FC<{
     sceneId: string,
     dialogueId: string
   ) => void;
+  onItemClick: (
+    event: React.MouseEvent,
+    input: {
+      chapterId?: string;
+      sceneId?: string;
+      dialogueId?: string;
+    }
+  ) => void;
 }> = ({
   chapterId,
   chapter,
@@ -20,6 +28,7 @@ export const Block_Chapter: React.FC<{
   onRemoveScene,
   onSceneChange,
   onAddDialogue,
+  onItemClick,
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
 
@@ -31,9 +40,15 @@ export const Block_Chapter: React.FC<{
   };
 
   return (
-    <div className="block-chapter">
+    <div
+      className="block-chapter"
+      onClick={(e) => onItemClick(e, { chapterId: chapterId })}
+    >
       <h2
-        onClick={() => setIsCollapsed(!isCollapsed)}
+        onClick={(e) => {
+          if (!isCollapsed) e.stopPropagation();
+          setIsCollapsed(!isCollapsed);
+        }}
         style={{ cursor: "pointer" }}
       >
         {chapterId}
@@ -55,6 +70,7 @@ export const Block_Chapter: React.FC<{
                 onRemove={() => onRemoveScene(chapterId, sceneId)}
                 onSceneChange={onSceneChange}
                 onAddDialogue={onAddDialogue}
+                onItemClick={onItemClick}
               />
             ))}
           <button onClick={handleAddScene}>Add Scene</button>

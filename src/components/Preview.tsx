@@ -1,6 +1,6 @@
-import React from "react";
-import { Story, Dialogue_Option } from "../story/Interfaces";
-import { characters } from "../story/Characters";
+import React, { useEffect, useState } from "react";
+import { Story, Dialogue_Option, Scene, Dialogue } from "../story/Interfaces";
+import { characters, Game_Character } from "../story/Characters";
 import Typewriter from "../components/Typewriter";
 
 const Preview: React.FC<{
@@ -9,6 +9,11 @@ const Preview: React.FC<{
   currentDialogueId: string;
   story: Story;
 }> = ({ currentChapterId, currentSceneId, currentDialogueId, story }) => {
+  const [render, setRender] = useState<boolean>(false);
+  const [scene, setScene] = useState<Scene>();
+  const [dialogue, setDialogue] = useState<Dialogue>();
+  const [npc, setNPC] = useState<Game_Character>();
+
   const getNPC = (id: string) => characters[id];
 
   const getChapter = (id: string) => story[id];
@@ -16,10 +21,6 @@ const Preview: React.FC<{
   const getScene = (id: string) => getChapter(currentChapterId).scenes[id];
 
   const getDialogue = (id: string) => getScene(currentSceneId).dialogue[id];
-
-  const currentDialogue = getDialogue(currentDialogueId);
-
-  const NPC = getNPC(currentDialogue.character_id);
 
   const summonOptions = (dialogueOptions: Dialogue_Option[]) => {
     return dialogueOptions.map((option: Dialogue_Option) => (
@@ -30,32 +31,48 @@ const Preview: React.FC<{
     ));
   };
 
+  useEffect(() => {
+    setRender(
+      currentChapterId?.length > 0 &&
+        currentSceneId?.length > 0 &&
+        currentDialogueId?.length > 0
+    );
+  }, [currentChapterId, currentSceneId, currentDialogueId]);
+
+  useEffect(() => {
+    if (render) {
+      console.log(currentDialogueId);
+      setScene(getScene(currentSceneId));
+      setDialogue(getDialogue(currentDialogueId));
+      setNPC(getNPC(getDialogue(currentDialogueId).character_id));
+    }
+  }, [render, currentChapterId, currentSceneId, currentDialogueId]);
+
   return (
-    <div className="game">
-      {getScene(currentSceneId).background && (
-        <img
-          className="game-background"
-          src={getScene(currentSceneId).background}
-        />
-      )}
-      <div className="game-buttons"></div>
-      <div className="game-characters">
-        <div className={`pc`}></div>
-        {NPC && (
-          <div className="npc" key={currentDialogue.character_id}>
-            <img src={NPC.url} />
-          </div>
+    render && (
+      <div className="game">
+        {scene?.background && (
+          <img className="game-background" src={scene?.background} />
         )}
-      </div>
-      <div className="dialogue-container">
-        <div>{NPC?.name}</div>
-        <Typewriter dialogue={currentDialogue} getNext={() => {}} />
-        <div className="dialogue-options">
-          {currentDialogue.next.dialog_options &&
-            summonOptions(currentDialogue.next.dialog_options)}
+        <div className="game-buttons"></div>
+        <div className="game-characters">
+          <div className={`pc`}></div>
+          {npc && (
+            <div className="npc" key={dialogue?.character_id}>
+              <img src={npc.url} />
+            </div>
+          )}
+        </div>
+        <div className="dialogue-container">
+          <div>{npc?.name}</div>
+          <Typewriter dialogue={dialogue} getNext={() => {}} />
+          <div className="dialogue-options">
+            {dialogue?.next.dialog_options &&
+              summonOptions(dialogue?.next.dialog_options)}
+          </div>
         </div>
       </div>
-    </div>
+    )
   );
 };
 

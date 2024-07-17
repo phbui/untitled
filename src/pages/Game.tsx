@@ -117,7 +117,7 @@ const Game = () => {
     story &&
     currentChapterId.length > 0 &&
     currentSceneId.length > 0 &&
-    currentChapterId.length > 0;
+    currentDialogueId.length > 0;
 
   const prepCharacters = (dialogue_id: string) => {
     const chapter_id: string = getDialogue(dialogue_id).character_id;
@@ -153,8 +153,6 @@ const Game = () => {
     else if (next.dialog_options) summonOptions();
     else if (next.dialogue_id) setCurrentDialogueId(next.dialogue_id);
   };
-
-  useEffect(() => {});
 
   return (
     <div className="game">

@@ -12,6 +12,7 @@ import Typewriter from "../components/Typewriter";
 import { characters, Game_Character } from "../story/Characters";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
+import { fetchStory } from "./Editor";
 
 export interface Save_Data {
   chapter_id: string;
@@ -47,12 +48,20 @@ const Game = () => {
     setCurrentDialogueId(saveData.dialogue_id);
   };
 
+  const loadStory = async () => {
+    try {
+      setLoading(true);
+      await fetchStory();
+    } catch {}
+  };
+
   useEffect(() => {
-    fetchStory();
+    loadStory();
   }, []);
 
   useEffect(() => {
     if (story) {
+      setLoading(false);
       // if (user.character === undefined) navigate("/Home"); // uncomment for prod
 
       const saveData = {
@@ -66,23 +75,6 @@ const Game = () => {
   }, [story]);
 
   const getNPC = (id: string) => characters[id];
-
-  const fetchStory = async () => {
-    setLoading(true);
-    try {
-      const storyDoc = doc(db, "dating-game", "story");
-      const snapshot = await getDoc(storyDoc);
-      if (snapshot.exists()) {
-        setStory(snapshot.data() as Story);
-      } else {
-        console.error("No such document!");
-      }
-    } catch (error) {
-      console.error("Error fetching story: ", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const getChapter = (id: string) => story[id];
 

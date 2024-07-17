@@ -5,7 +5,7 @@ import { Block_Chapter } from "../components/blocks/Chapter";
 import Preview from "../components/Preview";
 import { Story, Scene } from "../story/Interfaces";
 
-const fetchStory = async (): Promise<Story | null> => {
+export const fetchStory = async (): Promise<Story | null> => {
   try {
     const storyDoc = doc(db, "dating-game", "story");
     const snapshot = await getDoc(storyDoc);

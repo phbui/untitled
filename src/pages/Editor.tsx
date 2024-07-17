@@ -390,15 +390,21 @@ const Block_Scene: React.FC<{
       </h3>
       {!isCollapsed && (
         <div>
-          {Object.entries(scene.dialogue).map(([dialogueId, dialogue]) => (
-            <Dialogue_Block
-              key={dialogueId}
-              dialogueId={dialogueId}
-              dialogue={dialogue}
-              onChange={handleDialogueChange}
-              onNextChange={handleNextChange}
-            />
-          ))}
+          {Object.entries(scene.dialogue)
+            .sort(([a], [b]) => {
+              if (a === "start") return -1;
+              if (b === "start") return 1;
+              return a.localeCompare(b);
+            })
+            .map(([dialogueId, dialogue]) => (
+              <Dialogue_Block
+                key={dialogueId}
+                dialogueId={dialogueId}
+                dialogue={dialogue}
+                onChange={handleDialogueChange}
+                onNextChange={handleNextChange}
+              />
+            ))}
           <button onClick={handleAddDialogue}>Add Dialogue</button>
           <button onClick={onRemove}>Remove Scene</button>
         </div>
@@ -445,17 +451,23 @@ const Block_Chapter: React.FC<{
       </h2>
       {!isCollapsed && (
         <div>
-          {Object.entries(chapter.scenes).map(([sceneId, scene]) => (
-            <Block_Scene
-              key={sceneId}
-              chapterId={chapterId}
-              sceneId={sceneId}
-              scene={scene}
-              onRemove={() => onRemoveScene(chapterId, sceneId)}
-              onSceneChange={onSceneChange}
-              onAddDialogue={onAddDialogue}
-            />
-          ))}
+          {Object.entries(chapter.scenes)
+            .sort(([a], [b]) => {
+              if (a === "start") return -1;
+              if (b === "start") return 1;
+              return a.localeCompare(b);
+            })
+            .map(([sceneId, scene]) => (
+              <Block_Scene
+                key={sceneId}
+                chapterId={chapterId}
+                sceneId={sceneId}
+                scene={scene}
+                onRemove={() => onRemoveScene(chapterId, sceneId)}
+                onSceneChange={onSceneChange}
+                onAddDialogue={onAddDialogue}
+              />
+            ))}
           <button onClick={handleAddScene}>Add Scene</button>
         </div>
       )}
@@ -546,17 +558,23 @@ const Editor = () => {
 
   return (
     <div className="editor">
-      {Object.entries(story).map(([chapterId, chapter]) => (
-        <Block_Chapter
-          key={chapterId}
-          chapterId={chapterId}
-          chapter={chapter}
-          onAddScene={handleAddScene}
-          onRemoveScene={handleRemoveScene}
-          onSceneChange={handleSceneChange}
-          onAddDialogue={handleAddDialogue}
-        />
-      ))}
+      {Object.entries(story)
+        .sort(([a], [b]) => {
+          if (a === "start") return -1;
+          if (b === "start") return 1;
+          return a.localeCompare(b);
+        })
+        .map(([chapterId, chapter]) => (
+          <Block_Chapter
+            key={chapterId}
+            chapterId={chapterId}
+            chapter={chapter}
+            onAddScene={handleAddScene}
+            onRemoveScene={handleRemoveScene}
+            onSceneChange={handleSceneChange}
+            onAddDialogue={handleAddDialogue}
+          />
+        ))}
       <button onClick={handleSave}>Save Changes</button>
     </div>
   );

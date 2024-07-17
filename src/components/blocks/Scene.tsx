@@ -101,6 +101,8 @@ export const Block_Scene: React.FC<{
               .map(([dialogueId, dialogue]) => (
                 <Dialogue_Block
                   key={dialogueId}
+                  chapterId={chapterId}
+                  sceneId={sceneId}
                   dialogueId={dialogueId}
                   dialogue={dialogue}
                   onChange={handleDialogueChange}

@@ -3,6 +3,8 @@ import { Dialogue, Dialogue_Next } from "../../story/Interfaces";
 import { Dialogue_Next_Block } from "./Dialogue_Next_Block";
 
 export const Dialogue_Block: React.FC<{
+  chapterId: string;
+  sceneId: string;
   dialogueId: string;
   dialogue: Dialogue;
   onChange: (dialogueId: string, field: keyof Dialogue, value: string) => void;
@@ -15,7 +17,15 @@ export const Dialogue_Block: React.FC<{
       dialogueId?: string;
     }
   ) => void;
-}> = ({ dialogueId, dialogue, onChange, onNextChange, onItemClick }) => {
+}> = ({
+  chapterId,
+  sceneId,
+  dialogueId,
+  dialogue,
+  onChange,
+  onNextChange,
+  onItemClick,
+}) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
 
   const handleHeaderClick = (e: React.MouseEvent) => {
@@ -62,6 +72,8 @@ export const Dialogue_Block: React.FC<{
           </label>
           <br />
           <Dialogue_Next_Block
+            chapterId={chapterId}
+            sceneId={sceneId}
             next={dialogue.next}
             onNextChange={(next) => onNextChange(dialogueId, next)}
           />

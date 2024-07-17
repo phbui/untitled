@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import { Dialogue_Next, Dialogue_Option, Story } from "../../story/Interfaces";
 import { fetchStory } from "../../pages/Editor";
+
 export const Dialogue_Next_Block: React.FC<{
+  chapterId: string;
+  sceneId: string;
   next: Dialogue_Next;
   onNextChange: (next: Dialogue_Next) => void;
-}> = ({ next, onNextChange }) => {
+}> = ({ chapterId, sceneId, next, onNextChange }) => {
   const [nextType, setNextType] = useState<
     "chapter" | "scene" | "dialogue" | "choice"
   >();
@@ -61,16 +64,6 @@ export const Dialogue_Next_Block: React.FC<{
     }
   }, [sceneNext.scene_id, chapterNext.chapter_id, story]);
 
-  const handleOptionChange = (
-    index: number,
-    field: keyof Dialogue_Option,
-    value: string
-  ) => {
-    const updatedOptions = [...(choiceNext.dialog_options || [])];
-    updatedOptions[index] = { ...updatedOptions[index], [field]: value };
-    setChoiceNext({ ...choiceNext, dialog_options: updatedOptions });
-  };
-
   const handleNextOptionChange = (
     index: number,
     field: keyof Dialogue_Next,
@@ -99,15 +92,24 @@ export const Dialogue_Next_Block: React.FC<{
 
   const switchTab = (type: "chapter" | "scene" | "dialogue" | "choice") => {
     setNextType(type);
-    onNextChange(
-      type === "chapter"
-        ? { ...chapterNext }
-        : type === "scene"
-        ? { ...sceneNext }
-        : type === "dialogue"
-        ? { ...dialogueNext }
-        : { ...choiceNext }
-    );
+
+    switch (type) {
+      case "chapter":
+        onNextChange({ ...chapterNext });
+        break;
+      case "scene":
+        setChapterNext({ chapter_id: chapterId });
+        onNextChange({ ...sceneNext });
+        break;
+      case "dialogue":
+        setChapterNext({ chapter_id: chapterId });
+        setSceneNext({ scene_id: sceneId });
+        onNextChange({ ...dialogueNext });
+        break;
+      case "choice":
+        onNextChange({ ...choiceNext });
+        break;
+    }
   };
 
   const renderSelect = (

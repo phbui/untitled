@@ -62,7 +62,6 @@ export const Dialogue_Block: React.FC<{
           </label>
           <br />
           <Dialogue_Next_Block
-            dialogueId={dialogueId}
             next={dialogue.next}
             onNextChange={(next) => onNextChange(dialogueId, next)}
           />

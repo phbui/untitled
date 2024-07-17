@@ -18,33 +18,36 @@ export const Dialogue_Block: React.FC<{
 }> = ({ dialogueId, dialogue, onChange, onNextChange, onItemClick }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
 
+  const handleHeaderClick = (e: React.MouseEvent) => {
+    if (!isCollapsed) e.stopPropagation();
+    else onItemClick(e, { dialogueId });
+    setIsCollapsed(!isCollapsed);
+  };
+
+  const handleInputChange = (field: keyof Dialogue, value: string) => {
+    onChange(dialogueId, field, value);
+  };
+
+  const handleBlockClick = (e: React.MouseEvent) => {
+    onItemClick(e, { dialogueId });
+  };
+
   return (
     <>
       <div className="block-dialogue" onClick={(e) => e.stopPropagation()}>
-        <h4
-          onClick={(e) => {
-            if (!isCollapsed) e.stopPropagation();
-            else onItemClick(e, { dialogueId: dialogueId });
-            setIsCollapsed(!isCollapsed);
-          }}
-          style={{ cursor: "pointer" }}
-        >
+        <h4 onClick={handleHeaderClick} style={{ cursor: "pointer" }}>
           Dialogue: {dialogueId}
         </h4>
       </div>
       {!isCollapsed && (
-        <div
-          onClick={(e) => {
-            onItemClick(e, { dialogueId: dialogueId });
-          }}
-        >
+        <div onClick={handleBlockClick}>
           <label>
             Character ID:
             <input
               type="text"
               value={dialogue.character_id}
               onChange={(e) =>
-                onChange(dialogueId, "character_id", e.target.value)
+                handleInputChange("character_id", e.target.value)
               }
             />
           </label>
@@ -54,7 +57,7 @@ export const Dialogue_Block: React.FC<{
             <input
               type="text"
               value={dialogue.text}
-              onChange={(e) => onChange(dialogueId, "text", e.target.value)}
+              onChange={(e) => handleInputChange("text", e.target.value)}
             />
           </label>
           <br />

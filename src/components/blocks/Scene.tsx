@@ -66,18 +66,18 @@ export const Block_Scene: React.FC<{
     onSceneChange(chapterId, sceneId, updatedScene);
   };
 
+  const handleHeaderClick = (e: React.MouseEvent) => {
+    if (!isCollapsed) e.stopPropagation();
+    setIsCollapsed(!isCollapsed);
+  };
+
+  const handleBlockClick = (e: React.MouseEvent) => {
+    onItemClick(e, { sceneId });
+  };
+
   return (
-    <div
-      className="block-scene"
-      onClick={(e) => onItemClick(e, { sceneId: sceneId })}
-    >
-      <h3
-        onClick={(e) => {
-          if (!isCollapsed) e.stopPropagation();
-          setIsCollapsed(!isCollapsed);
-        }}
-        style={{ cursor: "pointer" }}
-      >
+    <div className="block-scene" onClick={handleBlockClick}>
+      <h3 onClick={handleHeaderClick} style={{ cursor: "pointer" }}>
         {sceneId}
       </h3>
       {!isCollapsed && (

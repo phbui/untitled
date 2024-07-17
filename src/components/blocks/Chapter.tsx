@@ -39,18 +39,18 @@ export const Block_Chapter: React.FC<{
     }
   };
 
+  const handleHeaderClick = (e: React.MouseEvent) => {
+    if (!isCollapsed) e.stopPropagation();
+    setIsCollapsed(!isCollapsed);
+  };
+
+  const handleBlockClick = (e: React.MouseEvent) => {
+    onItemClick(e, { chapterId });
+  };
+
   return (
-    <div
-      className="block-chapter"
-      onClick={(e) => onItemClick(e, { chapterId: chapterId })}
-    >
-      <h2
-        onClick={(e) => {
-          if (!isCollapsed) e.stopPropagation();
-          setIsCollapsed(!isCollapsed);
-        }}
-        style={{ cursor: "pointer" }}
-      >
+    <div className="block-chapter" onClick={handleBlockClick}>
+      <h2 onClick={handleHeaderClick} style={{ cursor: "pointer" }}>
         {chapterId}
       </h2>
       {!isCollapsed && (

@@ -676,7 +676,7 @@ canvas {
   width: 100%;
 }
 
-.block-dialogue button.active {
+.block-next button.active {
   background-color: #007bff;
   color: white;
 }

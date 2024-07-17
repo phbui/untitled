@@ -1,11 +1,17 @@
 import { useContext, useEffect, useState } from "react";
 import { User } from "../App";
-import { Dialogue, Dialogue_Next, Dialogue_Option } from "../story/Interfaces";
-import { story } from "../story/Story";
+import {
+  Dialogue,
+  Dialogue_Next,
+  Dialogue_Option,
+  Story,
+} from "../story/Interfaces";
 import { Character } from "../components/Creation";
 import { useNavigate } from "react-router-dom";
 import Typewriter from "../components/Typewriter";
 import { characters, Game_Character } from "../story/Characters";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebaseConfig";
 
 export interface Save_Data {
   chapter_id: string;
@@ -16,6 +22,8 @@ export interface Save_Data {
 const Game = () => {
   const navigate = useNavigate();
   const user = useContext(User);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [story, setStory] = useState<Story>({});
   const [currentChapterId, setCurrentChapterId] = useState<string>("");
   const [currentSceneId, setCurrentSceneId] = useState<string>("");
   const [backgroundURL, setBackgroundURL] = useState<string>();
@@ -40,18 +48,41 @@ const Game = () => {
   };
 
   useEffect(() => {
-    // if (user.character === undefined) navigate("/Home"); // uncomment for prod
-
-    const saveData = {
-      chapter_id: "start",
-      scene_id: "start",
-      dialogue_id: "start",
-    };
-
-    parseSaveData(saveData);
+    fetchStory();
   }, []);
 
+  useEffect(() => {
+    if (story) {
+      // if (user.character === undefined) navigate("/Home"); // uncomment for prod
+
+      const saveData = {
+        chapter_id: "day_one",
+        scene_id: "start",
+        dialogue_id: "start",
+      };
+
+      parseSaveData(saveData);
+    }
+  }, [story]);
+
   const getNPC = (id: string) => characters[id];
+
+  const fetchStory = async () => {
+    setLoading(true);
+    try {
+      const storyDoc = doc(db, "dating-game", "story");
+      const snapshot = await getDoc(storyDoc);
+      if (snapshot.exists()) {
+        setStory(snapshot.data() as Story);
+      } else {
+        console.error("No such document!");
+      }
+    } catch (error) {
+      console.error("Error fetching story: ", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getChapter = (id: string) => story[id];
 
@@ -82,6 +113,8 @@ const Game = () => {
   };
 
   const getInitialized = () =>
+    !loading &&
+    story &&
     currentChapterId.length > 0 &&
     currentSceneId.length > 0 &&
     currentChapterId.length > 0;
@@ -99,7 +132,7 @@ const Game = () => {
       setBackgroundURL(getScene(currentSceneId).background);
       prepCharacters(currentDialogueId);
     }
-  }, [currentDialogueId, currentSceneId, currentDialogueId]);
+  }, [currentDialogueId, currentSceneId, currentDialogueId, loading, story]);
 
   const summonOptions = () => {
     setDialogueOptions(getDialogue(currentDialogueId).next.dialog_options);

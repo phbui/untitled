@@ -101,9 +101,7 @@ export const Dialogue_Next_Block: React.FC<{
 
   return (
     <div className="block-next">
-      <h5 style={{ cursor: "pointer" }}>
-        Next Options for Dialogue: {dialogueId}
-      </h5>
+      <h5>Next Options for Dialogue: {dialogueId}</h5>
 
       <div>
         <button

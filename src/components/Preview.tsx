@@ -41,7 +41,6 @@ const Preview: React.FC<{
 
   useEffect(() => {
     if (render) {
-      console.log(currentDialogueId);
       setScene(getScene(currentSceneId));
       setDialogue(getDialogue(currentDialogueId));
       setNPC(getNPC(getDialogue(currentDialogueId).character_id));

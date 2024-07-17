@@ -128,8 +128,6 @@ const Editor = () => {
       setCurrentDialogueId("");
     }
 
-    console.log(input.dialogueId);
-
     if (input.dialogueId) setCurrentDialogueId(input.dialogueId);
   };
 

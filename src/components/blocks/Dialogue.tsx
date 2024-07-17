@@ -20,13 +20,11 @@ export const Dialogue_Block: React.FC<{
 
   return (
     <>
-      <div
-        className="block-dialogue"
-        onClick={(e) => onItemClick(e, { dialogueId: dialogueId })}
-      >
+      <div className="block-dialogue" onClick={(e) => e.stopPropagation()}>
         <h4
           onClick={(e) => {
             if (!isCollapsed) e.stopPropagation();
+            else onItemClick(e, { dialogueId: dialogueId });
             setIsCollapsed(!isCollapsed);
           }}
           style={{ cursor: "pointer" }}
@@ -35,7 +33,11 @@ export const Dialogue_Block: React.FC<{
         </h4>
       </div>
       {!isCollapsed && (
-        <div>
+        <div
+          onClick={(e) => {
+            onItemClick(e, { dialogueId: dialogueId });
+          }}
+        >
           <label>
             Character ID:
             <input

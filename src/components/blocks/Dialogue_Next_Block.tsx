@@ -29,24 +29,27 @@ export const Dialogue_Next_Block: React.FC<{
   }, []);
 
   useEffect(() => {
+    if (story === null) return;
+
     if (next.chapter_id) {
       setNextType("chapter");
       setChapterNext(next);
     } else if (next.scene_id) {
+      setChapterNext({ chapter_id: chapterId });
       setNextType("scene");
       setSceneNext(next);
     } else if (next.dialogue_id) {
+      setChapterNext({ chapter_id: chapterId });
+      setSceneNext({ scene_id: sceneId });
       setNextType("dialogue");
       setDialogueNext(next);
     } else if (next.dialog_options && next.dialog_options.length > 0) {
       setNextType("choice");
       setChoiceNext(next);
     }
-  }, [next]);
+  }, [next, story]);
 
   const findScenes = () => {
-    console.log(chapterNext.chapter_id && story);
-
     if (chapterNext.chapter_id && story)
       setAvailableScenes(
         Object.keys(story[chapterNext.chapter_id]?.scenes || {})
@@ -55,7 +58,7 @@ export const Dialogue_Next_Block: React.FC<{
 
   useEffect(() => {
     findScenes();
-  }, [chapterNext.chapter_id, story]);
+  }, [chapterNext, story]);
 
   const findDialogues = () => {
     if (sceneNext.scene_id && chapterNext.chapter_id && story)
@@ -129,7 +132,6 @@ export const Dialogue_Next_Block: React.FC<{
       <label>
         {label}
         <select value={value} onChange={onChange}>
-          <option value="">Select...</option>
           {options.map((option) => (
             <option key={option} value={option}>
               {option}

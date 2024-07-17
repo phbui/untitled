@@ -16,7 +16,6 @@ export const Dialogue_Next_Block: React.FC<{
   const [sceneNext, setSceneNext] = useState<Partial<Dialogue_Next>>({});
   const [dialogueNext, setDialogueNext] = useState<Partial<Dialogue_Next>>({});
   const [choiceNext, setChoiceNext] = useState<Partial<Dialogue_Next>>({});
-
   const [story, setStory] = useState<Story | null>(null);
   const [availableScenes, setAvailableScenes] = useState<string[]>([]);
   const [availableDialogues, setAvailableDialogues] = useState<string[]>([]);
@@ -45,23 +44,31 @@ export const Dialogue_Next_Block: React.FC<{
     }
   }, [next]);
 
-  useEffect(() => {
-    if (chapterNext.chapter_id && story) {
+  const findScenes = () => {
+    console.log(chapterNext.chapter_id && story);
+
+    if (chapterNext.chapter_id && story)
       setAvailableScenes(
         Object.keys(story[chapterNext.chapter_id]?.scenes || {})
       );
-    }
-  }, [chapterNext.chapter_id, story]);
+  };
 
   useEffect(() => {
-    if (sceneNext.scene_id && chapterNext.chapter_id && story) {
+    findScenes();
+  }, [chapterNext.chapter_id, story]);
+
+  const findDialogues = () => {
+    if (sceneNext.scene_id && chapterNext.chapter_id && story)
       setAvailableDialogues(
         Object.keys(
           story[chapterNext.chapter_id]?.scenes[sceneNext.scene_id]?.dialogue ||
             {}
         )
       );
-    }
+  };
+
+  useEffect(() => {
+    findDialogues();
   }, [sceneNext.scene_id, chapterNext.chapter_id, story]);
 
   const handleNextOptionChange = (

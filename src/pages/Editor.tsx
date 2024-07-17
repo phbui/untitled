@@ -45,45 +45,37 @@ const Dialogue_Next_Block: React.FC<{
     "chapter" | "scene" | "dialogue" | "choice"
   >();
 
-  const handleNextChange = (field: keyof Dialogue_Next, value: any) => {
-    const updatedNext = { ...next, [field]: value };
-    onNextChange(updatedNext);
-  };
+  const [chapterNext, setChapterNext] = useState<Partial<Dialogue_Next>>({});
+  const [sceneNext, setSceneNext] = useState<Partial<Dialogue_Next>>({});
+  const [dialogueNext, setDialogueNext] = useState<Partial<Dialogue_Next>>({});
+  const [choiceNext, setChoiceNext] = useState<Partial<Dialogue_Next>>({});
 
   useEffect(() => {
     if (next.chapter_id) {
       setNextType("chapter");
+      setChapterNext(next);
     } else if (next.scene_id) {
       setNextType("scene");
+      setSceneNext(next);
     } else if (next.dialogue_id) {
       setNextType("dialogue");
+      setDialogueNext(next);
     } else if (next.dialog_options && next.dialog_options.length > 0) {
       setNextType("choice");
+      setChoiceNext(next);
     }
-  }, []);
-
-  const clearNextFields = (
-    type: "chapter" | "scene" | "dialogue" | "choice"
-  ) => {
-    let clearedNext: Dialogue_Next = {
-      chapter_id: "",
-      scene_id: "",
-      dialogue_id: "",
-      dialog_options: [],
-    };
-
-    onNextChange(clearedNext);
-    setNextType(type);
-  };
+  }, [next]);
 
   const handleOptionChange = (
     index: number,
     field: keyof Dialogue_Option,
     value: string
   ) => {
-    const updatedOptions = next.dialog_options ? [...next.dialog_options] : [];
+    const updatedOptions = choiceNext.dialog_options
+      ? [...choiceNext.dialog_options]
+      : [];
     updatedOptions[index] = { ...updatedOptions[index], [field]: value };
-    handleNextChange("dialog_options", updatedOptions);
+    setChoiceNext({ ...choiceNext, dialog_options: updatedOptions });
   };
 
   const handleNextOptionChange = (
@@ -91,24 +83,55 @@ const Dialogue_Next_Block: React.FC<{
     field: keyof Dialogue_Next,
     value: string
   ) => {
-    const updatedOptions = next.dialog_options ? [...next.dialog_options] : [];
+    const updatedOptions = choiceNext.dialog_options
+      ? [...choiceNext.dialog_options]
+      : [];
     const option = updatedOptions[index];
     const updatedNext = { ...option.next, [field]: value };
     updatedOptions[index] = { ...option, next: updatedNext };
-    handleNextChange("dialog_options", updatedOptions);
+    setChoiceNext({ ...choiceNext, dialog_options: updatedOptions });
   };
 
   const handleAddOption = () => {
-    const updatedOptions = next.dialog_options
-      ? [...next.dialog_options, { text: "", next: {} }]
+    const updatedOptions = choiceNext.dialog_options
+      ? [...choiceNext.dialog_options, { text: "", next: {} }]
       : [{ text: "", next: {} }];
-    handleNextChange("dialog_options", updatedOptions);
+    setChoiceNext({ ...choiceNext, dialog_options: updatedOptions });
   };
 
   const handleRemoveOption = (index: number) => {
-    const updatedOptions = next.dialog_options ? [...next.dialog_options] : [];
+    const updatedOptions = choiceNext.dialog_options
+      ? [...choiceNext.dialog_options]
+      : [];
     updatedOptions.splice(index, 1);
-    handleNextChange("dialog_options", updatedOptions);
+    setChoiceNext({ ...choiceNext, dialog_options: updatedOptions });
+  };
+
+  const switchTab = (type: "chapter" | "scene" | "dialogue" | "choice") => {
+    if (nextType === "chapter") {
+      setChapterNext(next);
+    } else if (nextType === "scene") {
+      setSceneNext(next);
+    } else if (nextType === "dialogue") {
+      setDialogueNext(next);
+    } else if (nextType === "choice") {
+      setChoiceNext(next);
+    }
+
+    let newNext: Dialogue_Next = {};
+
+    if (type === "chapter") {
+      newNext = { ...chapterNext };
+    } else if (type === "scene") {
+      newNext = { ...sceneNext };
+    } else if (type === "dialogue") {
+      newNext = { ...dialogueNext };
+    } else if (type === "choice") {
+      newNext = { ...choiceNext };
+    }
+
+    setNextType(type);
+    onNextChange(newNext);
   };
 
   return (
@@ -119,25 +142,25 @@ const Dialogue_Next_Block: React.FC<{
 
       <div>
         <button
-          onClick={() => clearNextFields("chapter")}
+          onClick={() => switchTab("chapter")}
           className={nextType === "chapter" ? "active" : ""}
         >
           Next Chapter?
         </button>
         <button
-          onClick={() => clearNextFields("scene")}
+          onClick={() => switchTab("scene")}
           className={nextType === "scene" ? "active" : ""}
         >
           Next Scene?
         </button>
         <button
-          onClick={() => clearNextFields("dialogue")}
+          onClick={() => switchTab("dialogue")}
           className={nextType === "dialogue" ? "active" : ""}
         >
           Next Dialogue?
         </button>
         <button
-          onClick={() => clearNextFields("choice")}
+          onClick={() => switchTab("choice")}
           className={nextType === "choice" ? "active" : ""}
         >
           Next Choice?
@@ -149,8 +172,10 @@ const Dialogue_Next_Block: React.FC<{
               Next Chapter ID:
               <input
                 type="text"
-                value={next.chapter_id || ""}
-                onChange={(e) => handleNextChange("chapter_id", e.target.value)}
+                value={chapterNext.chapter_id || ""}
+                onChange={(e) =>
+                  setChapterNext({ ...chapterNext, chapter_id: e.target.value })
+                }
               />
             </label>
             <br />
@@ -158,8 +183,10 @@ const Dialogue_Next_Block: React.FC<{
               Next Scene ID:
               <input
                 type="text"
-                value={next.scene_id || ""}
-                onChange={(e) => handleNextChange("scene_id", e.target.value)}
+                value={chapterNext.scene_id || ""}
+                onChange={(e) =>
+                  setChapterNext({ ...chapterNext, scene_id: e.target.value })
+                }
               />
             </label>
             <br />
@@ -167,9 +194,12 @@ const Dialogue_Next_Block: React.FC<{
               Next Dialogue ID:
               <input
                 type="text"
-                value={next.dialogue_id || ""}
+                value={chapterNext.dialogue_id || ""}
                 onChange={(e) =>
-                  handleNextChange("dialogue_id", e.target.value)
+                  setChapterNext({
+                    ...chapterNext,
+                    dialogue_id: e.target.value,
+                  })
                 }
               />
             </label>
@@ -181,8 +211,10 @@ const Dialogue_Next_Block: React.FC<{
               Next Scene ID:
               <input
                 type="text"
-                value={next.scene_id || ""}
-                onChange={(e) => handleNextChange("scene_id", e.target.value)}
+                value={sceneNext.scene_id || ""}
+                onChange={(e) =>
+                  setSceneNext({ ...sceneNext, scene_id: e.target.value })
+                }
               />
             </label>
             <br />
@@ -190,9 +222,9 @@ const Dialogue_Next_Block: React.FC<{
               Next Dialogue ID:
               <input
                 type="text"
-                value={next.dialogue_id || ""}
+                value={sceneNext.dialogue_id || ""}
                 onChange={(e) =>
-                  handleNextChange("dialogue_id", e.target.value)
+                  setSceneNext({ ...sceneNext, dialogue_id: e.target.value })
                 }
               />
             </label>
@@ -204,9 +236,12 @@ const Dialogue_Next_Block: React.FC<{
               Next Dialogue ID:
               <input
                 type="text"
-                value={next.dialogue_id || ""}
+                value={dialogueNext.dialogue_id || ""}
                 onChange={(e) =>
-                  handleNextChange("dialogue_id", e.target.value)
+                  setDialogueNext({
+                    ...dialogueNext,
+                    dialogue_id: e.target.value,
+                  })
                 }
               />
             </label>
@@ -214,7 +249,7 @@ const Dialogue_Next_Block: React.FC<{
         )}
         {nextType === "choice" && (
           <>
-            {next.dialog_options?.map((option, index) => (
+            {choiceNext.dialog_options?.map((option, index) => (
               <div key={index} style={{ marginBottom: "10px" }}>
                 <label>
                   Option Text:
@@ -380,6 +415,11 @@ const Block_Scene: React.FC<{
     }
   };
 
+  const handleBackgroundChange = (value: string) => {
+    const updatedScene = { ...scene, background: value };
+    onSceneChange(chapterId, sceneId, updatedScene);
+  };
+
   return (
     <div className="block-scene">
       <h3
@@ -390,6 +430,15 @@ const Block_Scene: React.FC<{
       </h3>
       {!isCollapsed && (
         <div>
+          <label>
+            Background:
+            <input
+              type="text"
+              value={scene.background}
+              onChange={(e) => handleBackgroundChange(e.target.value)}
+            />
+          </label>
+          <br />
           {Object.entries(scene.dialogue)
             .sort(([a], [b]) => {
               if (a === "start") return -1;
@@ -558,6 +607,7 @@ const Editor = () => {
 
   return (
     <div className="editor">
+      <button onClick={handleSave}>Save Changes</button>
       {Object.entries(story)
         .sort(([a], [b]) => {
           if (a === "start") return -1;
@@ -575,7 +625,6 @@ const Editor = () => {
             onAddDialogue={handleAddDialogue}
           />
         ))}
-      <button onClick={handleSave}>Save Changes</button>
     </div>
   );
 };

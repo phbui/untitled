@@ -116,7 +116,13 @@ const Explorer: React.FC = () => {
   return (
     <div className="file-explorer" onClick={handleLeftClick}>
       <div
-        className={`explorer-item ${collapsedStory ? "collapsed" : ""}`}
+        className={`explorer-item ${collapsedStory ? "collapsed" : ""} ${
+          !editor.currentChapterId &&
+          !editor.currentSceneId &&
+          !editor.currentDialogueId
+            ? "selected"
+            : ""
+        }`}
         onContextMenu={(e) => handleRightClick(e, {})}
       >
         <span
@@ -137,7 +143,7 @@ const Explorer: React.FC = () => {
               <div
                 className={`explorer-item ${
                   collapsedChapters.has(chapterId) ? "collapsed" : ""
-                }`}
+                } ${editor.currentChapterId === chapterId ? "selected" : ""}`}
                 onContextMenu={(e) => handleRightClick(e, { chapterId })}
               >
                 <span
@@ -160,6 +166,8 @@ const Explorer: React.FC = () => {
                       <div
                         className={`explorer-item ${
                           collapsedScenes.has(sceneId) ? "collapsed" : ""
+                        } ${
+                          editor.currentSceneId === sceneId ? "selected" : ""
                         }`}
                         onContextMenu={(e) =>
                           handleRightClick(e, { chapterId, sceneId })
@@ -190,7 +198,11 @@ const Explorer: React.FC = () => {
                               style={{ paddingLeft: "40px" }}
                             >
                               <div
-                                className="explorer-item-dialogue"
+                                className={`explorer-item-dialogue ${
+                                  editor.currentDialogueId === dialogueId
+                                    ? "selected"
+                                    : ""
+                                }`}
                                 onContextMenu={(e) =>
                                   handleRightClick(e, {
                                     chapterId,

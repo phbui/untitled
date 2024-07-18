@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { Story } from "../../story/Interfaces";
 
 import { Editor_Type } from "../../pages/Editor";

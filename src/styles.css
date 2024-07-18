@@ -709,6 +709,14 @@ canvas {
   overflow-y: hidden;
 }
 
+.block-scene-container {
+  padding-left: 20px;
+}
+
+.block-dialogue-container {
+  padding-left: 20px;
+}
+
 .editor-layout {
   display: flex;
   height: 100vh;
@@ -727,7 +735,8 @@ canvas {
   padding-left: 20px;
 }
 
-.explorer-item {
+.explorer-item,
+.explorer-item-dialogue {
   display: flex;
   align-items: center;
   padding: 5px;
@@ -735,21 +744,13 @@ canvas {
   cursor: pointer;
 }
 
-.explorer-item.collapsed .triangle::before {
-  height: 10px;
-  width: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.explorer-item.collapsed .triangle::before,
+.explorer-item-dialogue.collapsed .triangle::before {
   content: "▶";
 }
 
-.explorer-item .triangle::before {
-  height: 10px;
-  width: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.explorer-item .triangle::before,
+.explorer-item-dialogue .triangle::before {
   content: "▼";
 }
 
@@ -758,9 +759,9 @@ canvas {
   margin-right: 5px;
 }
 
-.explorer-item-dialogue {
-  padding-left: 20px;
-  cursor: pointer;
+.explorer-item.selected,
+.explorer-item-dialogue.selected {
+  background-color: #d3d3d3;
 }
 
 .context-menu {
@@ -787,14 +788,6 @@ canvas {
 
 .editor-layout > * {
   flex: 1;
-}
-
-.block-scene-container {
-  padding-left: 20px;
-}
-
-.block-dialogue-container {
-  padding-left: 20px;
 }
 
 .editor-window {

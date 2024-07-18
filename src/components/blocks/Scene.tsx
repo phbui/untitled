@@ -1,6 +1,5 @@
-import { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Story } from "../../story/Interfaces";
-
 import { Editor_Type } from "../../pages/Editor";
 
 export const Block_Scene: React.FC<{}> = () => {
@@ -8,6 +7,11 @@ export const Block_Scene: React.FC<{}> = () => {
   const scene = (editor.story as Story)[editor.currentChapterId].scenes[
     editor.currentSceneId
   ];
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [sceneName, setSceneName] = useState(
+    scene.name || editor.currentSceneId
+  );
 
   const handleAddDialogue = () => {
     const dialogueId = prompt("Enter new dialogue ID:");
@@ -33,10 +37,41 @@ export const Block_Scene: React.FC<{}> = () => {
     editor.handleItemClick(e, { sceneId: editor.currentSceneId });
   };
 
-  return (
-    <div className="block-scene" onClick={handleBlockClick}>
-      <h3>{editor.currentSceneId}</h3>
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSceneName(e.target.value);
+  };
 
+  const handleNameBlur = () => {
+    setIsEditing(false);
+    const updatedScene = { ...scene, name: sceneName };
+    editor.handleSceneChange(
+      editor.currentChapterId,
+      editor.currentSceneId,
+      updatedScene
+    );
+  };
+
+  return (
+    <div className="block" onClick={handleBlockClick}>
+      {isEditing ? (
+        <input
+          type="text"
+          value={sceneName}
+          onChange={handleNameChange}
+          onBlur={handleNameBlur}
+          autoFocus
+          className="scene-name-input"
+        />
+      ) : (
+        <h2 onDoubleClick={() => setIsEditing(true)}>
+          {sceneName}
+          <i
+            className="fas fa-pen edit-icon"
+            title="Edit Scene Name"
+            onClick={() => setIsEditing(true)}
+          ></i>
+        </h2>
+      )}
       <div>
         <label>
           Background:
@@ -56,6 +91,7 @@ export const Block_Scene: React.FC<{}> = () => {
             })
             .map(([dialogueId]) => (
               <p
+                key={dialogueId}
                 onClick={(e) =>
                   editor.handleItemClick(e, {
                     chapterId: editor.currentChapterId,

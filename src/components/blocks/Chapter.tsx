@@ -40,7 +40,7 @@ export const Block_Chapter: React.FC = () => {
   };
 
   return (
-    <div className="block-chapter" onClick={handleBlockClick}>
+    <div className="block" onClick={handleBlockClick}>
       {isEditing ? (
         <input
           type="text"

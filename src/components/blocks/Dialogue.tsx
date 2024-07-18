@@ -41,7 +41,7 @@ export const Block_Dialogue: React.FC<{}> = () => {
 
   return (
     <div className="block-dialogue" onClick={(e) => e.stopPropagation()}>
-      <h4>Dialogue: {editor.currentDialogueId}</h4>
+      <h2>Dialogue: {editor.currentDialogueId}</h2>
       <div onClick={handleBlockClick}>
         <label>
           Character ID:

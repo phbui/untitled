@@ -48,12 +48,7 @@ const Preview: React.FC = () => {
       setDialogue(getDialogue(editor.currentDialogueId));
       setNPC(getNPC(getDialogue(editor.currentDialogueId).character_id));
     }
-  }, [
-    render,
-    editor.currentChapterId,
-    editor.currentSceneId,
-    editor.currentDialogueId,
-  ]);
+  }, [render, editor.currentDialogueId]);
 
   return (
     render && (

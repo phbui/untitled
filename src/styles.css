@@ -709,6 +709,75 @@ canvas {
   overflow-y: hidden;
 }
 
+.editor-layout {
+  display: flex;
+  height: 100vh;
+}
+
+.file-explorer {
+  width: 20%;
+  background-color: #f4f4f4;
+  padding: 10px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  height: 100vh;
+}
+
+.explorer-item {
+  cursor: pointer;
+  padding: 5px;
+  margin: 2px 0;
+  display: flex;
+  align-items: center;
+}
+
+.explorer-item.collapsed::before {
+  content: "▶";
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.explorer-item:not(.collapsed)::before {
+  content: "▼";
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.context-menu {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.context-menu div {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.context-menu div:hover {
+  background-color: #eee;
+}
+
+.block-scene-container {
+  padding-left: 20px;
+}
+
+.block-dialogue-container {
+  padding-left: 20px;
+}
+
+.editor-window {
+  width: 80%;
+  padding: 20px;
+}
+
+.editor-window button {
+  display: block;
+  margin-bottom: 10px;
+}
+
 @media only screen and (min-width: 600px) {
 }
 

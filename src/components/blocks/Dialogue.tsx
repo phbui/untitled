@@ -1,70 +1,71 @@
-import { useContext, useState } from "react";
-import { Dialogue, Dialogue_Next } from "../../story/Interfaces";
-import { Dialogue_Next_Block } from "./Dialogue_Next_Block";
+import { useContext } from "react";
+import { Dialogue, Story } from "../../story/Interfaces";
 import { Editor_Type } from "../../pages/Editor";
+import { Dialogue_Next_Block } from "./Dialogue_Next";
 
-export const Dialogue_Block: React.FC<{
-  chapterId: string;
-  sceneId: string;
-  dialogueId: string;
-  dialogue: Dialogue;
-  onChange: (dialogueId: string, field: keyof Dialogue, value: string) => void;
-  onNextChange: (dialogueId: string, next: Dialogue_Next) => void;
-}> = ({ chapterId, sceneId, dialogueId, dialogue, onChange, onNextChange }) => {
+export const Dialogue_Block: React.FC<{}> = () => {
   const editor = useContext(Editor_Type);
-  const [isCollapsed, setIsCollapsed] = useState(true);
 
-  const handleHeaderClick = (e: React.MouseEvent) => {
-    if (!isCollapsed) e.stopPropagation();
-    else editor.handleItemClick(e, { dialogueId });
-    setIsCollapsed(!isCollapsed);
+  const scene = (editor.story as Story)[editor.currentChapterId].scenes[
+    editor.currentSceneId
+  ];
+
+  const dialogue = (editor.story as Story)[editor.currentChapterId].scenes[
+    editor.currentSceneId
+  ].dialogue[editor.currentDialogueId];
+
+  const handleDialogueChange = (
+    dialogueId: string,
+    field: keyof Dialogue,
+    value: string
+  ) => {
+    const updatedScene = { ...scene };
+    const dialogue = updatedScene.dialogue[dialogueId];
+    if (dialogue) {
+      dialogue[field] = value;
+      editor.handleSceneChange(
+        editor.currentChapterId,
+        editor.currentSceneId,
+        updatedScene
+      );
+    }
   };
 
   const handleInputChange = (field: keyof Dialogue, value: string) => {
-    onChange(dialogueId, field, value);
+    handleDialogueChange(editor.currentDialogueId, field, value);
   };
 
   const handleBlockClick = (e: React.MouseEvent) => {
-    editor.handleItemClick(e, { dialogueId });
+    editor.handleItemClick(e, { dialogueId: editor.currentDialogueId });
   };
 
   return (
     <>
       <div className="block-dialogue" onClick={(e) => e.stopPropagation()}>
-        <h4 onClick={handleHeaderClick} style={{ cursor: "pointer" }}>
-          Dialogue: {dialogueId}
-        </h4>
+        <h4>Dialogue: {editor.currentDialogueId}</h4>
       </div>
-      {!isCollapsed && (
-        <div onClick={handleBlockClick}>
-          <label>
-            Character ID:
-            <input
-              type="text"
-              value={dialogue.character_id}
-              onChange={(e) =>
-                handleInputChange("character_id", e.target.value)
-              }
-            />
-          </label>
-          <br />
-          <label>
-            Text:
-            <input
-              type="text"
-              value={dialogue.text}
-              onChange={(e) => handleInputChange("text", e.target.value)}
-            />
-          </label>
-          <br />
-          <Dialogue_Next_Block
-            chapterId={chapterId}
-            sceneId={sceneId}
-            next={dialogue.next}
-            onNextChange={(next) => onNextChange(dialogueId, next)}
+
+      <div onClick={handleBlockClick}>
+        <label>
+          Character ID:
+          <input
+            type="text"
+            value={dialogue.character_id}
+            onChange={(e) => handleInputChange("character_id", e.target.value)}
           />
-        </div>
-      )}
+        </label>
+        <br />
+        <label>
+          Text:
+          <input
+            type="text"
+            value={dialogue.text}
+            onChange={(e) => handleInputChange("text", e.target.value)}
+          />
+        </label>
+        <br />
+        <Dialogue_Next_Block />
+      </div>
     </>
   );
 };

@@ -1,9 +1,8 @@
 import React, { useState, useEffect, createContext } from "react";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
-import { Block_Chapter } from "../components/blocks/Chapter";
-import Preview from "../components/Preview";
 import { Story, Scene } from "../story/Interfaces";
+import { EditorLayout } from "../components/Explorer";
 
 export const fetchStory = async (): Promise<Story | null> => {
   try {
@@ -46,6 +45,23 @@ const EditorContext = () => {
     };
     loadStory();
   }, []);
+
+  const handleAddChapter = (chapterId: string) => {
+    if (story) {
+      const updatedStory = {
+        ...story,
+        [chapterId]: { name: "New Chapter", scenes: {} },
+      };
+      setStory(updatedStory);
+    }
+  };
+
+  const handleRemoveChapter = (chapterId: string) => {
+    if (story) {
+      const { [chapterId]: _, ...updatedStory } = story;
+      setStory(updatedStory);
+    }
+  };
 
   const handleAddScene = (chapterId: string, sceneId: string) => {
     if (story) {
@@ -101,6 +117,22 @@ const EditorContext = () => {
     }
   };
 
+  const handleRemoveDialogue = (
+    chapterId: string,
+    sceneId: string,
+    dialogueId: string
+  ) => {
+    if (story) {
+      const updatedStory = { ...story };
+      const chapter = updatedStory[chapterId];
+      const scene = chapter.scenes[sceneId];
+      if (scene && scene.dialogue) {
+        delete scene.dialogue[dialogueId];
+        setStory(updatedStory);
+      }
+    }
+  };
+
   const handleSave = async () => {
     if (story) {
       await updateStory(story);
@@ -137,10 +169,13 @@ const EditorContext = () => {
     currentChapterId,
     currentSceneId,
     currentDialogueId,
+    handleAddChapter,
+    handleRemoveChapter,
     handleAddScene,
     handleRemoveScene,
     handleSceneChange,
     handleAddDialogue,
+    handleRemoveDialogue,
     handleSave,
     handleItemClick,
   };
@@ -152,7 +187,7 @@ export const Editor_Type = createContext(
   {} as unknown as ReturnType<typeof EditorContext>
 );
 
-const Editor = () => {
+const Editor: React.FC = () => {
   const editor = EditorContext();
 
   if (editor.loading) {
@@ -163,30 +198,19 @@ const Editor = () => {
     return <p>No story data available</p>;
   }
 
+  const handleAddChapterClick = () => {
+    const chapterId = prompt("Enter new chapter ID:");
+    if (chapterId) {
+      editor.handleAddChapter(chapterId);
+    }
+  };
+
   return (
     <Editor_Type.Provider value={editor}>
       <div className="editor">
         <button onClick={editor.handleSave}>Save Changes</button>
-        <div className="editor-content">
-          <div className="editor-blocks">
-            {Object.entries(editor.story)
-              .sort(([a], [b]) => {
-                if (a === "start") return -1;
-                if (b === "start") return 1;
-                return a.localeCompare(b);
-              })
-              .map(([chapterId, chapter]) => (
-                <Block_Chapter
-                  key={chapterId}
-                  chapterId={chapterId}
-                  chapter={chapter}
-                />
-              ))}
-          </div>
-          <div className="editor-preview">
-            <Preview />
-          </div>
-        </div>
+        <button onClick={handleAddChapterClick}>Add Chapter</button>
+        <EditorLayout />
       </div>
     </Editor_Type.Provider>
   );

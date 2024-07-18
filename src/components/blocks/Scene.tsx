@@ -33,10 +33,6 @@ export const Block_Scene: React.FC<{}> = () => {
     );
   };
 
-  const handleBlockClick = (e: React.MouseEvent) => {
-    editor.handleItemClick(e, { sceneId: editor.currentSceneId });
-  };
-
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSceneName(e.target.value);
   };
@@ -52,7 +48,7 @@ export const Block_Scene: React.FC<{}> = () => {
   };
 
   return (
-    <div className="block" onClick={handleBlockClick}>
+    <div className="block">
       {isEditing ? (
         <input
           type="text"

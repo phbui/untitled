@@ -35,34 +35,29 @@ export const Block_Dialogue: React.FC<{}> = () => {
     handleDialogueChange(editor.currentDialogueId, field, value);
   };
 
-  const handleBlockClick = (e: React.MouseEvent) => {
-    editor.handleItemClick(e, { dialogueId: editor.currentDialogueId });
-  };
-
   return (
     <div className="block-dialogue" onClick={(e) => e.stopPropagation()}>
       <h2>Dialogue: {editor.currentDialogueId}</h2>
-      <div onClick={handleBlockClick}>
-        <label>
-          Character ID:
-          <input
-            type="text"
-            value={dialogue.character_id}
-            onChange={(e) => handleInputChange("character_id", e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Text:
-          <input
-            type="text"
-            value={dialogue.text}
-            onChange={(e) => handleInputChange("text", e.target.value)}
-          />
-        </label>
-        <br />
-        <Block_Dialogue_Next />
-      </div>
+
+      <label>
+        Character ID:
+        <input
+          type="text"
+          value={dialogue.character_id}
+          onChange={(e) => handleInputChange("character_id", e.target.value)}
+        />
+      </label>
+      <br />
+      <label>
+        Text:
+        <input
+          type="text"
+          value={dialogue.text}
+          onChange={(e) => handleInputChange("text", e.target.value)}
+        />
+      </label>
+      <br />
+      <Block_Dialogue_Next />
     </div>
   );
 };

@@ -25,10 +25,6 @@ export const Block_Chapter: React.FC = () => {
     }
   };
 
-  const handleBlockClick = (e: React.MouseEvent) => {
-    editor.handleItemClick(e, { chapterId: editor.currentChapterId });
-  };
-
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setChapterName(e.target.value);
   };
@@ -40,7 +36,7 @@ export const Block_Chapter: React.FC = () => {
   };
 
   return (
-    <div className="block" onClick={handleBlockClick}>
+    <div className="block">
       {isEditing ? (
         <input
           type="text"

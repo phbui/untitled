@@ -3,7 +3,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { Story, Scene, Chapter } from "../story/Interfaces";
 import { EditorLayout } from "../components/Explorer";
-import { Character_Repository } from "../story/Characters";
+import { Character_Repository, Game_Character } from "../story/Characters";
 
 export const fetchStory = async (): Promise<Story | null> => {
   try {
@@ -69,6 +69,7 @@ const EditorContext = () => {
   const [currentChapterId, setCurrentChapterId] = useState<string>("");
   const [currentSceneId, setCurrentSceneId] = useState<string>("");
   const [currentDialogueId, setCurrentDialogueId] = useState<string>("");
+  const [currentCharacterId, setCurrentCharacterId] = useState<string>("");
 
   useEffect(() => {
     const load = async () => {
@@ -192,6 +193,33 @@ const EditorContext = () => {
     }
   };
 
+  const handleAddCharacter = (
+    characterId: string,
+    character: Game_Character
+  ) => {
+    if (characters) {
+      const updatedCharacters = { ...characters, [characterId]: character };
+      setCharacters(updatedCharacters);
+    }
+  };
+
+  const handleDeleteCharacter = (characterId: string) => {
+    if (characters) {
+      const { [characterId]: _, ...updatedCharacters } = characters;
+      setCharacters(updatedCharacters);
+    }
+  };
+
+  const handleCharacterChange = (
+    characterId: string,
+    character: Game_Character
+  ) => {
+    if (characters) {
+      const updatedCharacters = { ...characters, [characterId]: character };
+      setCharacters(updatedCharacters);
+    }
+  };
+
   const handleSave = async () => {
     if (story && characters) {
       if (window.confirm("Are you sure you want to save changes?")) {
@@ -207,22 +235,35 @@ const EditorContext = () => {
       chapterId?: string;
       sceneId?: string;
       dialogueId?: string;
+      characterId?: string;
     }
   ) => {
     event.stopPropagation();
 
+    if (input.characterId) {
+      setCurrentCharacterId(input.characterId);
+      setCurrentChapterId("");
+      setCurrentSceneId("");
+      setCurrentDialogueId("");
+    }
+
     if (input.chapterId) {
+      setCurrentCharacterId("");
       setCurrentChapterId(input.chapterId);
       setCurrentSceneId("");
       setCurrentDialogueId("");
     }
 
     if (input.sceneId) {
+      setCurrentCharacterId("");
       setCurrentSceneId(input.sceneId);
       setCurrentDialogueId("");
     }
 
-    if (input.dialogueId) setCurrentDialogueId(input.dialogueId);
+    if (input.dialogueId) {
+      setCurrentCharacterId("");
+      setCurrentDialogueId(input.dialogueId);
+    }
   };
 
   const editor = {
@@ -232,14 +273,18 @@ const EditorContext = () => {
     currentChapterId,
     currentSceneId,
     currentDialogueId,
+    currentCharacterId,
     handleAddChapter,
     handleDeleteChapter,
+    handleChapterChange,
     handleAddScene,
     handleDeleteScene,
     handleSceneChange,
-    handleChapterChange,
     handleAddDialogue,
     handleDeleteDialogue,
+    handleAddCharacter,
+    handleDeleteCharacter,
+    handleCharacterChange,
     handleSave,
     handleItemClick,
   };

@@ -15,6 +15,7 @@ const Explorer: React.FC = () => {
   const [collapsedScenes, setCollapsedScenes] = useState<Set<string>>(
     new Set()
   );
+  const [collapsedCharacters, setCollapsedCharacters] = useState(false); // New state for Characters
   const [contextMenu, setContextMenu] = useState<{
     x: number;
     y: number;
@@ -76,13 +77,21 @@ const Explorer: React.FC = () => {
           );
         }
         break;
+      case "addCharacter":
+        const characterId = prompt("Enter new character ID:");
+        if (characterId) {
+          editor.handleAddCharacter(characterId, {
+            name: "",
+            url: "",
+            stats: {},
+          });
+        }
+        break;
       case "removeChapter":
         editor.handleDeleteChapter(target.chapterId);
-
         break;
       case "removeScene":
         editor.handleDeleteScene(target.chapterId, target.sceneId);
-
         break;
       case "removeDialogue":
         editor.handleDeleteDialogue(
@@ -90,7 +99,9 @@ const Explorer: React.FC = () => {
           target.sceneId,
           target.dialogueId
         );
-
+        break;
+      case "removeCharacter":
+        editor.handleDeleteCharacter(target.characterId);
         break;
       default:
         break;
@@ -102,9 +113,9 @@ const Explorer: React.FC = () => {
     <div className="file-explorer" onClick={handleLeftClick}>
       <div
         className={`explorer-item ${collapsedStory ? "collapsed" : ""} ${
-          !editor.currentChapterId &&
-          !editor.currentSceneId &&
-          !editor.currentDialogueId
+          editor.currentChapterId.length > 0 ||
+          editor.currentSceneId.length > 0 ||
+          editor.currentDialogueId.length > 0
             ? "selected"
             : ""
         }`}
@@ -218,6 +229,37 @@ const Explorer: React.FC = () => {
                   ))}
             </div>
           ))}
+      <div
+        className={`explorer-item ${collapsedCharacters ? "collapsed" : ""} ${
+          editor.currentCharacterId.length > 0 ? "selected" : ""
+        }`}
+        onContextMenu={(e) => handleRightClick(e, {})}
+      >
+        <span
+          className="triangle"
+          onClick={() => setCollapsedCharacters(!collapsedCharacters)}
+        />
+        <span>Characters</span>
+      </div>
+      {!collapsedCharacters &&
+        editor.characters &&
+        Object.keys(editor.characters).map((characterId) => (
+          <div key={characterId} style={{ paddingLeft: "20px" }}>
+            <div
+              className={`explorer-item ${
+                editor.currentCharacterId === characterId ? "selected" : ""
+              }`}
+              onContextMenu={(e) => handleRightClick(e, { characterId })}
+              onClick={(e) => editor.handleItemClick(e, { characterId })}
+            >
+              <span>
+                [Character]{" "}
+                {editor.characters && editor.characters[characterId].name}
+              </span>
+            </div>
+          </div>
+        ))}
+
       {contextMenu && (
         <div
           className="context-menu"
@@ -226,7 +268,7 @@ const Explorer: React.FC = () => {
             left: `${contextMenu.x}px`,
           }}
         >
-          {!contextMenu.target.chapterId && (
+          {!contextMenu.target.chapterId && !contextMenu.target.characterId && (
             <div onClick={() => handleContextMenuAction("addChapter")}>
               Add Chapter
             </div>
@@ -258,6 +300,13 @@ const Explorer: React.FC = () => {
               </div>
             </>
           )}
+          {contextMenu.target.characterId && (
+            <>
+              <div onClick={() => handleContextMenuAction("removeCharacter")}>
+                Delete Character
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>
@@ -279,7 +328,11 @@ const EditorWindow: React.FC = () => {
     return <Block_Chapter />;
   }
 
-  return <p>Select a chapter, scene, or dialogue to edit.</p>;
+  if (editor.currentCharacterId) {
+    //return <Block_Character />;
+  }
+
+  return <p>Select a chapter, scene, dialogue, or character to edit.</p>;
 };
 
 export const EditorLayout: React.FC = () => {

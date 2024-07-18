@@ -1,7 +1,8 @@
 import { useContext } from "react";
-import { Dialogue, Story } from "../../story/Interfaces";
 import { Editor_Type } from "../../pages/Editor";
 import { Block_Dialogue_Next } from "./Dialogue_Next";
+import { Character_Repository } from "../../story/Characters";
+import { Dialogue, Story } from "../../story/Interfaces";
 
 export const Block_Dialogue: React.FC<{}> = () => {
   const editor = useContext(Editor_Type);
@@ -40,12 +41,20 @@ export const Block_Dialogue: React.FC<{}> = () => {
       <h2>Dialogue: {editor.currentDialogueId}</h2>
 
       <label>
-        Character ID:
-        <input
-          type="text"
+        Character:
+        <select
           value={dialogue.character_id}
           onChange={(e) => handleInputChange("character_id", e.target.value)}
-        />
+        >
+          <option value="">Select a character</option>
+          {Object.entries(editor.characters as Character_Repository).map(
+            ([id, character]) => (
+              <option key={id} value={id}>
+                {character.name}
+              </option>
+            )
+          )}
+        </select>
       </label>
       <br />
       <label>

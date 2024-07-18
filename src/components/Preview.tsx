@@ -33,6 +33,22 @@ const Preview: React.FC = () => {
   };
 
   useEffect(() => {
+    if (editor.currentChapterId && editor.currentSceneId) {
+      const currentScene = getScene(
+        editor.currentChapterId,
+        editor.currentSceneId
+      );
+
+      setScene(currentScene);
+    }
+  }, [
+    editor.story,
+    editor.currentChapterId,
+    editor.currentSceneId,
+    editor.currentDialogueId,
+  ]);
+
+  useEffect(() => {
     if (
       editor.currentChapterId &&
       editor.currentSceneId &&
@@ -52,12 +68,13 @@ const Preview: React.FC = () => {
       setNPC(getNPC(currentDialogue.character_id));
     }
   }, [
+    editor.story,
     editor.currentChapterId,
     editor.currentSceneId,
     editor.currentDialogueId,
   ]);
 
-  if (!scene || !dialogue) {
+  if (!scene) {
     return null;
   }
 
@@ -67,22 +84,26 @@ const Preview: React.FC = () => {
         <img className="game-background" src={scene.background} />
       )}
       <div className="game-buttons"></div>
-      <div className="game-characters">
-        <div className="pc"></div>
-        {npc && (
-          <div className="npc" key={dialogue.character_id}>
-            <img src={npc.url} alt={npc.name} />
+      {dialogue && (
+        <>
+          <div className="game-characters">
+            <div className="pc"></div>
+            {npc && (
+              <div className="npc active" key={dialogue.character_id}>
+                <img src={npc.url} alt={npc.name} />
+              </div>
+            )}
           </div>
-        )}
-      </div>
-      <div className="dialogue-container">
-        <div>{npc?.name}</div>
-        <Typewriter dialogue={dialogue} getNext={() => {}} />
-        <div className="dialogue-options">
-          {dialogue.next.dialog_options &&
-            summonOptions(dialogue.next.dialog_options)}
-        </div>
-      </div>
+          <div className="dialogue-container">
+            <div>{npc?.name}</div>
+            <Typewriter dialogue={dialogue} getNext={() => {}} />
+            <div className="dialogue-options">
+              {dialogue.next.dialog_options &&
+                summonOptions(dialogue.next.dialog_options)}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

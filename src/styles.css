@@ -652,7 +652,8 @@ canvas {
   padding: 10px;
   overflow-x: hidden;
   overflow-y: auto;
-  width: 95%;
+  width: calc(100% - 20px);
+  height: calc(100% - 20px);
 }
 
 .block-scene {
@@ -663,7 +664,8 @@ canvas {
   padding: 10px;
   overflow-x: hidden;
   overflow-y: auto;
-  width: 100%;
+  width: calc(100% - 20px);
+  height: calc(100% - 20px);
 }
 
 .block-dialogue {
@@ -674,7 +676,8 @@ canvas {
   padding: 10px;
   overflow-x: hidden;
   overflow-y: auto;
-  width: 100%;
+  width: calc(100% - 20px);
+  height: calc(100% - 20px);
 }
 
 .block-next button.active {

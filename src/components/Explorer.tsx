@@ -167,7 +167,10 @@ const Explorer: React.FC = () => {
                         className={`explorer-item ${
                           collapsedScenes.has(sceneId) ? "collapsed" : ""
                         } ${
-                          editor.currentSceneId === sceneId ? "selected" : ""
+                          editor.currentSceneId === sceneId &&
+                          editor.currentChapterId === chapterId
+                            ? "selected"
+                            : ""
                         }`}
                         onContextMenu={(e) =>
                           handleRightClick(e, { chapterId, sceneId })
@@ -199,7 +202,9 @@ const Explorer: React.FC = () => {
                             >
                               <div
                                 className={`explorer-item-dialogue ${
-                                  editor.currentDialogueId === dialogueId
+                                  editor.currentDialogueId === dialogueId &&
+                                  editor.currentSceneId === sceneId &&
+                                  editor.currentChapterId === chapterId
                                     ? "selected"
                                     : ""
                                 }`}

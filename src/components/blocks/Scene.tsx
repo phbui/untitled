@@ -72,24 +72,23 @@ export const Block_Scene: React.FC<{}> = () => {
           ></i>
         </h2>
       )}
-      <div>
-        <label>
-          Background:
-          <input
-            type="text"
-            value={scene.background}
-            onChange={(e) => handleBackgroundChange(e.target.value)}
-          />
-        </label>
-        <br />
-        <div className="block-dialogue-container">
-          {Object.entries(scene.dialogue)
-            .sort(([a], [b]) => {
-              if (a === "start") return -1;
-              if (b === "start") return 1;
-              return a.localeCompare(b);
-            })
-            .map(([dialogueId]) => (
+      <div className="background-scene">
+        Background Url:
+        <input
+          type="text"
+          value={scene.background}
+          onChange={(e) => handleBackgroundChange(e.target.value)}
+        />
+      </div>
+      <div style={{ height: "75%" }} className="block-list">
+        {Object.entries(scene.dialogue)
+          .sort(([a], [b]) => {
+            if (a === "start") return -1;
+            if (b === "start") return 1;
+            return a.localeCompare(b);
+          })
+          .map(([dialogueId]) => (
+            <div className="block-container">
               <p
                 key={dialogueId}
                 onClick={(e) =>
@@ -102,19 +101,22 @@ export const Block_Scene: React.FC<{}> = () => {
               >
                 {dialogueId}
               </p>
-            ))}
-        </div>
+              <button
+                onClick={() =>
+                  editor.handleDeleteDialogue(
+                    editor.currentChapterId,
+                    editor.currentSceneId,
+                    dialogueId
+                  )
+                }
+              >
+                Delete Dialogue
+              </button>
+            </div>
+          ))}
+      </div>
+      <div className="add-button">
         <button onClick={handleAddDialogue}>Add Dialogue</button>
-        <button
-          onClick={() =>
-            editor.handleDeleteScene(
-              editor.currentChapterId,
-              editor.currentSceneId
-            )
-          }
-        >
-          Delete Scene
-        </button>
       </div>
     </div>
   );

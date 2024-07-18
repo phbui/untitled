@@ -77,35 +77,20 @@ const Explorer: React.FC = () => {
         }
         break;
       case "removeChapter":
-        if (
-          window.confirm(
-            `Are you sure you want to remove chapter "${target.chapterId}"?`
-          )
-        ) {
-          editor.handleDeleteChapter(target.chapterId);
-        }
+        editor.handleDeleteChapter(target.chapterId);
+
         break;
       case "removeScene":
-        if (
-          window.confirm(
-            `Are you sure you want to remove scene "${target.sceneId}"?`
-          )
-        ) {
-          editor.handleDeleteScene(target.chapterId, target.sceneId);
-        }
+        editor.handleDeleteScene(target.chapterId, target.sceneId);
+
         break;
       case "removeDialogue":
-        if (
-          window.confirm(
-            `Are you sure you want to remove dialogue "${target.dialogueId}"?`
-          )
-        ) {
-          editor.handleDeleteDialogue(
-            target.chapterId,
-            target.sceneId,
-            target.dialogueId
-          );
-        }
+        editor.handleDeleteDialogue(
+          target.chapterId,
+          target.sceneId,
+          target.dialogueId
+        );
+
         break;
       default:
         break;

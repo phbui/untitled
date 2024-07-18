@@ -677,29 +677,45 @@ canvas {
   box-sizing: border-box;
 }
 
-.block-scene-container {
+.block-list {
+  height: 80%;
+  background-color: #e9e9e9;
+  padding: 10px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.block-container {
+  height: 50px;
+  background-color: #fff;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 5px 0;
+  padding: 5px;
+  border-bottom: 2px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  cursor: pointer;
+  border-radius: 5px;
 }
 
-.block-scene-container p {
+.blockcontainer p {
   margin: 0;
   cursor: pointer;
 }
 
-.block-scene-container button {
+.block-container button {
+  height: 100%;
   margin-left: 10px;
   padding: 5px 10px;
   cursor: pointer;
   border: none;
   background-color: #ff4d4d;
   color: white;
-  border-radius: 3px;
+  border-radius: 5px;
 }
 
-.block-scene-container button:hover {
+.block-container button:hover {
   background-color: #ff1a1a;
 }
 
@@ -734,6 +750,29 @@ canvas {
 
 .block-scene-container button {
   margin-left: 10px;
+}
+
+.background-scene {
+  height: 5%;
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  text-wrap: nowrap;
+}
+
+.background-scene input {
+  width: 100%;
+  margin-left: 10px;
+}
+
+.add-button {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 5%;
+  padding: 10px;
 }
 
 button {
@@ -914,10 +953,29 @@ button:hover {
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+.save-button-container button {
+  height: 100%;
+  width: 50px;
+  background-color: transparent;
+  color: #555;
+}
+
+.save-button-container button:hover {
+  color: black;
+}
+
+.save-button-container button i {
+  transform: scale(2);
+}
+
 .editing {
   position: relative;
   flex: 1;
   height: 100%;
+}
+
+.editing p {
+  margin-left: 10px;
 }
 
 .exploring {

@@ -233,7 +233,7 @@ const Phone: React.FC<Props_Phone> = ({
       default:
         console.log(area.name);
         setActiveTab(area.name);
-        setCurrentPage(0); // Reset to first page when changing tabs
+        setCurrentPage(0);
         break;
     }
   };

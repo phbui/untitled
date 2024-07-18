@@ -130,13 +130,15 @@ const EditorContext = () => {
     sceneId: string,
     dialogueId: string
   ) => {
+    console.log(chapterId, " ", sceneId, " ", dialogueId);
+
     if (story) {
       const updatedStory = { ...story };
       const chapter = updatedStory[chapterId];
       const scene = chapter.scenes[sceneId];
       if (scene && scene.dialogue) {
         delete scene.dialogue[dialogueId];
-        setStory(updatedStory);
+        setStory({ ...updatedStory });
       }
     }
   };
@@ -214,7 +216,7 @@ const Editor: React.FC = () => {
       <div className="editor">
         <div className="save-button-container">
           <button className="save-button" onClick={editor.handleSave}>
-            Save Changes
+            <i className="fas fa-save"></i>
           </button>
         </div>
         <EditorLayout />

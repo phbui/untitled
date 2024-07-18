@@ -60,7 +60,7 @@ export const Block_Chapter: React.FC = () => {
           ></i>
         </h2>
       )}
-      <div>
+      <div className="block-list">
         {Object.entries(chapter.scenes)
           .sort(([a], [b]) => {
             if (a === "start") return -1;
@@ -68,22 +68,24 @@ export const Block_Chapter: React.FC = () => {
             return a.localeCompare(b);
           })
           .map(([sceneId]) => (
-            <div key={sceneId} className="block-scene-container">
-              <p
-                onClick={(e) =>
-                  editor.handleItemClick(e, {
-                    chapterId: editor.currentChapterId,
-                    sceneId: sceneId,
-                  })
-                }
-              >
-                {sceneId}
-              </p>
+            <div
+              key={sceneId}
+              className="block-container"
+              onClick={(e) =>
+                editor.handleItemClick(e, {
+                  chapterId: editor.currentChapterId,
+                  sceneId: sceneId,
+                })
+              }
+            >
+              <p>{sceneId}</p>
               <button onClick={() => handleDeleteScene(sceneId)}>
                 Delete Scene
               </button>
             </div>
           ))}
+      </div>
+      <div className="add-button">
         <button onClick={handleAddScene}>Add Scene</button>
       </div>
     </div>

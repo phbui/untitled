@@ -40,6 +40,7 @@ const Preview: React.FC = () => {
       );
 
       setScene(currentScene);
+      setDialogue(undefined);
     }
   }, [
     editor.story,

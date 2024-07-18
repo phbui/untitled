@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createContext } from "react";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { Block_Chapter } from "../components/blocks/Chapter";
@@ -31,7 +31,7 @@ const updateStory = async (story: Story): Promise<void> => {
   }
 };
 
-const Editor = () => {
+const EditorContext = () => {
   const [story, setStory] = useState<Story | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [currentChapterId, setCurrentChapterId] = useState<string>("");
@@ -60,26 +60,6 @@ const Editor = () => {
     }
   };
 
-  const handleAddDialogue = (
-    chapterId: string,
-    sceneId: string,
-    dialogueId: string
-  ) => {
-    if (story) {
-      const updatedStory = { ...story };
-      const chapter = updatedStory[chapterId];
-      const scene = chapter.scenes[sceneId];
-      if (scene) {
-        scene.dialogue[dialogueId] = {
-          character_id: "",
-          text: "",
-          next: {},
-        };
-        setStory(updatedStory);
-      }
-    }
-  };
-
   const handleRemoveScene = (chapterId: string, sceneId: string) => {
     if (story) {
       const updatedStory = { ...story };
@@ -98,6 +78,26 @@ const Editor = () => {
       const updatedStory = { ...story };
       updatedStory[chapterId].scenes[sceneId] = scene;
       setStory(updatedStory);
+    }
+  };
+
+  const handleAddDialogue = (
+    chapterId: string,
+    sceneId: string,
+    dialogueId: string
+  ) => {
+    if (story) {
+      const updatedStory = { ...story };
+      const chapter = updatedStory[chapterId];
+      const scene = chapter.scenes[sceneId];
+      if (scene) {
+        scene.dialogue[dialogueId] = {
+          character_id: "",
+          text: "",
+          next: {},
+        };
+        setStory(updatedStory);
+      }
     }
   };
 
@@ -131,48 +131,64 @@ const Editor = () => {
     if (input.dialogueId) setCurrentDialogueId(input.dialogueId);
   };
 
-  if (loading) {
+  const editor = {
+    story,
+    loading,
+    currentChapterId,
+    currentSceneId,
+    currentDialogueId,
+    handleAddScene,
+    handleRemoveScene,
+    handleSceneChange,
+    handleAddDialogue,
+    handleSave,
+    handleItemClick,
+  };
+
+  return editor;
+};
+
+export const Editor_Type = createContext(
+  {} as unknown as ReturnType<typeof EditorContext>
+);
+
+const Editor = () => {
+  const editor = EditorContext();
+
+  if (editor.loading) {
     return <p>Loading story...</p>;
   }
 
-  if (!story) {
+  if (!editor.story) {
     return <p>No story data available</p>;
   }
 
   return (
-    <div className="editor">
-      <button onClick={handleSave}>Save Changes</button>
-      <div className="editor-content">
-        <div className="editor-blocks">
-          {Object.entries(story)
-            .sort(([a], [b]) => {
-              if (a === "start") return -1;
-              if (b === "start") return 1;
-              return a.localeCompare(b);
-            })
-            .map(([chapterId, chapter]) => (
-              <Block_Chapter
-                key={chapterId}
-                chapterId={chapterId}
-                chapter={chapter}
-                onAddScene={handleAddScene}
-                onRemoveScene={handleRemoveScene}
-                onSceneChange={handleSceneChange}
-                onAddDialogue={handleAddDialogue}
-                onItemClick={handleItemClick}
-              />
-            ))}
-        </div>
-        <div className="editor-preview">
-          <Preview
-            currentChapterId={currentChapterId}
-            currentSceneId={currentSceneId}
-            currentDialogueId={currentDialogueId}
-            story={story}
-          />
+    <Editor_Type.Provider value={editor}>
+      <div className="editor">
+        <button onClick={editor.handleSave}>Save Changes</button>
+        <div className="editor-content">
+          <div className="editor-blocks">
+            {Object.entries(editor.story)
+              .sort(([a], [b]) => {
+                if (a === "start") return -1;
+                if (b === "start") return 1;
+                return a.localeCompare(b);
+              })
+              .map(([chapterId, chapter]) => (
+                <Block_Chapter
+                  key={chapterId}
+                  chapterId={chapterId}
+                  chapter={chapter}
+                />
+              ))}
+          </div>
+          <div className="editor-preview">
+            <Preview />
+          </div>
         </div>
       </div>
-    </div>
+    </Editor_Type.Provider>
   );
 };
 

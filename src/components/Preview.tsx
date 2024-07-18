@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Story, Dialogue_Option, Scene, Dialogue } from "../story/Interfaces";
 import { characters, Game_Character } from "../story/Characters";
 import Typewriter from "../components/Typewriter";
+import { Editor_Type } from "../pages/Editor";
 
-const Preview: React.FC<{
-  currentChapterId: string;
-  currentSceneId: string;
-  currentDialogueId: string;
-  story: Story;
-}> = ({ currentChapterId, currentSceneId, currentDialogueId, story }) => {
+const Preview: React.FC = () => {
+  const editor = useContext(Editor_Type);
   const [render, setRender] = useState<boolean>(false);
   const [scene, setScene] = useState<Scene>();
   const [dialogue, setDialogue] = useState<Dialogue>();
@@ -16,11 +13,13 @@ const Preview: React.FC<{
 
   const getNPC = (id: string) => characters[id];
 
-  const getChapter = (id: string) => story[id];
+  const getChapter = (id: string) => (editor.story as Story)[id];
 
-  const getScene = (id: string) => getChapter(currentChapterId).scenes[id];
+  const getScene = (id: string) =>
+    getChapter(editor.currentChapterId).scenes[id];
 
-  const getDialogue = (id: string) => getScene(currentSceneId).dialogue[id];
+  const getDialogue = (id: string) =>
+    getScene(editor.currentSceneId).dialogue[id];
 
   const summonOptions = (dialogueOptions: Dialogue_Option[]) => {
     return dialogueOptions.map((option: Dialogue_Option) => (
@@ -33,19 +32,28 @@ const Preview: React.FC<{
 
   useEffect(() => {
     setRender(
-      currentChapterId?.length > 0 &&
-        currentSceneId?.length > 0 &&
-        currentDialogueId?.length > 0
+      editor.currentChapterId?.length > 0 &&
+        editor.currentSceneId?.length > 0 &&
+        editor.currentDialogueId?.length > 0
     );
-  }, [currentChapterId, currentSceneId, currentDialogueId]);
+  }, [
+    editor.currentChapterId,
+    editor.currentSceneId,
+    editor.currentDialogueId,
+  ]);
 
   useEffect(() => {
     if (render) {
-      setScene(getScene(currentSceneId));
-      setDialogue(getDialogue(currentDialogueId));
-      setNPC(getNPC(getDialogue(currentDialogueId).character_id));
+      setScene(getScene(editor.currentSceneId));
+      setDialogue(getDialogue(editor.currentDialogueId));
+      setNPC(getNPC(getDialogue(editor.currentDialogueId).character_id));
     }
-  }, [render, currentChapterId, currentSceneId, currentDialogueId]);
+  }, [
+    render,
+    editor.currentChapterId,
+    editor.currentSceneId,
+    editor.currentDialogueId,
+  ]);
 
   return (
     render && (

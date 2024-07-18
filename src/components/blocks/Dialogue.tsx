@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Dialogue, Dialogue_Next } from "../../story/Interfaces";
 import { Dialogue_Next_Block } from "./Dialogue_Next_Block";
+import { Editor_Type } from "../../pages/Editor";
 
 export const Dialogue_Block: React.FC<{
   chapterId: string;
@@ -9,28 +10,13 @@ export const Dialogue_Block: React.FC<{
   dialogue: Dialogue;
   onChange: (dialogueId: string, field: keyof Dialogue, value: string) => void;
   onNextChange: (dialogueId: string, next: Dialogue_Next) => void;
-  onItemClick: (
-    event: React.MouseEvent,
-    input: {
-      chapterId?: string;
-      sceneId?: string;
-      dialogueId?: string;
-    }
-  ) => void;
-}> = ({
-  chapterId,
-  sceneId,
-  dialogueId,
-  dialogue,
-  onChange,
-  onNextChange,
-  onItemClick,
-}) => {
+}> = ({ chapterId, sceneId, dialogueId, dialogue, onChange, onNextChange }) => {
+  const editor = useContext(Editor_Type);
   const [isCollapsed, setIsCollapsed] = useState(true);
 
   const handleHeaderClick = (e: React.MouseEvent) => {
     if (!isCollapsed) e.stopPropagation();
-    else onItemClick(e, { dialogueId });
+    else editor.handleItemClick(e, { dialogueId });
     setIsCollapsed(!isCollapsed);
   };
 
@@ -39,7 +25,7 @@ export const Dialogue_Block: React.FC<{
   };
 
   const handleBlockClick = (e: React.MouseEvent) => {
-    onItemClick(e, { dialogueId });
+    editor.handleItemClick(e, { dialogueId });
   };
 
   return (

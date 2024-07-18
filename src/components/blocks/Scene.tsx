@@ -1,35 +1,14 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Scene, Dialogue, Dialogue_Next } from "../../story/Interfaces";
 import { Dialogue_Block } from "./Dialogue";
+import { Editor_Type } from "../../pages/Editor";
 
 export const Block_Scene: React.FC<{
   chapterId: string;
   sceneId: string;
   scene: Scene;
-  onRemove: () => void;
-  onSceneChange: (chapterId: string, sceneId: string, scene: Scene) => void;
-  onAddDialogue: (
-    chapterId: string,
-    sceneId: string,
-    dialogueId: string
-  ) => void;
-  onItemClick: (
-    event: React.MouseEvent,
-    input: {
-      chapterId?: string;
-      sceneId?: string;
-      dialogueId?: string;
-    }
-  ) => void;
-}> = ({
-  chapterId,
-  sceneId,
-  scene,
-  onRemove,
-  onSceneChange,
-  onAddDialogue,
-  onItemClick,
-}) => {
+}> = ({ chapterId, sceneId, scene }) => {
+  const editor = useContext(Editor_Type);
   const [isCollapsed, setIsCollapsed] = useState(true);
 
   const handleDialogueChange = (
@@ -41,7 +20,7 @@ export const Block_Scene: React.FC<{
     const dialogue = updatedScene.dialogue[dialogueId];
     if (dialogue) {
       dialogue[field] = value;
-      onSceneChange(chapterId, sceneId, updatedScene);
+      editor.handleSceneChange(chapterId, sceneId, updatedScene);
     }
   };
 
@@ -50,20 +29,20 @@ export const Block_Scene: React.FC<{
     const dialogue = updatedScene.dialogue[dialogueId];
     if (dialogue) {
       dialogue.next = next;
-      onSceneChange(chapterId, sceneId, updatedScene);
+      editor.handleSceneChange(chapterId, sceneId, updatedScene);
     }
   };
 
   const handleAddDialogue = () => {
     const dialogueId = prompt("Enter new dialogue ID:");
     if (dialogueId) {
-      onAddDialogue(chapterId, sceneId, dialogueId);
+      editor.handleAddDialogue(chapterId, sceneId, dialogueId);
     }
   };
 
   const handleBackgroundChange = (value: string) => {
     const updatedScene = { ...scene, background: value };
-    onSceneChange(chapterId, sceneId, updatedScene);
+    editor.handleSceneChange(chapterId, sceneId, updatedScene);
   };
 
   const handleHeaderClick = (e: React.MouseEvent) => {
@@ -72,7 +51,7 @@ export const Block_Scene: React.FC<{
   };
 
   const handleBlockClick = (e: React.MouseEvent) => {
-    onItemClick(e, { sceneId });
+    editor.handleItemClick(e, { sceneId });
   };
 
   return (
@@ -107,12 +86,13 @@ export const Block_Scene: React.FC<{
                   dialogue={dialogue}
                   onChange={handleDialogueChange}
                   onNextChange={handleNextChange}
-                  onItemClick={onItemClick}
                 />
               ))}
           </div>
           <button onClick={handleAddDialogue}>Add Dialogue</button>
-          <button onClick={onRemove}>Remove Scene</button>
+          <button onClick={() => editor.handleRemoveScene(chapterId, sceneId)}>
+            Remove Scene
+          </button>
         </div>
       )}
     </div>

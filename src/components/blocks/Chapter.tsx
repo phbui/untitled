@@ -1,41 +1,19 @@
-import { useState } from "react";
-import { Chapter, Scene } from "../../story/Interfaces";
+import { useContext, useState } from "react";
+import { Chapter } from "../../story/Interfaces";
 import { Block_Scene } from "./Scene";
+import { Editor_Type } from "../../pages/Editor";
 
 export const Block_Chapter: React.FC<{
   chapterId: string;
   chapter: Chapter;
-  onAddScene: (chapterId: string, sceneId: string) => void;
-  onRemoveScene: (chapterId: string, sceneId: string) => void;
-  onSceneChange: (chapterId: string, sceneId: string, scene: Scene) => void;
-  onAddDialogue: (
-    chapterId: string,
-    sceneId: string,
-    dialogueId: string
-  ) => void;
-  onItemClick: (
-    event: React.MouseEvent,
-    input: {
-      chapterId?: string;
-      sceneId?: string;
-      dialogueId?: string;
-    }
-  ) => void;
-}> = ({
-  chapterId,
-  chapter,
-  onAddScene,
-  onRemoveScene,
-  onSceneChange,
-  onAddDialogue,
-  onItemClick,
-}) => {
+}> = ({ chapterId, chapter }) => {
+  const editor = useContext(Editor_Type);
   const [isCollapsed, setIsCollapsed] = useState(true);
 
   const handleAddScene = () => {
     const sceneId = prompt("Enter new scene ID:");
     if (sceneId) {
-      onAddScene(chapterId, sceneId);
+      editor.handleAddScene(chapterId, sceneId);
     }
   };
 
@@ -45,7 +23,7 @@ export const Block_Chapter: React.FC<{
   };
 
   const handleBlockClick = (e: React.MouseEvent) => {
-    onItemClick(e, { chapterId });
+    editor.handleItemClick(e, { chapterId });
   };
 
   return (
@@ -67,10 +45,6 @@ export const Block_Chapter: React.FC<{
                 chapterId={chapterId}
                 sceneId={sceneId}
                 scene={scene}
-                onRemove={() => onRemoveScene(chapterId, sceneId)}
-                onSceneChange={onSceneChange}
-                onAddDialogue={onAddDialogue}
-                onItemClick={onItemClick}
               />
             ))}
           <button onClick={handleAddScene}>Add Scene</button>

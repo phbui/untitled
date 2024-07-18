@@ -3,6 +3,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { Story, Scene, Chapter } from "../story/Interfaces";
 import { EditorLayout } from "../components/Explorer";
+import { Game_Character } from "../story/Characters";
 
 export const fetchStory = async (): Promise<Story | null> => {
   try {
@@ -30,20 +31,49 @@ const updateStory = async (story: Story): Promise<void> => {
   }
 };
 
+export const fetchCharacters = async (): Promise<Game_Character | null> => {
+  try {
+    const characterDocs = doc(db, "dating-game", "characters");
+    const snapshot = await getDoc(characterDocs);
+    if (snapshot.exists()) {
+      return snapshot.data() as Game_Character;
+    } else {
+      console.error("No such document!");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching characters:", error);
+    return null;
+  }
+};
+
+const updateCharacters = async (character: Game_Character): Promise<void> => {
+  try {
+    const characterDocs = doc(db, "dating-game", "characters");
+    await setDoc(characterDocs, character);
+    console.log("Characters updated successfully!");
+  } catch (error) {
+    console.error("Error updating characters:", error);
+  }
+};
+
 const EditorContext = () => {
   const [story, setStory] = useState<Story | null>(null);
+  const [characters, setCharacters] = useState<Game_Character | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [currentChapterId, setCurrentChapterId] = useState<string>("");
   const [currentSceneId, setCurrentSceneId] = useState<string>("");
   const [currentDialogueId, setCurrentDialogueId] = useState<string>("");
 
   useEffect(() => {
-    const loadStory = async () => {
+    const load = async () => {
       const fetchedStory = await fetchStory();
       setStory(fetchedStory);
+      const fetchedCharacters = await fetchCharacters();
+      setCharacters(fetchedCharacters);
       setLoading(false);
     };
-    loadStory();
+    load();
   }, []);
 
   const handleAddChapter = (chapterId: string) => {
@@ -158,9 +188,10 @@ const EditorContext = () => {
   };
 
   const handleSave = async () => {
-    if (story) {
+    if (story && characters) {
       if (window.confirm("Are you sure you want to save changes?")) {
         await updateStory(story);
+        await updateCharacters(characters);
       }
     }
   };
@@ -191,6 +222,7 @@ const EditorContext = () => {
 
   const editor = {
     story,
+    characters,
     loading,
     currentChapterId,
     currentSceneId,

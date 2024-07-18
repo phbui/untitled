@@ -7,10 +7,9 @@ import {
   Story,
 } from "../story/Interfaces";
 import { Character } from "../components/Creation";
-import { useNavigate } from "react-router-dom";
 import Typewriter from "../components/Typewriter";
-import { characters, Game_Character } from "../story/Characters";
-import { fetchStory } from "./Editor";
+import { fetchCharacters, fetchStory } from "./Editor";
+import { Character_Repository, Game_Character } from "../story/Characters";
 
 export interface Save_Data {
   chapter_id: string;
@@ -22,6 +21,7 @@ const Game = () => {
   const user = useContext(User);
   const [loading, setLoading] = useState<boolean>(true);
   const [story, setStory] = useState<Story>({});
+  const [characters, setCharacters] = useState<Character_Repository>({});
   const [currentChapterId, setCurrentChapterId] = useState<string>("");
   const [currentSceneId, setCurrentSceneId] = useState<string>("");
   const [backgroundURL, setBackgroundURL] = useState<string>();
@@ -45,15 +45,15 @@ const Game = () => {
     setCurrentDialogueId(saveData.dialogue_id);
   };
 
-  const loadStory = async () => {
-    try {
-      setLoading(true);
-      await fetchStory();
-    } catch {}
-  };
-
   useEffect(() => {
-    loadStory();
+    const load = async () => {
+      const fetchedStory = await fetchStory();
+      setStory(fetchedStory as Story);
+      const fetchedCharacters = await fetchCharacters();
+      setCharacters(fetchedCharacters as Character_Repository);
+      setLoading(false);
+    };
+    load();
   }, []);
 
   useEffect(() => {

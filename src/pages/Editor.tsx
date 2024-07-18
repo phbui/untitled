@@ -3,7 +3,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { Story, Scene, Chapter } from "../story/Interfaces";
 import { EditorLayout } from "../components/Explorer";
-import { Game_Character } from "../story/Characters";
+import { Character_Repository } from "../story/Characters";
 
 export const fetchStory = async (): Promise<Story | null> => {
   try {
@@ -31,26 +31,29 @@ const updateStory = async (story: Story): Promise<void> => {
   }
 };
 
-export const fetchCharacters = async (): Promise<Game_Character | null> => {
-  try {
-    const characterDocs = doc(db, "dating-game", "characters");
-    const snapshot = await getDoc(characterDocs);
-    if (snapshot.exists()) {
-      return snapshot.data() as Game_Character;
-    } else {
-      console.error("No such document!");
+export const fetchCharacters =
+  async (): Promise<Character_Repository | null> => {
+    try {
+      const characterDocs = doc(db, "dating-game", "characters");
+      const snapshot = await getDoc(characterDocs);
+      if (snapshot.exists()) {
+        return snapshot.data() as Character_Repository;
+      } else {
+        console.error("No such document!");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching characters:", error);
       return null;
     }
-  } catch (error) {
-    console.error("Error fetching characters:", error);
-    return null;
-  }
-};
+  };
 
-const updateCharacters = async (character: Game_Character): Promise<void> => {
+const updateCharacters = async (
+  characters: Character_Repository
+): Promise<void> => {
   try {
     const characterDocs = doc(db, "dating-game", "characters");
-    await setDoc(characterDocs, character);
+    await setDoc(characterDocs, characters);
     console.log("Characters updated successfully!");
   } catch (error) {
     console.error("Error updating characters:", error);
@@ -59,7 +62,9 @@ const updateCharacters = async (character: Game_Character): Promise<void> => {
 
 const EditorContext = () => {
   const [story, setStory] = useState<Story | null>(null);
-  const [characters, setCharacters] = useState<Game_Character | null>(null);
+  const [characters, setCharacters] = useState<Character_Repository | null>(
+    null
+  );
   const [loading, setLoading] = useState<boolean>(true);
   const [currentChapterId, setCurrentChapterId] = useState<string>("");
   const [currentSceneId, setCurrentSceneId] = useState<string>("");

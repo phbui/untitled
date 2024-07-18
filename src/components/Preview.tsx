@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Story, Dialogue_Option, Scene, Dialogue } from "../story/Interfaces";
-import { characters, Game_Character } from "../story/Characters";
+import { Game_Character } from "../story/Characters";
 import Typewriter from "../components/Typewriter";
 import { Editor_Type } from "../pages/Editor";
 
@@ -10,7 +10,7 @@ const Preview: React.FC = () => {
   const [dialogue, setDialogue] = useState<Dialogue | undefined>();
   const [npc, setNPC] = useState<Game_Character | undefined>();
 
-  const getNPC = (id: string) => characters[id];
+  const getNPC = (id: string) => editor.characters[id] as Game_Character;
 
   const getChapter = (id: string) => (editor.story as Story)[id];
 

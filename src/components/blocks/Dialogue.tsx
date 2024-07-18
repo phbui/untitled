@@ -1,9 +1,9 @@
 import { useContext } from "react";
 import { Dialogue, Story } from "../../story/Interfaces";
 import { Editor_Type } from "../../pages/Editor";
-import { Dialogue_Next_Block } from "./Dialogue_Next";
+import { Block_Dialogue_Next } from "./Dialogue_Next";
 
-export const Dialogue_Block: React.FC<{}> = () => {
+export const Block_Dialogue: React.FC<{}> = () => {
   const editor = useContext(Editor_Type);
 
   const scene = (editor.story as Story)[editor.currentChapterId].scenes[
@@ -40,11 +40,8 @@ export const Dialogue_Block: React.FC<{}> = () => {
   };
 
   return (
-    <>
-      <div className="block-dialogue" onClick={(e) => e.stopPropagation()}>
-        <h4>Dialogue: {editor.currentDialogueId}</h4>
-      </div>
-
+    <div className="block-dialogue" onClick={(e) => e.stopPropagation()}>
+      <h4>Dialogue: {editor.currentDialogueId}</h4>{" "}
       <div onClick={handleBlockClick}>
         <label>
           Character ID:
@@ -64,8 +61,8 @@ export const Dialogue_Block: React.FC<{}> = () => {
           />
         </label>
         <br />
-        <Dialogue_Next_Block />
+        <Block_Dialogue_Next />
       </div>
-    </>
+    </div>
   );
 };

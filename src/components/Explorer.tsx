@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { Editor_Type } from "../pages/Editor";
 import { Story } from "../story/Interfaces";
 import { Block_Chapter } from "./blocks/Chapter";
-import { Dialogue_Block } from "./blocks/Dialogue";
+import { Block_Dialogue } from "./blocks/Dialogue";
 import { Block_Scene } from "./blocks/Scene";
 import Preview from "./Preview";
 
@@ -82,7 +82,7 @@ const Explorer: React.FC = () => {
             `Are you sure you want to remove chapter "${target.chapterId}"?`
           )
         ) {
-          editor.handleRemoveChapter(target.chapterId);
+          editor.handleDeleteChapter(target.chapterId);
         }
         break;
       case "removeScene":
@@ -91,7 +91,7 @@ const Explorer: React.FC = () => {
             `Are you sure you want to remove scene "${target.sceneId}"?`
           )
         ) {
-          editor.handleRemoveScene(target.chapterId, target.sceneId);
+          editor.handleDeleteScene(target.chapterId, target.sceneId);
         }
         break;
       case "removeDialogue":
@@ -100,7 +100,7 @@ const Explorer: React.FC = () => {
             `Are you sure you want to remove dialogue "${target.dialogueId}"?`
           )
         ) {
-          editor.handleRemoveDialogue(
+          editor.handleDeleteDialogue(
             target.chapterId,
             target.sceneId,
             target.dialogueId
@@ -242,7 +242,7 @@ const Explorer: React.FC = () => {
                 Add Scene
               </div>
               <div onClick={() => handleContextMenuAction("removeChapter")}>
-                Remove Chapter
+                Delete Chapter
               </div>
             </>
           )}
@@ -252,14 +252,14 @@ const Explorer: React.FC = () => {
                 Add Dialogue
               </div>
               <div onClick={() => handleContextMenuAction("removeScene")}>
-                Remove Scene
+                Delete Scene
               </div>
             </>
           )}
           {contextMenu.target.dialogueId && (
             <>
               <div onClick={() => handleContextMenuAction("removeDialogue")}>
-                Remove Dialogue
+                Delete Dialogue
               </div>
             </>
           )}
@@ -273,7 +273,7 @@ const EditorWindow: React.FC = () => {
   const editor = useContext(Editor_Type);
 
   if (editor.currentDialogueId) {
-    return <Dialogue_Block />;
+    return <Block_Dialogue />;
   }
 
   if (editor.currentSceneId) {
@@ -290,9 +290,16 @@ const EditorWindow: React.FC = () => {
 export const EditorLayout: React.FC = () => {
   return (
     <div className="editor-layout">
-      <Explorer />
-      <EditorWindow />
-      <Preview />
+      <div className="exploring">
+        <Explorer />
+        <div className="editing">
+          {" "}
+          <EditorWindow />
+        </div>
+      </div>
+      <div className="previewing">
+        <Preview />
+      </div>
     </div>
   );
 };

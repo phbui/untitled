@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { Dialogue_Next, Story } from "../../story/Interfaces";
 import { Editor_Type, fetchStory } from "../../pages/Editor";
 
-export const Dialogue_Next_Block: React.FC = () => {
+export const Block_Dialogue_Next: React.FC = () => {
   const editor = useContext(Editor_Type);
   const [nextType, setNextType] = useState<
     "chapter" | "scene" | "dialogue" | "choice"
@@ -98,7 +98,7 @@ export const Dialogue_Next_Block: React.FC = () => {
     setChoiceNext({ ...choiceNext, dialog_options: updatedOptions });
   };
 
-  const handleRemoveOption = (index: number) => {
+  const handleDeleteOption = (index: number) => {
     const updatedOptions = [...(choiceNext.dialog_options || [])];
     updatedOptions.splice(index, 1);
     setChoiceNext({ ...choiceNext, dialog_options: updatedOptions });
@@ -181,7 +181,7 @@ export const Dialogue_Next_Block: React.FC = () => {
           Object.keys(story || {}),
           (e) => handleNextOptionChange(index, "chapter_id", e.target.value)
         )}
-        <button onClick={() => handleRemoveOption(index)}>Remove Option</button>
+        <button onClick={() => handleDeleteOption(index)}>Delete Option</button>
       </div>
     ));
 

@@ -15,12 +15,12 @@ export const Block_Chapter: React.FC = () => {
     }
   };
 
-  const handleRemoveScene = (sceneId: string) => {
+  const handleDeleteScene = (sceneId: string) => {
     const confirm = window.confirm(
       `Are you sure you want to remove scene: ${sceneId}?`
     );
     if (confirm) {
-      editor.handleRemoveScene(editor.currentChapterId, sceneId);
+      editor.handleDeleteScene(editor.currentChapterId, sceneId);
     }
   };
 
@@ -41,8 +41,8 @@ export const Block_Chapter: React.FC = () => {
           .map(([sceneId]) => (
             <div key={sceneId} className="block-scene-container">
               <p>{sceneId}</p>
-              <button onClick={() => handleRemoveScene(sceneId)}>
-                Remove Scene
+              <button onClick={() => handleDeleteScene(sceneId)}>
+                Delete Scene
               </button>
             </div>
           ))}

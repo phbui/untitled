@@ -10,8 +10,6 @@ import { Character } from "../components/Creation";
 import { useNavigate } from "react-router-dom";
 import Typewriter from "../components/Typewriter";
 import { characters, Game_Character } from "../story/Characters";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../firebaseConfig";
 import { fetchStory } from "./Editor";
 
 export interface Save_Data {
@@ -21,7 +19,6 @@ export interface Save_Data {
 }
 
 const Game = () => {
-  const navigate = useNavigate();
   const user = useContext(User);
   const [loading, setLoading] = useState<boolean>(true);
   const [story, setStory] = useState<Story>({});

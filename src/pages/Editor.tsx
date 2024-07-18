@@ -56,7 +56,7 @@ const EditorContext = () => {
     }
   };
 
-  const handleRemoveChapter = (chapterId: string) => {
+  const handleDeleteChapter = (chapterId: string) => {
     if (story) {
       const { [chapterId]: _, ...updatedStory } = story;
       setStory(updatedStory);
@@ -76,7 +76,7 @@ const EditorContext = () => {
     }
   };
 
-  const handleRemoveScene = (chapterId: string, sceneId: string) => {
+  const handleDeleteScene = (chapterId: string, sceneId: string) => {
     if (story) {
       const updatedStory = { ...story };
       const chapter = updatedStory[chapterId];
@@ -117,7 +117,7 @@ const EditorContext = () => {
     }
   };
 
-  const handleRemoveDialogue = (
+  const handleDeleteDialogue = (
     chapterId: string,
     sceneId: string,
     dialogueId: string
@@ -135,7 +135,9 @@ const EditorContext = () => {
 
   const handleSave = async () => {
     if (story) {
-      await updateStory(story);
+      if (window.confirm("Are you sure you want to save changes?")) {
+        await updateStory(story);
+      }
     }
   };
 
@@ -170,12 +172,12 @@ const EditorContext = () => {
     currentSceneId,
     currentDialogueId,
     handleAddChapter,
-    handleRemoveChapter,
+    handleDeleteChapter,
     handleAddScene,
-    handleRemoveScene,
+    handleDeleteScene,
     handleSceneChange,
     handleAddDialogue,
-    handleRemoveDialogue,
+    handleDeleteDialogue,
     handleSave,
     handleItemClick,
   };
@@ -201,7 +203,11 @@ const Editor: React.FC = () => {
   return (
     <Editor_Type.Provider value={editor}>
       <div className="editor">
-        <button onClick={editor.handleSave}>Save Changes</button>
+        <div className="save-button-container">
+          <button className="save-button" onClick={editor.handleSave}>
+            Save Changes
+          </button>
+        </div>
         <EditorLayout />
       </div>
     </Editor_Type.Provider>

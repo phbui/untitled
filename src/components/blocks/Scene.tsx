@@ -61,13 +61,13 @@ export const Block_Scene: React.FC<{}> = () => {
         <button onClick={handleAddDialogue}>Add Dialogue</button>
         <button
           onClick={() =>
-            editor.handleRemoveScene(
+            editor.handleDeleteScene(
               editor.currentChapterId,
               editor.currentSceneId
             )
           }
         >
-          Remove Scene
+          Delete Scene
         </button>
       </div>
     </div>

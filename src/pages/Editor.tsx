@@ -59,6 +59,13 @@ const EditorContext = () => {
   const handleDeleteChapter = (chapterId: string) => {
     if (story) {
       const { [chapterId]: _, ...updatedStory } = story;
+
+      if (chapterId === currentSceneId) {
+        setCurrentChapterId("");
+        setCurrentSceneId("");
+        setCurrentDialogueId("");
+      }
+
       setStory(updatedStory);
     }
   };
@@ -81,6 +88,12 @@ const EditorContext = () => {
       const updatedStory = { ...story };
       const chapter = updatedStory[chapterId];
       delete chapter.scenes[sceneId];
+
+      if (sceneId === currentSceneId) {
+        setCurrentSceneId("");
+        setCurrentDialogueId("");
+      }
+
       setStory(updatedStory);
     }
   };
@@ -130,12 +143,13 @@ const EditorContext = () => {
     sceneId: string,
     dialogueId: string
   ) => {
-    console.log(chapterId, " ", sceneId, " ", dialogueId);
-
     if (story) {
       const updatedStory = { ...story };
       const chapter = updatedStory[chapterId];
       const scene = chapter.scenes[sceneId];
+
+      if (dialogueId === currentDialogueId) setCurrentDialogueId("");
+
       if (scene && scene.dialogue) {
         delete scene.dialogue[dialogueId];
         setStory({ ...updatedStory });

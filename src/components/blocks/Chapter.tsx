@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-
 import { Editor_Type } from "../../pages/Editor";
 import { Story } from "../../story/Interfaces";
 
@@ -7,6 +6,8 @@ export const Block_Chapter: React.FC = () => {
   const editor = useContext(Editor_Type);
 
   const chapter = (editor.story as Story)[editor.currentChapterId];
+  const [chapterName, setChapterName] = useState(chapter.name);
+  const [isEditing, setIsEditing] = useState(false);
 
   const handleAddScene = () => {
     const sceneId = prompt("Enter new scene ID:");
@@ -28,9 +29,37 @@ export const Block_Chapter: React.FC = () => {
     editor.handleItemClick(e, { chapterId: editor.currentChapterId });
   };
 
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setChapterName(e.target.value);
+  };
+
+  const handleNameBlur = () => {
+    const updatedChapter = { ...chapter, name: chapterName };
+    editor.handleChapterChange(editor.currentChapterId, updatedChapter);
+    setIsEditing(false);
+  };
+
   return (
     <div className="block-chapter" onClick={handleBlockClick}>
-      <h2>{editor.currentChapterId}</h2>
+      {isEditing ? (
+        <input
+          type="text"
+          value={chapterName}
+          onChange={handleNameChange}
+          onBlur={handleNameBlur}
+          autoFocus
+          className="chapter-name-input"
+        />
+      ) : (
+        <h2 onDoubleClick={() => setIsEditing(true)}>
+          {chapterName}
+          <i
+            className="fas fa-pen edit-icon"
+            title="Edit Chapter Name"
+            onClick={() => setIsEditing(true)}
+          ></i>
+        </h2>
+      )}
       <div>
         {Object.entries(chapter.scenes)
           .sort(([a], [b]) => {

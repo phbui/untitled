@@ -43,7 +43,7 @@ const Explorer: React.FC = () => {
 
   const handleRightClick = (e: React.MouseEvent, target: any) => {
     e.preventDefault();
-    setContextMenu({ x: e.clientX, y: e.clientY, target });
+    setContextMenu({ x: e.pageX, y: e.pageY - 50, target });
   };
 
   const handleLeftClick = () => {
@@ -145,14 +145,16 @@ const Explorer: React.FC = () => {
                   collapsedChapters.has(chapterId) ? "collapsed" : ""
                 } ${editor.currentChapterId === chapterId ? "selected" : ""}`}
                 onContextMenu={(e) => handleRightClick(e, { chapterId })}
+                onClick={(e) => editor.handleItemClick(e, { chapterId })}
               >
                 <span
                   className="triangle"
-                  onClick={() => toggleCollapse(chapterId, true)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleCollapse(chapterId, true);
+                  }}
                 />
-                <span onClick={(e) => editor.handleItemClick(e, { chapterId })}>
-                  [Chapter] {chapterId}
-                </span>
+                <span>[Chapter] {chapterId}</span>
               </div>
               {!collapsedChapters.has(chapterId) &&
                 Object.entries(chapter.scenes)
@@ -175,18 +177,18 @@ const Explorer: React.FC = () => {
                         onContextMenu={(e) =>
                           handleRightClick(e, { chapterId, sceneId })
                         }
+                        onClick={(e) =>
+                          editor.handleItemClick(e, { chapterId, sceneId })
+                        }
                       >
                         <span
                           className="triangle"
-                          onClick={() => toggleCollapse(sceneId, false)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleCollapse(sceneId, false);
+                          }}
                         />
-                        <span
-                          onClick={(e) =>
-                            editor.handleItemClick(e, { chapterId, sceneId })
-                          }
-                        >
-                          [Scene] {sceneId}
-                        </span>
+                        <span>[Scene] {sceneId}</span>
                       </div>
                       {!collapsedScenes.has(sceneId) &&
                         Object.keys(chapter.scenes[sceneId].dialogue)
@@ -234,7 +236,10 @@ const Explorer: React.FC = () => {
       {contextMenu && (
         <div
           className="context-menu"
-          style={{ top: contextMenu.y, left: contextMenu.x }}
+          style={{
+            top: `${contextMenu.y}px`,
+            left: `${contextMenu.x}px`,
+          }}
         >
           {!contextMenu.target.chapterId && (
             <div onClick={() => handleContextMenuAction("addChapter")}>
@@ -298,7 +303,6 @@ export const EditorLayout: React.FC = () => {
       <div className="exploring">
         <Explorer />
         <div className="editing">
-          {" "}
           <EditorWindow />
         </div>
       </div>

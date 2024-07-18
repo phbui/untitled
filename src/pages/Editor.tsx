@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createContext } from "react";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
-import { Story, Scene } from "../story/Interfaces";
+import { Story, Scene, Chapter } from "../story/Interfaces";
 import { EditorLayout } from "../components/Explorer";
 
 export const fetchStory = async (): Promise<Story | null> => {
@@ -97,6 +97,14 @@ const EditorContext = () => {
     }
   };
 
+  const handleChapterChange = (chapterId: string, chapter: Chapter) => {
+    if (story) {
+      const updatedStory = { ...story };
+      updatedStory[chapterId] = chapter;
+      setStory(updatedStory);
+    }
+  };
+
   const handleAddDialogue = (
     chapterId: string,
     sceneId: string,
@@ -176,6 +184,7 @@ const EditorContext = () => {
     handleAddScene,
     handleDeleteScene,
     handleSceneChange,
+    handleChapterChange,
     handleAddDialogue,
     handleDeleteDialogue,
     handleSave,

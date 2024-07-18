@@ -55,7 +55,17 @@ export const Block_Scene: React.FC<{}> = () => {
               return a.localeCompare(b);
             })
             .map(([dialogueId]) => (
-              <p>{dialogueId}</p>
+              <p
+                onClick={(e) =>
+                  editor.handleItemClick(e, {
+                    chapterId: editor.currentChapterId,
+                    sceneId: editor.currentSceneId,
+                    dialogueId: dialogueId,
+                  })
+                }
+              >
+                {dialogueId}
+              </p>
             ))}
         </div>
         <button onClick={handleAddDialogue}>Add Dialogue</button>

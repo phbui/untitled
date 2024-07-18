@@ -40,7 +40,16 @@ export const Block_Chapter: React.FC = () => {
           })
           .map(([sceneId]) => (
             <div key={sceneId} className="block-scene-container">
-              <p>{sceneId}</p>
+              <p
+                onClick={(e) =>
+                  editor.handleItemClick(e, {
+                    chapterId: editor.currentChapterId,
+                    sceneId: sceneId,
+                  })
+                }
+              >
+                {sceneId}
+              </p>
               <button onClick={() => handleDeleteScene(sceneId)}>
                 Delete Scene
               </button>

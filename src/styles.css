@@ -723,24 +723,34 @@ canvas {
   height: 100vh;
 }
 
+.ide-chapter {
+  padding-left: 20px;
+}
+
 .explorer-item {
-  cursor: pointer;
-  padding: 5px;
-  margin: 2px 0;
   display: flex;
   align-items: center;
+  padding: 5px;
+  margin: 2px 0;
+  cursor: pointer;
 }
 
-.explorer-item.collapsed::before {
+.explorer-item.collapsed .triangle::before {
   content: "▶";
-  display: inline-block;
+}
+
+.explorer-item .triangle::before {
+  content: "▼";
+}
+
+.triangle {
+  cursor: pointer;
   margin-right: 5px;
 }
 
-.explorer-item:not(.collapsed)::before {
-  content: "▼";
-  display: inline-block;
-  margin-right: 5px;
+.explorer-item-dialogue {
+  padding-left: 20px;
+  cursor: pointer;
 }
 
 .context-menu {
@@ -758,6 +768,15 @@ canvas {
 
 .context-menu div:hover {
   background-color: #eee;
+}
+
+.editor-layout {
+  display: flex;
+  height: 100vh;
+}
+
+.editor-layout > * {
+  flex: 1;
 }
 
 .block-scene-container {

@@ -198,18 +198,10 @@ const Editor: React.FC = () => {
     return <p>No story data available</p>;
   }
 
-  const handleAddChapterClick = () => {
-    const chapterId = prompt("Enter new chapter ID:");
-    if (chapterId) {
-      editor.handleAddChapter(chapterId);
-    }
-  };
-
   return (
     <Editor_Type.Provider value={editor}>
       <div className="editor">
         <button onClick={editor.handleSave}>Save Changes</button>
-        <button onClick={handleAddChapterClick}>Add Chapter</button>
         <EditorLayout />
       </div>
     </Editor_Type.Provider>

@@ -736,10 +736,20 @@ canvas {
 }
 
 .explorer-item.collapsed .triangle::before {
+  height: 10px;
+  width: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   content: "▶";
 }
 
 .explorer-item .triangle::before {
+  height: 10px;
+  width: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   content: "▼";
 }
 

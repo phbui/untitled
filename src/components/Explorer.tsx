@@ -145,7 +145,7 @@ const Explorer: React.FC = () => {
                   onClick={() => toggleCollapse(chapterId, true)}
                 />
                 <span onClick={(e) => editor.handleItemClick(e, { chapterId })}>
-                  {chapterId}
+                  [Chapter] {chapterId}
                 </span>
               </div>
               {!collapsedChapters.has(chapterId) &&
@@ -174,7 +174,7 @@ const Explorer: React.FC = () => {
                             editor.handleItemClick(e, { chapterId, sceneId })
                           }
                         >
-                          {sceneId}
+                          [Scene] {sceneId}
                         </span>
                       </div>
                       {!collapsedScenes.has(sceneId) &&
@@ -206,7 +206,7 @@ const Explorer: React.FC = () => {
                                   })
                                 }
                               >
-                                {dialogueId}
+                                [Dialogue] {dialogueId}
                               </div>
                             </div>
                           ))}

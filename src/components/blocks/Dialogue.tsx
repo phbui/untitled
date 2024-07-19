@@ -7,10 +7,6 @@ import { Dialogue, Story } from "../../story/Interfaces";
 export const Block_Dialogue: React.FC<{}> = () => {
   const editor = useContext(Editor_Type);
 
-  const scene = (editor.story as Story)[editor.currentChapterId].scenes[
-    editor.currentSceneId
-  ];
-
   const dialogue = (editor.story as Story)[editor.currentChapterId].scenes[
     editor.currentSceneId
   ].dialogue[editor.currentDialogueId];

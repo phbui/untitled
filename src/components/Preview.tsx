@@ -48,11 +48,9 @@ const Preview: React.FC = () => {
       setDialogue(undefined);
     }
   }, [
-    editor.story,
+    editor.currentCharacterId,
     editor.currentChapterId,
     editor.currentSceneId,
-    editor.currentDialogueId,
-    editor.currentCharacterId,
     editor.characters,
   ]);
 
@@ -71,8 +69,9 @@ const Preview: React.FC = () => {
         editor.currentSceneId,
         editor.currentDialogueId
       );
+
       setScene(currentScene);
-      setDialogue(currentDialogue);
+      setDialogue({ ...currentDialogue });
       setNPC(getNPC(currentDialogue.character_id));
     }
   }, [
@@ -126,7 +125,7 @@ const Preview: React.FC = () => {
           <div className="dialogue-container">
             <div className="name-container">
               <div className="name">
-                <p> {npc?.name}</p>
+                <p>{npc?.name}</p>
               </div>
             </div>
             <Typewriter

@@ -177,7 +177,11 @@ const Game = () => {
             <p> {playerTurn ? "Anon" : NPC?.name}</p>
           </div>
         </div>
-        <Typewriter dialogue={dialogue} getNext={getNext} />
+        <Typewriter
+          dialogue={dialogue}
+          getNext={getNext}
+          playerTurn={playerTurn}
+        />
         <div className="dialogue-options">
           {dialogueOptions?.map((option: Dialogue_Option) => {
             return (

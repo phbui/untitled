@@ -53,6 +53,7 @@ const Preview: React.FC = () => {
     editor.currentSceneId,
     editor.currentDialogueId,
     editor.currentCharacterId,
+    editor.characters,
   ]);
 
   useEffect(() => {
@@ -128,7 +129,11 @@ const Preview: React.FC = () => {
                 <p> {npc?.name}</p>
               </div>
             </div>
-            <Typewriter dialogue={dialogue} getNext={() => {}} />
+            <Typewriter
+              dialogue={dialogue}
+              getNext={() => {}}
+              playerTurn={false}
+            />
             <div className="dialogue-options">
               {dialogue.next.dialog_options &&
                 summonOptions(dialogue.next.dialog_options)}

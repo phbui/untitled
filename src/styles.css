@@ -499,7 +499,6 @@ canvas {
   justify-content: center;
   align-items: center;
   opacity: 0;
-
   animation: new-character 0.5s forwards;
 }
 
@@ -549,6 +548,7 @@ canvas {
   z-index: 10;
   cursor: pointer;
   position: relative;
+  transition: opacity ease-in-out 0.25s;
 }
 
 .name-container {
@@ -1001,6 +1001,10 @@ canvas {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.character-preview img {
+  width: 250px;
 }
 
 .character-preview div {

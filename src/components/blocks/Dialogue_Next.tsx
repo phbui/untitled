@@ -12,10 +12,6 @@ export const Block_Dialogue_Next: React.FC = () => {
   const [availableScenes, setAvailableScenes] = useState<string[]>([]);
   const [availableDialogues, setAvailableDialogues] = useState<string[]>([]);
 
-  const scene = (editor.story as Story)[editor.currentChapterId].scenes[
-    editor.currentSceneId
-  ];
-
   const next = (editor.story as Story)[editor.currentChapterId].scenes[
     editor.currentSceneId
   ].dialogue[editor.currentDialogueId].next;
@@ -114,32 +110,29 @@ export const Block_Dialogue_Next: React.FC = () => {
     setChoiceNext({ ...choiceNext, dialog_options: updatedOptions });
   };
 
-  const handleNextChange = (dialogueId: string, next: Dialogue_Next) => {
-    const updatedScene = { ...scene };
-    const dialogue = updatedScene.dialogue[dialogueId];
-    if (dialogue) {
-      dialogue.next = next;
-      editor.handleSceneChange(
-        editor.currentChapterId,
-        editor.currentSceneId,
-        updatedScene
-      );
-    }
-  };
-
   const switchTab = (type: "navigate" | "options") => {
     setNextType(type);
 
     switch (type) {
       case "navigate":
-        handleNextChange(editor.currentDialogueId, {
-          ...navigateNext,
-        } as Dialogue_Next);
+        editor.handleNextChange(
+          editor.currentChapterId,
+          editor.currentSceneId,
+          editor.currentDialogueId,
+          {
+            ...navigateNext,
+          } as Dialogue_Next
+        );
         break;
       case "options":
-        handleNextChange(editor.currentDialogueId, {
-          ...choiceNext,
-        } as Dialogue_Next);
+        editor.handleNextChange(
+          editor.currentChapterId,
+          editor.currentSceneId,
+          editor.currentDialogueId,
+          {
+            ...choiceNext,
+          } as Dialogue_Next
+        );
         break;
     }
   };

@@ -1,7 +1,13 @@
 import React, { useState, useEffect, createContext } from "react";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
-import { Story, Scene, Chapter, Dialogue } from "../story/Interfaces";
+import {
+  Story,
+  Scene,
+  Chapter,
+  Dialogue,
+  Dialogue_Next,
+} from "../story/Interfaces";
 import { Character_Repository, Game_Character } from "../story/Characters";
 import { EditorLayout } from "../components/Explorer";
 
@@ -88,7 +94,7 @@ const EditorContext = () => {
         ...story,
         [chapterId]: { name: "New Chapter", scenes: {} },
       };
-      setStory(updatedStory);
+      setStory({ ...updatedStory });
       setCurrentChapterId(chapterId);
       setCurrentSceneId("");
       setCurrentDialogueId("");
@@ -105,7 +111,7 @@ const EditorContext = () => {
         setCurrentDialogueId("");
       }
 
-      setStory(updatedStory);
+      setStory({ ...updatedStory });
     }
   };
 
@@ -118,7 +124,7 @@ const EditorContext = () => {
         background: "",
         dialogue: {},
       };
-      setStory(updatedStory);
+      setStory({ ...updatedStory });
       setCurrentChapterId(chapterId);
       setCurrentSceneId(sceneId);
       setCurrentDialogueId("");
@@ -136,7 +142,7 @@ const EditorContext = () => {
         setCurrentDialogueId("");
       }
 
-      setStory(updatedStory);
+      setStory({ ...updatedStory });
     }
   };
 
@@ -148,7 +154,7 @@ const EditorContext = () => {
     if (story) {
       const updatedStory = { ...story };
       updatedStory[chapterId].scenes[sceneId] = scene;
-      setStory(updatedStory);
+      setStory({ ...updatedStory });
     }
   };
 
@@ -156,7 +162,7 @@ const EditorContext = () => {
     if (story) {
       const updatedStory = { ...story };
       updatedStory[chapterId] = chapter;
-      setStory(updatedStory);
+      setStory({ ...updatedStory });
     }
   };
 
@@ -177,7 +183,7 @@ const EditorContext = () => {
             text: "",
           },
         };
-        setStory(updatedStory);
+        setStory({ ...updatedStory });
         setCurrentChapterId(chapterId);
         setCurrentSceneId(sceneId);
         setCurrentDialogueId(dialogueId);
@@ -219,7 +225,26 @@ const EditorContext = () => {
 
       if (dialogue) {
         dialogue[field] = value;
-        setStory(updatedStory);
+        setStory({ ...updatedStory });
+      }
+    }
+  };
+
+  const handleNextChange = (
+    chapterId: string,
+    sceneId: string,
+    dialogueId: string,
+    next: Dialogue_Next
+  ) => {
+    if (story) {
+      const updatedStory = { ...story };
+      const chapter = updatedStory[chapterId];
+      const scene = chapter.scenes[sceneId];
+      const dialogue = scene.dialogue[dialogueId];
+
+      if (dialogue) {
+        dialogue.next = next;
+        setStory({ ...updatedStory });
       }
     }
   };
@@ -309,6 +334,10 @@ const EditorContext = () => {
     }
   };
 
+  useEffect(() => {
+    console.log(story);
+  }, [story]);
+
   const editor = {
     story,
     characters,
@@ -326,6 +355,7 @@ const EditorContext = () => {
     handleAddDialogue,
     handleDeleteDialogue,
     handleDialogueChange,
+    handleNextChange,
     handleAddCharacter,
     handleDeleteCharacter,
     handleCharacterChange,

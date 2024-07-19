@@ -103,7 +103,15 @@ const Preview: React.FC = () => {
       {scene.background && (
         <img className="game-background" src={scene.background} />
       )}
-      <div className="game-buttons"></div>
+      <div className="title">
+        {dialogue && (
+          <p>
+            {getChapter(editor.currentChapterId).name}
+            {" - "}
+            {getScene(editor.currentChapterId, editor.currentSceneId).name}
+          </p>
+        )}
+      </div>
       {dialogue && (
         <>
           <div className="game-characters">

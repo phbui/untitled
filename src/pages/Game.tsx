@@ -148,6 +148,15 @@ const Game = () => {
   return (
     <div className="game">
       {backgroundURL && <img className="game-background" src={backgroundURL} />}
+      <div className="title">
+        {dialogue && (
+          <p>
+            {getChapter(currentChapterId).name}
+            {" - "}
+            {getScene(currentSceneId).name}
+          </p>
+        )}
+      </div>
       <div className="game-buttons"></div>
       <div className="game-characters">
         <div className={`pc ${playerTurn ? "active" : ""}`}>

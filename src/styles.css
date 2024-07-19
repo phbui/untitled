@@ -583,6 +583,17 @@ canvas {
   z-index: 12;
 }
 
+.title {
+  padding: 10px;
+}
+
+.title p {
+  margin: 0;
+  font-weight: 600;
+  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(218, 82, 122);
+}
+
 .cursor {
   display: inline-block;
   width: 10px;

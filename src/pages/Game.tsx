@@ -61,7 +61,7 @@ const Game = () => {
   useEffect(() => {
     if (story) {
       setLoading(false);
-      //if (user.character === undefined) navigate("/Home"); // uncomment for prod
+      if (user.character === undefined) navigate("/Home"); // uncomment for prod
 
       const saveData = {
         chapter_id: "day_one",
@@ -80,7 +80,7 @@ const Game = () => {
   const getNextChapter = (next: Dialogue_Next) => {
     if (next.chapter_id === undefined) return;
 
-    setCurrentChapterId(next.chapter_id);
+    setCurrentChapterId(next.chapter_id.replace(" (current)", ""));
     getNextScene(next);
   };
 
@@ -89,7 +89,7 @@ const Game = () => {
   const getNextScene = (next: Dialogue_Next) => {
     if (next.scene_id === undefined) return;
 
-    setCurrentSceneId(next.scene_id);
+    setCurrentSceneId(next.scene_id.replace(" (current)", ""));
     getNextDialogue(next);
   };
 
@@ -100,7 +100,7 @@ const Game = () => {
   const getNextDialogue = (next: Dialogue_Next) => {
     if (next.dialogue_id === undefined) return;
 
-    setCurrentDialogueId(next.dialogue_id);
+    setCurrentDialogueId(next.dialogue_id.replace(" (current)", ""));
   };
 
   const getInitialized = () =>
@@ -113,7 +113,7 @@ const Game = () => {
   const prepCharacters = (dialogue_id: string) => {
     const chapter_id: string = getDialogue(dialogue_id).character_id;
 
-    setPlayerTurn(chapter_id === "anon");
+    setPlayerTurn(chapter_id === "player");
     setNPC(getNPC(chapter_id) ?? getNPC(chapter_id));
   };
 
@@ -149,7 +149,7 @@ const Game = () => {
     <div className="game">
       {backgroundURL && <img className="game-background" src={backgroundURL} />}
       <div className="title">
-        {dialogue && (
+        {getInitialized() && dialogue && (
           <p>
             {getChapter(currentChapterId).name}
             {" - "}

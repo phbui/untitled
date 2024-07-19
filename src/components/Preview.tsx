@@ -55,6 +55,16 @@ const Preview: React.FC = () => {
   ]);
 
   useEffect(() => {
+    if (editor.currentChapterId && editor.currentSceneId) {
+      const currentScene = getScene(
+        editor.currentChapterId,
+        editor.currentSceneId
+      );
+      setScene(currentScene);
+    }
+  }, [editor.story]);
+
+  useEffect(() => {
     if (
       editor.currentChapterId &&
       editor.currentSceneId &&

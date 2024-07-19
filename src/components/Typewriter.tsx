@@ -51,7 +51,10 @@ const Typewriter: React.FC<Props_Typewriter> = ({
   return (
     <div
       className="dialogue"
-      style={{ opacity: `${playerTurn ? "0.5" : "1"}` }}
+      style={{
+        opacity: `${playerTurn ? "0.8" : "1"}`,
+        cursor: `${playerTurn ? "not-allowed" : "pointer"}`,
+      }}
       onClick={handleClick}
     >
       <div className="halftone" />

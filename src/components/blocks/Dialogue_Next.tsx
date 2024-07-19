@@ -4,13 +4,9 @@ import { Editor_Type, fetchStory } from "../../pages/Editor";
 
 export const Block_Dialogue_Next: React.FC = () => {
   const editor = useContext(Editor_Type);
-  const [nextType, setNextType] = useState<
-    "chapter" | "scene" | "dialogue" | "choice"
-  >();
+  const [nextType, setNextType] = useState<"navigate" | "options">();
 
-  const [chapterNext, setChapterNext] = useState<Partial<Dialogue_Next>>({});
-  const [sceneNext, setSceneNext] = useState<Partial<Dialogue_Next>>({});
-  const [dialogueNext, setDialogueNext] = useState<Partial<Dialogue_Next>>({});
+  const [navigateNext, setNavigateNext] = useState<Partial<Dialogue_Next>>({});
   const [choiceNext, setChoiceNext] = useState<Partial<Dialogue_Next>>({});
   const [story, setStory] = useState<Story | null>(null);
   const [availableScenes, setAvailableScenes] = useState<string[]>([]);
@@ -35,27 +31,24 @@ export const Block_Dialogue_Next: React.FC = () => {
   useEffect(() => {
     if (story === null) return;
 
-    if (next.chapter_id) {
-      setNextType("chapter");
-      setChapterNext(next);
-    } else if (next.scene_id) {
-      setChapterNext({ chapter_id: editor.currentChapterId });
-      setNextType("scene");
-      setSceneNext(next);
-    } else if (next.dialogue_id) {
-      setChapterNext({ chapter_id: editor.currentChapterId });
-      setSceneNext({ scene_id: editor.currentSceneId });
-      setNextType("dialogue");
-      setDialogueNext(next);
+    if (next.chapter_id || next.scene_id || next.dialogue_id) {
+      setNextType("navigate");
+      setNavigateNext(next);
     } else if (next.dialog_options && next.dialog_options.length > 0) {
-      setNextType("choice");
+      setNextType("options");
       setChoiceNext(next);
     }
   }, [next, story]);
 
   const findScenes = (chapterId: string) => {
     if (chapterId && story)
-      setAvailableScenes(Object.keys(story[chapterId]?.scenes || {}));
+      setAvailableScenes(
+        Object.keys(story[chapterId]?.scenes || {}).map((sceneId) => {
+          return sceneId === editor.currentSceneId
+            ? `${sceneId} (current)`
+            : sceneId;
+        })
+      );
   };
 
   const findDialogues = (chapterId: string, sceneId: string) => {
@@ -68,19 +61,22 @@ export const Block_Dialogue_Next: React.FC = () => {
   };
 
   useEffect(() => {
-    if (nextType === "chapter") {
-      findScenes(chapterNext.chapter_id || editor.currentChapterId);
-      if (chapterNext.chapter_id && chapterNext.scene_id) {
-        findDialogues(chapterNext.chapter_id, chapterNext.scene_id);
-      }
-    } else if (nextType === "scene" || nextType === "dialogue") {
-      findScenes(editor.currentChapterId);
-      findDialogues(
-        editor.currentChapterId,
-        sceneNext.scene_id || editor.currentSceneId
-      );
+    if (navigateNext.chapter_id) {
+      findScenes(navigateNext.chapter_id.replace(" (current)", ""));
+      setNavigateNext((prev) => ({ ...prev, scene_id: "", dialogue_id: "" }));
+      setAvailableDialogues([]);
     }
-  }, [chapterNext.chapter_id, sceneNext.scene_id, story, nextType]);
+  }, [navigateNext.chapter_id]);
+
+  useEffect(() => {
+    if (navigateNext.scene_id) {
+      findDialogues(
+        navigateNext.chapter_id!.replace(" (current)", ""),
+        navigateNext.scene_id.replace(" (current)", "")
+      );
+      setNavigateNext((prev) => ({ ...prev, dialogue_id: "" }));
+    }
+  }, [navigateNext.scene_id]);
 
   const handleNextOptionChange = (
     index: number,
@@ -128,29 +124,16 @@ export const Block_Dialogue_Next: React.FC = () => {
     }
   };
 
-  const switchTab = (type: "chapter" | "scene" | "dialogue" | "choice") => {
+  const switchTab = (type: "navigate" | "options") => {
     setNextType(type);
 
     switch (type) {
-      case "chapter":
+      case "navigate":
         handleNextChange(editor.currentDialogueId, {
-          ...chapterNext,
+          ...navigateNext,
         } as Dialogue_Next);
         break;
-      case "scene":
-        setChapterNext({ chapter_id: editor.currentChapterId });
-        handleNextChange(editor.currentDialogueId, {
-          ...sceneNext,
-        } as Dialogue_Next);
-        break;
-      case "dialogue":
-        setChapterNext({ chapter_id: editor.currentChapterId });
-        setSceneNext({ scene_id: editor.currentSceneId });
-        handleNextChange(editor.currentDialogueId, {
-          ...dialogueNext,
-        } as Dialogue_Next);
-        break;
-      case "choice":
+      case "options":
         handleNextChange(editor.currentDialogueId, {
           ...choiceNext,
         } as Dialogue_Next);
@@ -241,72 +224,45 @@ export const Block_Dialogue_Next: React.FC = () => {
 
   const renderInputs = () => {
     switch (nextType) {
-      case "chapter":
+      case "navigate":
         return (
           <>
             {renderSelect(
               "Next Chapter ID:",
-              chapterNext.chapter_id || "",
-              Object.keys(story || {}),
+              navigateNext.chapter_id || editor.currentChapterId,
+              Object.keys(story || {}).map((id) =>
+                id === editor.currentChapterId ? `${id} (current)` : id
+              ),
               (e) =>
-                setChapterNext({ ...chapterNext, chapter_id: e.target.value })
-            )}
-            {renderSelect(
-              "Next Scene ID:",
-              chapterNext.scene_id || "",
-              availableScenes,
-              (e) =>
-                setChapterNext({ ...chapterNext, scene_id: e.target.value }),
-              !chapterNext.chapter_id
-            )}
-            {renderSelect(
-              "Next Dialogue ID:",
-              chapterNext.dialogue_id || "",
-              availableDialogues,
-              (e) =>
-                setChapterNext({
-                  ...chapterNext,
-                  dialogue_id: e.target.value,
-                }),
-              !chapterNext.scene_id
-            )}
-          </>
-        );
-      case "scene":
-        return (
-          <>
-            {renderSelect(
-              "Next Scene ID:",
-              sceneNext.scene_id || "",
-              availableScenes,
-              (e) => setSceneNext({ ...sceneNext, scene_id: e.target.value })
-            )}
-            {renderSelect(
-              "Next Dialogue ID:",
-              sceneNext.dialogue_id || "",
-              availableDialogues,
-              (e) =>
-                setSceneNext({ ...sceneNext, dialogue_id: e.target.value }),
-              !sceneNext.scene_id
-            )}
-          </>
-        );
-      case "dialogue":
-        return (
-          <>
-            {renderSelect(
-              "Next Dialogue ID:",
-              dialogueNext.dialogue_id || "",
-              availableDialogues,
-              (e) =>
-                setDialogueNext({
-                  ...dialogueNext,
-                  dialogue_id: e.target.value,
+                setNavigateNext({
+                  ...navigateNext,
+                  chapter_id: e.target.value,
+                  scene_id: "",
+                  dialogue_id: "",
                 })
             )}
+            {renderSelect(
+              "Next Scene ID:",
+              navigateNext.scene_id || "",
+              availableScenes,
+              (e) =>
+                setNavigateNext({ ...navigateNext, scene_id: e.target.value }),
+              !navigateNext.chapter_id
+            )}
+            {renderSelect(
+              "Next Dialogue ID:",
+              navigateNext.dialogue_id || "",
+              availableDialogues,
+              (e) =>
+                setNavigateNext({
+                  ...navigateNext,
+                  dialogue_id: e.target.value,
+                }),
+              !navigateNext.scene_id
+            )}
           </>
         );
-      case "choice":
+      case "options":
         return (
           <div className="options-container">
             {renderOptionInputs()}
@@ -328,17 +284,15 @@ export const Block_Dialogue_Next: React.FC = () => {
   return (
     <div className="block-next">
       <div className="block-next__tabs">
-        {["chapter", "scene", "dialogue", "choice"].map((type) => (
+        {["navigate", "options"].map((type) => (
           <button
             key={type}
-            onClick={() =>
-              switchTab(type as "chapter" | "scene" | "dialogue" | "choice")
-            }
+            onClick={() => switchTab(type as "navigate" | "options")}
             className={`block-next__tab-button ${
               nextType === type ? "active" : ""
             }`}
           >
-            {`Next ${type.charAt(0).toUpperCase() + type.slice(1)}`}
+            {type.charAt(0).toUpperCase() + type.slice(1)}
           </button>
         ))}
       </div>

@@ -2,7 +2,7 @@ import React, { useState, useEffect, createContext } from "react";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { Story, Scene, Chapter } from "../story/Interfaces";
-import { Character_Repository } from "../story/Characters";
+import { Character_Repository, Game_Character } from "../story/Characters";
 import { EditorLayout } from "../components/Explorer";
 
 export const fetchStory = async (): Promise<Story | null> => {
@@ -227,6 +227,19 @@ const EditorContext = () => {
     }
   };
 
+  const handleCharacterChange = (
+    characterId: string,
+    character: Game_Character
+  ) => {
+    if (characters) {
+      const updatedCharacters = {
+        ...characters,
+        [characterId]: character,
+      };
+      setCharacters(updatedCharacters);
+    }
+  };
+
   const handleSave = async () => {
     if (story && characters) {
       if (window.confirm("Are you sure you want to save changes?")) {
@@ -247,20 +260,30 @@ const EditorContext = () => {
   ) => {
     event.stopPropagation();
 
+    if (input.characterId) {
+      setCurrentCharacterId(input.characterId);
+      setCurrentChapterId("");
+      setCurrentSceneId("");
+      setCurrentDialogueId("");
+    }
+
     if (input.chapterId) {
+      setCurrentCharacterId("");
       setCurrentChapterId(input.chapterId);
       setCurrentSceneId("");
       setCurrentDialogueId("");
     }
 
     if (input.sceneId) {
+      setCurrentCharacterId("");
       setCurrentSceneId(input.sceneId);
       setCurrentDialogueId("");
     }
 
-    if (input.dialogueId) setCurrentDialogueId(input.dialogueId);
-
-    if (input.characterId) setCurrentCharacterId(input.characterId);
+    if (input.dialogueId) {
+      setCurrentCharacterId("");
+      setCurrentDialogueId(input.dialogueId);
+    }
   };
 
   const editor = {
@@ -281,6 +304,7 @@ const EditorContext = () => {
     handleDeleteDialogue,
     handleAddCharacter,
     handleDeleteCharacter,
+    handleCharacterChange,
     handleSave,
     handleItemClick,
   };

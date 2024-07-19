@@ -34,12 +34,16 @@ const Preview: React.FC = () => {
   };
 
   useEffect(() => {
-    if (editor.currentChapterId && editor.currentSceneId) {
+    if (editor.currentCharacterId) {
+      const character = getNPC(editor.currentCharacterId);
+      setNPC(character);
+      setScene(undefined);
+      setDialogue(undefined);
+    } else if (editor.currentChapterId && editor.currentSceneId) {
       const currentScene = getScene(
         editor.currentChapterId,
         editor.currentSceneId
       );
-
       setScene(currentScene);
       setDialogue(undefined);
     }
@@ -48,6 +52,7 @@ const Preview: React.FC = () => {
     editor.currentChapterId,
     editor.currentSceneId,
     editor.currentDialogueId,
+    editor.currentCharacterId,
   ]);
 
   useEffect(() => {
@@ -75,6 +80,19 @@ const Preview: React.FC = () => {
     editor.currentSceneId,
     editor.currentDialogueId,
   ]);
+
+  if (editor.currentCharacterId && npc) {
+    return (
+      <div className="game">
+        <div className="character-preview">
+          <div className="npc active">
+            <img src={npc.url} alt={npc.name} />
+            <p>{npc.name}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!scene) {
     return null;

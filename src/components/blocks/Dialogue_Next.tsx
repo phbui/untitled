@@ -61,7 +61,9 @@ export const Block_Dialogue_Next: React.FC = () => {
   const findDialogues = (chapterId: string, sceneId: string) => {
     if (chapterId && sceneId && story)
       setAvailableDialogues(
-        Object.keys(story[chapterId]?.scenes[sceneId]?.dialogue || {})
+        Object.keys(story[chapterId]?.scenes[sceneId]?.dialogue || {}).filter(
+          (dialogueId) => dialogueId !== editor.currentDialogueId
+        )
       );
   };
 

@@ -750,7 +750,8 @@ canvas {
   margin-left: 10px;
 }
 
-.background-scene {
+.background-scene,
+.character-url {
   height: 10%;
   padding: 10px;
   display: flex;
@@ -807,7 +808,8 @@ canvas {
 }
 
 .block-dialogue__label,
-.background-scene {
+.background-scene,
+.character-url {
   display: block;
   font-weight: bold;
   color: #333;
@@ -815,7 +817,8 @@ canvas {
 
 .block-dialogue__select,
 .block-dialogue__input,
-.background-scene input {
+.background-scene input,
+.character-url input {
   display: block;
   width: 100%;
   padding: 10px;
@@ -944,6 +947,18 @@ canvas {
   overflow-y: auto;
   padding: 20px;
   height: 340px;
+}
+
+.character-preview {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.character-preview div {
+  flex-direction: column;
 }
 
 .editor-blocks {
@@ -1103,7 +1118,7 @@ canvas {
 .editing {
   position: relative;
   flex: 1;
-  height: 100%;
+  height: calc(100vh - 50px);
   width: 60%;
   z-index: 9;
 }

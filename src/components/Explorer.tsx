@@ -5,6 +5,7 @@ import { Block_Chapter } from "./blocks/Chapter";
 import { Block_Dialogue } from "./blocks/Dialogue";
 import { Block_Scene } from "./blocks/Scene";
 import Preview from "./Preview";
+import { Block_Character } from "./blocks/Character";
 
 const Explorer: React.FC = () => {
   const editor = useContext(Editor_Type);
@@ -331,7 +332,7 @@ const EditorWindow: React.FC = () => {
   }
 
   if (editor.currentCharacterId) {
-    //return <Block_Character />;
+    return <Block_Character />;
   }
 
   return <p>Select a chapter, scene, dialogue, or character to edit.</p>;

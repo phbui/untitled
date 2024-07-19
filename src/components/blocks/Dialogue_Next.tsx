@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { Dialogue_Next, Story } from "../../story/Interfaces";
+import { Dialogue_Next, Dialogue_Option, Story } from "../../story/Interfaces";
 import { Editor_Type, fetchStory } from "../../pages/Editor";
 
 export const Block_Dialogue_Next: React.FC = () => {
@@ -53,30 +53,32 @@ export const Block_Dialogue_Next: React.FC = () => {
     }
   }, [next, story]);
 
-  const findScenes = () => {
-    if (chapterNext.chapter_id && story)
-      setAvailableScenes(
-        Object.keys(story[chapterNext.chapter_id]?.scenes || {})
-      );
+  const findScenes = (chapterId: string) => {
+    if (chapterId && story)
+      setAvailableScenes(Object.keys(story[chapterId]?.scenes || {}));
   };
 
-  useEffect(() => {
-    findScenes();
-  }, [chapterNext, story]);
-
-  const findDialogues = () => {
-    if (sceneNext.scene_id && chapterNext.chapter_id && story)
+  const findDialogues = (chapterId: string, sceneId: string) => {
+    if (chapterId && sceneId && story)
       setAvailableDialogues(
-        Object.keys(
-          story[chapterNext.chapter_id]?.scenes[sceneNext.scene_id]?.dialogue ||
-            {}
-        )
+        Object.keys(story[chapterId]?.scenes[sceneId]?.dialogue || {})
       );
   };
 
   useEffect(() => {
-    findDialogues();
-  }, [sceneNext.scene_id, chapterNext.chapter_id, story]);
+    if (nextType === "chapter") {
+      findScenes(chapterNext.chapter_id || editor.currentChapterId);
+      if (chapterNext.chapter_id && chapterNext.scene_id) {
+        findDialogues(chapterNext.chapter_id, chapterNext.scene_id);
+      }
+    } else if (nextType === "scene" || nextType === "dialogue") {
+      findScenes(editor.currentChapterId);
+      findDialogues(
+        editor.currentChapterId,
+        sceneNext.scene_id || editor.currentSceneId
+      );
+    }
+  }, [chapterNext.chapter_id, sceneNext.scene_id, story, nextType]);
 
   const handleNextOptionChange = (
     index: number,
@@ -95,7 +97,10 @@ export const Block_Dialogue_Next: React.FC = () => {
       ...(choiceNext.dialog_options || []),
       { text: "", next: {} },
     ];
-    setChoiceNext({ ...choiceNext, dialog_options: updatedOptions });
+    setChoiceNext({
+      ...choiceNext,
+      dialog_options: updatedOptions as Dialogue_Option[],
+    });
   };
 
   const handleDeleteOption = (index: number) => {
@@ -122,19 +127,27 @@ export const Block_Dialogue_Next: React.FC = () => {
 
     switch (type) {
       case "chapter":
-        handleNextChange(editor.currentDialogueId, { ...chapterNext });
+        handleNextChange(editor.currentDialogueId, {
+          ...chapterNext,
+        } as Dialogue_Next);
         break;
       case "scene":
         setChapterNext({ chapter_id: editor.currentChapterId });
-        handleNextChange(editor.currentDialogueId, { ...sceneNext });
+        handleNextChange(editor.currentDialogueId, {
+          ...sceneNext,
+        } as Dialogue_Next);
         break;
       case "dialogue":
         setChapterNext({ chapter_id: editor.currentChapterId });
         setSceneNext({ scene_id: editor.currentSceneId });
-        handleNextChange(editor.currentDialogueId, { ...dialogueNext });
+        handleNextChange(editor.currentDialogueId, {
+          ...dialogueNext,
+        } as Dialogue_Next);
         break;
       case "choice":
-        handleNextChange(editor.currentDialogueId, { ...choiceNext });
+        handleNextChange(editor.currentDialogueId, {
+          ...choiceNext,
+        } as Dialogue_Next);
         break;
     }
   };
@@ -143,7 +156,8 @@ export const Block_Dialogue_Next: React.FC = () => {
     label: string,
     value: string,
     options: string[],
-    onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
+    onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void,
+    disabled: boolean = false
   ) => (
     <div className="block-next__select-container">
       <label className="block-next__label">
@@ -152,6 +166,7 @@ export const Block_Dialogue_Next: React.FC = () => {
           className="block-next__select"
           value={value}
           onChange={onChange}
+          disabled={disabled}
         >
           <option value="">Select...</option>
           {options.map((option) => (
@@ -168,6 +183,16 @@ export const Block_Dialogue_Next: React.FC = () => {
   const renderOptionInputs = () =>
     (choiceNext.dialog_options || []).map((option, index) => (
       <div key={index} className="block-next__option">
+        <label>
+          Option Text:
+          <input
+            type="text"
+            value={option.text}
+            onChange={(e) =>
+              handleNextOptionChange(index, "text", e.target.value)
+            }
+          />
+        </label>
         {renderSelect(
           "Next Dialogue ID:",
           option.next.dialogue_id || "",
@@ -212,7 +237,8 @@ export const Block_Dialogue_Next: React.FC = () => {
               chapterNext.scene_id || "",
               availableScenes,
               (e) =>
-                setChapterNext({ ...chapterNext, scene_id: e.target.value })
+                setChapterNext({ ...chapterNext, scene_id: e.target.value }),
+              !chapterNext.chapter_id
             )}
             {renderSelect(
               "Next Dialogue ID:",
@@ -222,7 +248,8 @@ export const Block_Dialogue_Next: React.FC = () => {
                 setChapterNext({
                   ...chapterNext,
                   dialogue_id: e.target.value,
-                })
+                }),
+              !chapterNext.scene_id
             )}
           </>
         );
@@ -239,7 +266,9 @@ export const Block_Dialogue_Next: React.FC = () => {
               "Next Dialogue ID:",
               sceneNext.dialogue_id || "",
               availableDialogues,
-              (e) => setSceneNext({ ...sceneNext, dialogue_id: e.target.value })
+              (e) =>
+                setSceneNext({ ...sceneNext, dialogue_id: e.target.value }),
+              !sceneNext.scene_id
             )}
           </>
         );
@@ -263,7 +292,6 @@ export const Block_Dialogue_Next: React.FC = () => {
           <div className="options-container">
             {renderOptionInputs()}
             <div className="add-button">
-              {" "}
               <button
                 className="block-next__add-option-button"
                 onClick={handleAddOption}

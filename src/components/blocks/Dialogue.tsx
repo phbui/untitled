@@ -18,7 +18,7 @@ export const Block_Dialogue: React.FC<{}> = () => {
   const handleDialogueChange = (
     dialogueId: string,
     field: keyof Dialogue,
-    value: string
+    value: any
   ) => {
     const updatedScene = { ...scene };
     const dialogue = updatedScene.dialogue[dialogueId];

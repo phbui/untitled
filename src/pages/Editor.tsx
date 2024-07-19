@@ -167,7 +167,9 @@ const EditorContext = () => {
         scene.dialogue[dialogueId] = {
           character_id: "",
           text: "",
-          next: {},
+          next: {
+            text: "",
+          },
         };
         setStory(updatedStory);
       }

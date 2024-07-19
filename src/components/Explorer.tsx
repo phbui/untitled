@@ -235,7 +235,7 @@ const Explorer: React.FC = () => {
           className={`explorer-item ${collapsedCharacters ? "collapsed" : ""} ${
             editor.currentCharacterId.length > 0 ? "selected" : ""
           }`}
-          onContextMenu={(e) => handleRightClick(e, {})}
+          onContextMenu={(e) => handleRightClick(e, { isCharacter: true })}
         >
           <span
             className="triangle"
@@ -251,13 +251,12 @@ const Explorer: React.FC = () => {
                 className={`explorer-item ${
                   editor.currentCharacterId === characterId ? "selected" : ""
                 }`}
-                onContextMenu={(e) => handleRightClick(e, { characterId })}
+                onContextMenu={(e) =>
+                  handleRightClick(e, { characterId, isCharacter: true })
+                }
                 onClick={(e) => editor.handleItemClick(e, { characterId })}
               >
-                <span>
-                  [Character]{" "}
-                  {editor.characters && editor.characters[characterId].name}
-                </span>
+                <span>[Character] {characterId}</span>
               </div>
             </div>
           ))}
@@ -270,7 +269,8 @@ const Explorer: React.FC = () => {
             }}
           >
             {!contextMenu.target.chapterId &&
-              !contextMenu.target.characterId && (
+              !contextMenu.target.characterId &&
+              !contextMenu.target.isCharacter && (
                 <div onClick={() => handleContextMenuAction("addChapter")}>
                   Add Chapter
                 </div>
@@ -302,11 +302,18 @@ const Explorer: React.FC = () => {
                 </div>
               </>
             )}
-            {contextMenu.target.characterId && (
+            {contextMenu.target.isCharacter && (
               <>
-                <div onClick={() => handleContextMenuAction("removeCharacter")}>
-                  Delete Character
+                <div onClick={() => handleContextMenuAction("addCharacter")}>
+                  Add Character
                 </div>
+                {contextMenu.target.characterId && (
+                  <div
+                    onClick={() => handleContextMenuAction("removeCharacter")}
+                  >
+                    Delete Character
+                  </div>
+                )}
               </>
             )}
           </div>

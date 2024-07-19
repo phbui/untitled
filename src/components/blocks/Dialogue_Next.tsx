@@ -145,10 +145,15 @@ export const Block_Dialogue_Next: React.FC = () => {
     options: string[],
     onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
   ) => (
-    <div>
-      <label>
+    <div className="block-next__select-container">
+      <label className="block-next__label">
         {label}
-        <select value={value} onChange={onChange}>
+        <select
+          className="block-next__select"
+          value={value}
+          onChange={onChange}
+        >
+          <option value="">Select...</option>
           {options.map((option) => (
             <option key={option} value={option}>
               {option}
@@ -162,7 +167,7 @@ export const Block_Dialogue_Next: React.FC = () => {
 
   const renderOptionInputs = () =>
     (choiceNext.dialog_options || []).map((option, index) => (
-      <div key={index} style={{ marginBottom: "10px" }}>
+      <div key={index} className="block-next__option">
         {renderSelect(
           "Next Dialogue ID:",
           option.next.dialogue_id || "",
@@ -181,7 +186,12 @@ export const Block_Dialogue_Next: React.FC = () => {
           Object.keys(story || {}),
           (e) => handleNextOptionChange(index, "chapter_id", e.target.value)
         )}
-        <button onClick={() => handleDeleteOption(index)}>Delete Option</button>
+        <button
+          className="block-next__delete-button"
+          onClick={() => handleDeleteOption(index)}
+        >
+          Delete Option
+        </button>
       </div>
     ));
 
@@ -250,10 +260,18 @@ export const Block_Dialogue_Next: React.FC = () => {
         );
       case "choice":
         return (
-          <>
+          <div className="options-container">
             {renderOptionInputs()}
-            <button onClick={handleAddOption}>Add Option</button>
-          </>
+            <div className="add-button">
+              {" "}
+              <button
+                className="block-next__add-option-button"
+                onClick={handleAddOption}
+              >
+                Add Option
+              </button>
+            </div>
+          </div>
         );
       default:
         return null;
@@ -262,19 +280,23 @@ export const Block_Dialogue_Next: React.FC = () => {
 
   return (
     <div className="block-next">
-      {["chapter", "scene", "dialogue", "choice"].map((type) => (
-        <button
-          key={type}
-          onClick={() =>
-            switchTab(type as "chapter" | "scene" | "dialogue" | "choice")
-          }
-          className={nextType === type ? "active" : ""}
-        >
-          {`Next ${type.charAt(0).toUpperCase() + type.slice(1)}?`}
-        </button>
-      ))}
+      <div className="block-next__tabs">
+        {["chapter", "scene", "dialogue", "choice"].map((type) => (
+          <button
+            key={type}
+            onClick={() =>
+              switchTab(type as "chapter" | "scene" | "dialogue" | "choice")
+            }
+            className={`block-next__tab-button ${
+              nextType === type ? "active" : ""
+            }`}
+          >
+            {`Next ${type.charAt(0).toUpperCase() + type.slice(1)}`}
+          </button>
+        ))}
+      </div>
       <br />
-      {renderInputs()}
+      <div className="block-next__inputs">{renderInputs()}</div>
     </div>
   );
 };

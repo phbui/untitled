@@ -41,7 +41,6 @@ export const Block_Dialogue: React.FC<{}> = () => {
       <h2 className="block-dialogue__title">
         Dialogue: {editor.currentDialogueId}
       </h2>
-
       <label className="block-dialogue__label">
         Character:
         <select
@@ -59,14 +58,13 @@ export const Block_Dialogue: React.FC<{}> = () => {
           )}
         </select>
       </label>
-      <br />
       <label className="block-dialogue__label">
         Text:
         <textarea
           className="block-dialogue__input"
           style={{
             resize: "vertical",
-            maxHeight: "250px",
+            maxHeight: "160px",
             overflowX: "hidden",
             overflowY: "auto",
           }}
@@ -74,7 +72,6 @@ export const Block_Dialogue: React.FC<{}> = () => {
           onChange={(e) => handleInputChange("text", e.target.value)}
         />
       </label>
-      <br />
       <Block_Dialogue_Next />
     </div>
   );

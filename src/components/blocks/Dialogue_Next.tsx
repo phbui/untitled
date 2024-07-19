@@ -5,7 +5,6 @@ import { Editor_Type } from "../../pages/Editor";
 export const Block_Dialogue_Next: React.FC = () => {
   const editor = useContext(Editor_Type);
   const [nextType, setNextType] = useState<"navigate" | "options">();
-
   const [navigateNext, setNavigateNext] = useState<Partial<Dialogue_Next>>({});
   const [choiceNext, setChoiceNext] = useState<Partial<Dialogue_Next>>({});
   const [availableScenes, setAvailableScenes] = useState<string[]>([]);
@@ -53,7 +52,10 @@ export const Block_Dialogue_Next: React.FC = () => {
         navigateNext.scene_id || ""
       );
     }
-  }, [nextType, navigateNext.chapter_id, navigateNext.scene_id]);
+    if (nextType === "options" && choiceNext.dialog_options) {
+      setChoiceNext(choiceNext);
+    }
+  }, [nextType, navigateNext.chapter_id, navigateNext.scene_id, choiceNext]);
 
   const updateAvailableScenes = (chapterId: string) => {
     if (chapterId && editor.story) {

@@ -6,25 +6,31 @@ export const Block_Character: React.FC = () => {
   const editor = useContext(Editor_Type);
 
   const [isEditing, setIsEditing] = useState(false);
-  const [character, setCharacter] = useState<Game_Character>();
+  const [character, setCharacter] = useState<Game_Character | undefined>(
+    undefined
+  );
   const [characterName, setCharacterName] = useState<string>("");
   const [characterUrl, setCharacterUrl] = useState<string>("");
 
   useEffect(() => {
-    setCharacter(editor.characters![editor.currentCharacterId]);
-    setCharacterName(editor.characters![editor.currentCharacterId].name);
-    setCharacterUrl(editor.characters![editor.currentCharacterId].url);
-  }, [editor.currentCharacterId]);
+    const currentCharacter = editor.characters![editor.currentCharacterId];
+    setCharacter(currentCharacter);
+    setCharacterName(currentCharacter.name);
+    setCharacterUrl(currentCharacter.url);
+  }, [editor.currentCharacterId, editor.characters]);
 
   const handleCharacterChange = (
     field: keyof Game_Character,
     value: string
   ) => {
-    const updatedCharacter = { ...character, [field]: value };
-    editor.handleCharacterChange(
-      editor.currentCharacterId,
-      updatedCharacter as Game_Character
-    );
+    if (character) {
+      const updatedCharacter = { ...character, [field]: value };
+      setCharacter(updatedCharacter);
+      editor.handleCharacterChange(
+        editor.currentCharacterId,
+        updatedCharacter as Game_Character
+      );
+    }
   };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {

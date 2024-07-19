@@ -105,7 +105,7 @@ const Preview: React.FC = () => {
         <img className="game-background" src={scene.background} />
       )}
       <div className="title">
-        {dialogue && (
+        {editor.currentChapterId && editor.currentSceneId && (
           <p>
             {getChapter(editor.currentChapterId).name}
             {" - "}

@@ -15,32 +15,19 @@ export const Block_Dialogue: React.FC<{}> = () => {
     editor.currentSceneId
   ].dialogue[editor.currentDialogueId];
 
-  const handleDialogueChange = (
-    dialogueId: string,
-    field: keyof Dialogue,
-    value: any
-  ) => {
-    const updatedScene = { ...scene };
-    const dialogue = updatedScene.dialogue[dialogueId];
-    if (dialogue) {
-      dialogue[field] = value;
-      editor.handleSceneChange(
-        editor.currentChapterId,
-        editor.currentSceneId,
-        updatedScene
-      );
-    }
-  };
-
   const handleInputChange = (field: keyof Dialogue, value: string) => {
-    handleDialogueChange(editor.currentDialogueId, field, value);
+    editor.handleDialogueChange(
+      editor.currentChapterId,
+      editor.currentSceneId,
+      editor.currentDialogueId,
+      field,
+      value
+    );
   };
 
   return (
     <div className="block" onClick={(e) => e.stopPropagation()}>
-      <h2 className="block-dialogue__title">
-        Dialogue: {editor.currentDialogueId}
-      </h2>
+      <h2 className="block-dialogue__title">{editor.currentDialogueId}</h2>
       <label className="block-dialogue__label">
         Character:
         <select

@@ -245,21 +245,23 @@ const Explorer: React.FC = () => {
         </div>
         {!collapsedCharacters &&
           editor.characters &&
-          Object.keys(editor.characters).map((characterId) => (
-            <div key={characterId} style={{ paddingLeft: "20px" }}>
-              <div
-                className={`explorer-item ${
-                  editor.currentCharacterId === characterId ? "selected" : ""
-                }`}
-                onContextMenu={(e) =>
-                  handleRightClick(e, { characterId, isCharacter: true })
-                }
-                onClick={(e) => editor.handleItemClick(e, { characterId })}
-              >
-                <span>[Character] {characterId}</span>
+          Object.keys(editor.characters)
+            .sort()
+            .map((characterId) => (
+              <div key={characterId} style={{ paddingLeft: "20px" }}>
+                <div
+                  className={`explorer-item ${
+                    editor.currentCharacterId === characterId ? "selected" : ""
+                  }`}
+                  onContextMenu={(e) =>
+                    handleRightClick(e, { characterId, isCharacter: true })
+                  }
+                  onClick={(e) => editor.handleItemClick(e, { characterId })}
+                >
+                  <span>[Character] {characterId}</span>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
         {contextMenu && (
           <div
             className="context-menu"

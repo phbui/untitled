@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createContext } from "react";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
-import { Story, Scene, Chapter } from "../story/Interfaces";
+import { Story, Scene, Chapter, Dialogue } from "../story/Interfaces";
 import { Character_Repository, Game_Character } from "../story/Characters";
 import { EditorLayout } from "../components/Explorer";
 
@@ -204,6 +204,26 @@ const EditorContext = () => {
     }
   };
 
+  const handleDialogueChange = (
+    chapterId: string,
+    sceneId: string,
+    dialogueId: string,
+    field: keyof Dialogue,
+    value: any
+  ) => {
+    if (story) {
+      const updatedStory = { ...story };
+      const chapter = updatedStory[chapterId];
+      const scene = chapter.scenes[sceneId];
+      const dialogue = scene.dialogue[dialogueId];
+
+      if (dialogue) {
+        dialogue[field] = value;
+        setStory(updatedStory);
+      }
+    }
+  };
+
   const handleAddCharacter = (characterId: string, character: any) => {
     if (characters) {
       const updatedCharacters = {
@@ -212,6 +232,9 @@ const EditorContext = () => {
       };
       setCharacters(updatedCharacters);
       setCurrentCharacterId(characterId);
+      setCurrentChapterId("");
+      setCurrentSceneId("");
+      setCurrentDialogueId("");
     }
   };
 
@@ -302,6 +325,7 @@ const EditorContext = () => {
     handleSceneChange,
     handleAddDialogue,
     handleDeleteDialogue,
+    handleDialogueChange,
     handleAddCharacter,
     handleDeleteCharacter,
     handleCharacterChange,

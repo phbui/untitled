@@ -809,6 +809,7 @@ canvas {
 
 .block-dialogue__label,
 .background-scene,
+.block-next__option,
 .character-url {
   display: block;
   font-weight: bold;
@@ -818,6 +819,7 @@ canvas {
 .block-dialogue__select,
 .block-dialogue__input,
 .background-scene input,
+.block-next__option input,
 .character-url input {
   display: block;
   width: 100%;

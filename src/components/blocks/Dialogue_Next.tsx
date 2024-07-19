@@ -84,14 +84,18 @@ export const Block_Dialogue_Next: React.FC = () => {
 
   const handleNextOptionChange = (
     index: number,
-    field: keyof Dialogue_Option["next"],
-    value: string
+    field: keyof Dialogue_Option,
+    value: any
   ) => {
-    const updatedOptions = [...(choiceNext.dialog_options || [])];
-    const option = updatedOptions[index];
-    const updatedNext = { ...option.next, [field]: value };
-    updatedOptions[index] = { ...option, next: updatedNext };
-    setChoiceNext({ ...choiceNext, dialog_options: updatedOptions });
+    const updatedOptions = { ...choiceNext };
+    const dialogOption = updatedOptions.dialog_options
+      ? updatedOptions.dialog_options[index]
+      : null;
+
+    if (dialogOption) {
+      dialogOption[field] = value;
+      setChoiceNext(updatedOptions);
+    }
   };
 
   const handleAddOption = () => {
@@ -186,7 +190,7 @@ export const Block_Dialogue_Next: React.FC = () => {
     (choiceNext.dialog_options || []).map((option, index) => (
       <div key={index} className="block-next__option">
         <label>
-          Option Text:
+          Text:
           <input
             type="text"
             value={option.text}
@@ -200,7 +204,9 @@ export const Block_Dialogue_Next: React.FC = () => {
           option.next.chapter_id || "",
           Object.keys(story || {}),
           (e) => {
-            handleNextOptionChange(index, "chapter_id", e.target.value);
+            handleNextOptionChange(index, "next", {
+              chapter_id: e.target.value,
+            });
             findScenes(e.target.value);
           }
         )}
@@ -209,7 +215,7 @@ export const Block_Dialogue_Next: React.FC = () => {
           option.next.scene_id || "",
           availableScenes,
           (e) => {
-            handleNextOptionChange(index, "scene_id", e.target.value);
+            handleNextOptionChange(index, "next", { scene_id: e.target.value });
             findDialogues(option.next.chapter_id || "", e.target.value);
           },
           !option.next.chapter_id
@@ -218,7 +224,10 @@ export const Block_Dialogue_Next: React.FC = () => {
           "Next Dialogue ID:",
           option.next.dialogue_id || "",
           availableDialogues,
-          (e) => handleNextOptionChange(index, "dialogue_id", e.target.value),
+          (e) =>
+            handleNextOptionChange(index, "next", {
+              dialogue_id: e.target.value,
+            }),
           !option.next.scene_id
         )}
         <button

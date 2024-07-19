@@ -44,7 +44,7 @@ const Explorer: React.FC = () => {
 
   const handleRightClick = (e: React.MouseEvent, target: any) => {
     e.preventDefault();
-    setContextMenu({ x: e.pageX, y: e.pageY - 50, target });
+    setContextMenu({ x: e.pageX, y: e.pageY, target });
   };
 
   const handleLeftClick = () => {
@@ -111,204 +111,206 @@ const Explorer: React.FC = () => {
 
   return (
     <div className="file-explorer" onClick={handleLeftClick}>
-      <div
-        className={`explorer-item ${collapsedStory ? "collapsed" : ""} ${
-          editor.currentChapterId.length > 0 ||
-          editor.currentSceneId.length > 0 ||
-          editor.currentDialogueId.length > 0
-            ? "selected"
-            : ""
-        }`}
-        onContextMenu={(e) => handleRightClick(e, {})}
-      >
-        <span
-          className="triangle"
-          onClick={() => setCollapsedStory(!collapsedStory)}
-        />
-        <span>Story</span>
-      </div>
-      {!collapsedStory &&
-        Object.entries(editor.story as Story)
-          .sort(([a], [b]) => {
-            if (a === "start") return -1;
-            if (b === "start") return 1;
-            return a.localeCompare(b);
-          })
-          .map(([chapterId, chapter]) => (
-            <div className="ide-chapter" key={chapterId}>
+      <div className="file-explorer-content">
+        <div
+          className={`explorer-item ${collapsedStory ? "collapsed" : ""} ${
+            editor.currentChapterId.length > 0 ||
+            editor.currentSceneId.length > 0 ||
+            editor.currentDialogueId.length > 0
+              ? "selected"
+              : ""
+          }`}
+          onContextMenu={(e) => handleRightClick(e, {})}
+        >
+          <span
+            className="triangle"
+            onClick={() => setCollapsedStory(!collapsedStory)}
+          />
+          <span>Story</span>
+        </div>
+        {!collapsedStory &&
+          Object.entries(editor.story as Story)
+            .sort(([a], [b]) => {
+              if (a === "start") return -1;
+              if (b === "start") return 1;
+              return a.localeCompare(b);
+            })
+            .map(([chapterId, chapter]) => (
+              <div className="ide-chapter" key={chapterId}>
+                <div
+                  className={`explorer-item ${
+                    collapsedChapters.has(chapterId) ? "collapsed" : ""
+                  } ${editor.currentChapterId === chapterId ? "selected" : ""}`}
+                  onContextMenu={(e) => handleRightClick(e, { chapterId })}
+                  onClick={(e) => editor.handleItemClick(e, { chapterId })}
+                >
+                  <span
+                    className="triangle"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleCollapse(chapterId, true);
+                    }}
+                  />
+                  <span>[Chapter] {chapterId}</span>
+                </div>
+                {!collapsedChapters.has(chapterId) &&
+                  Object.entries(chapter.scenes)
+                    .sort(([a], [b]) => {
+                      if (a === "start") return -1;
+                      if (b === "start") return 1;
+                      return a.localeCompare(b);
+                    })
+                    .map(([sceneId]) => (
+                      <div key={sceneId} style={{ paddingLeft: "20px" }}>
+                        <div
+                          className={`explorer-item ${
+                            collapsedScenes.has(sceneId) ? "collapsed" : ""
+                          } ${
+                            editor.currentSceneId === sceneId &&
+                            editor.currentChapterId === chapterId
+                              ? "selected"
+                              : ""
+                          }`}
+                          onContextMenu={(e) =>
+                            handleRightClick(e, { chapterId, sceneId })
+                          }
+                          onClick={(e) =>
+                            editor.handleItemClick(e, { chapterId, sceneId })
+                          }
+                        >
+                          <span
+                            className="triangle"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleCollapse(sceneId, false);
+                            }}
+                          />
+                          <span>[Scene] {sceneId}</span>
+                        </div>
+                        {!collapsedScenes.has(sceneId) &&
+                          Object.keys(chapter.scenes[sceneId].dialogue)
+                            .sort((a, b) => {
+                              if (a === "start") return -1;
+                              if (b === "start") return 1;
+                              return a.localeCompare(b);
+                            })
+                            .map((dialogueId) => (
+                              <div
+                                key={dialogueId}
+                                style={{ paddingLeft: "40px" }}
+                              >
+                                <div
+                                  className={`explorer-item-dialogue ${
+                                    editor.currentDialogueId === dialogueId &&
+                                    editor.currentSceneId === sceneId &&
+                                    editor.currentChapterId === chapterId
+                                      ? "selected"
+                                      : ""
+                                  }`}
+                                  onContextMenu={(e) =>
+                                    handleRightClick(e, {
+                                      chapterId,
+                                      sceneId,
+                                      dialogueId,
+                                    })
+                                  }
+                                  onClick={(e) =>
+                                    editor.handleItemClick(e, {
+                                      chapterId,
+                                      sceneId,
+                                      dialogueId,
+                                    })
+                                  }
+                                >
+                                  [Dialogue] {dialogueId}
+                                </div>
+                              </div>
+                            ))}
+                      </div>
+                    ))}
+              </div>
+            ))}
+        <div
+          className={`explorer-item ${collapsedCharacters ? "collapsed" : ""} ${
+            editor.currentCharacterId.length > 0 ? "selected" : ""
+          }`}
+          onContextMenu={(e) => handleRightClick(e, {})}
+        >
+          <span
+            className="triangle"
+            onClick={() => setCollapsedCharacters(!collapsedCharacters)}
+          />
+          <span>Characters</span>
+        </div>
+        {!collapsedCharacters &&
+          editor.characters &&
+          Object.keys(editor.characters).map((characterId) => (
+            <div key={characterId} style={{ paddingLeft: "20px" }}>
               <div
                 className={`explorer-item ${
-                  collapsedChapters.has(chapterId) ? "collapsed" : ""
-                } ${editor.currentChapterId === chapterId ? "selected" : ""}`}
-                onContextMenu={(e) => handleRightClick(e, { chapterId })}
-                onClick={(e) => editor.handleItemClick(e, { chapterId })}
+                  editor.currentCharacterId === characterId ? "selected" : ""
+                }`}
+                onContextMenu={(e) => handleRightClick(e, { characterId })}
+                onClick={(e) => editor.handleItemClick(e, { characterId })}
               >
-                <span
-                  className="triangle"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleCollapse(chapterId, true);
-                  }}
-                />
-                <span>[Chapter] {chapterId}</span>
+                <span>
+                  [Character]{" "}
+                  {editor.characters && editor.characters[characterId].name}
+                </span>
               </div>
-              {!collapsedChapters.has(chapterId) &&
-                Object.entries(chapter.scenes)
-                  .sort(([a], [b]) => {
-                    if (a === "start") return -1;
-                    if (b === "start") return 1;
-                    return a.localeCompare(b);
-                  })
-                  .map(([sceneId]) => (
-                    <div key={sceneId} style={{ paddingLeft: "20px" }}>
-                      <div
-                        className={`explorer-item ${
-                          collapsedScenes.has(sceneId) ? "collapsed" : ""
-                        } ${
-                          editor.currentSceneId === sceneId &&
-                          editor.currentChapterId === chapterId
-                            ? "selected"
-                            : ""
-                        }`}
-                        onContextMenu={(e) =>
-                          handleRightClick(e, { chapterId, sceneId })
-                        }
-                        onClick={(e) =>
-                          editor.handleItemClick(e, { chapterId, sceneId })
-                        }
-                      >
-                        <span
-                          className="triangle"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleCollapse(sceneId, false);
-                          }}
-                        />
-                        <span>[Scene] {sceneId}</span>
-                      </div>
-                      {!collapsedScenes.has(sceneId) &&
-                        Object.keys(chapter.scenes[sceneId].dialogue)
-                          .sort((a, b) => {
-                            if (a === "start") return -1;
-                            if (b === "start") return 1;
-                            return a.localeCompare(b);
-                          })
-                          .map((dialogueId) => (
-                            <div
-                              key={dialogueId}
-                              style={{ paddingLeft: "40px" }}
-                            >
-                              <div
-                                className={`explorer-item-dialogue ${
-                                  editor.currentDialogueId === dialogueId &&
-                                  editor.currentSceneId === sceneId &&
-                                  editor.currentChapterId === chapterId
-                                    ? "selected"
-                                    : ""
-                                }`}
-                                onContextMenu={(e) =>
-                                  handleRightClick(e, {
-                                    chapterId,
-                                    sceneId,
-                                    dialogueId,
-                                  })
-                                }
-                                onClick={(e) =>
-                                  editor.handleItemClick(e, {
-                                    chapterId,
-                                    sceneId,
-                                    dialogueId,
-                                  })
-                                }
-                              >
-                                [Dialogue] {dialogueId}
-                              </div>
-                            </div>
-                          ))}
-                    </div>
-                  ))}
             </div>
           ))}
-      <div
-        className={`explorer-item ${collapsedCharacters ? "collapsed" : ""} ${
-          editor.currentCharacterId.length > 0 ? "selected" : ""
-        }`}
-        onContextMenu={(e) => handleRightClick(e, {})}
-      >
-        <span
-          className="triangle"
-          onClick={() => setCollapsedCharacters(!collapsedCharacters)}
-        />
-        <span>Characters</span>
-      </div>
-      {!collapsedCharacters &&
-        editor.characters &&
-        Object.keys(editor.characters).map((characterId) => (
-          <div key={characterId} style={{ paddingLeft: "20px" }}>
-            <div
-              className={`explorer-item ${
-                editor.currentCharacterId === characterId ? "selected" : ""
-              }`}
-              onContextMenu={(e) => handleRightClick(e, { characterId })}
-              onClick={(e) => editor.handleItemClick(e, { characterId })}
-            >
-              <span>
-                [Character]{" "}
-                {editor.characters && editor.characters[characterId].name}
-              </span>
-            </div>
+        {contextMenu && (
+          <div
+            className="context-menu"
+            style={{
+              top: `${contextMenu.y}px`,
+              left: `${contextMenu.x}px`,
+            }}
+          >
+            {!contextMenu.target.chapterId &&
+              !contextMenu.target.characterId && (
+                <div onClick={() => handleContextMenuAction("addChapter")}>
+                  Add Chapter
+                </div>
+              )}
+            {contextMenu.target.chapterId && !contextMenu.target.sceneId && (
+              <>
+                <div onClick={() => handleContextMenuAction("addScene")}>
+                  Add Scene
+                </div>
+                <div onClick={() => handleContextMenuAction("removeChapter")}>
+                  Delete Chapter
+                </div>
+              </>
+            )}
+            {contextMenu.target.sceneId && !contextMenu.target.dialogueId && (
+              <>
+                <div onClick={() => handleContextMenuAction("addDialogue")}>
+                  Add Dialogue
+                </div>
+                <div onClick={() => handleContextMenuAction("removeScene")}>
+                  Delete Scene
+                </div>
+              </>
+            )}
+            {contextMenu.target.dialogueId && (
+              <>
+                <div onClick={() => handleContextMenuAction("removeDialogue")}>
+                  Delete Dialogue
+                </div>
+              </>
+            )}
+            {contextMenu.target.characterId && (
+              <>
+                <div onClick={() => handleContextMenuAction("removeCharacter")}>
+                  Delete Character
+                </div>
+              </>
+            )}
           </div>
-        ))}
-
-      {contextMenu && (
-        <div
-          className="context-menu"
-          style={{
-            top: `${contextMenu.y}px`,
-            left: `${contextMenu.x}px`,
-          }}
-        >
-          {!contextMenu.target.chapterId && !contextMenu.target.characterId && (
-            <div onClick={() => handleContextMenuAction("addChapter")}>
-              Add Chapter
-            </div>
-          )}
-          {contextMenu.target.chapterId && !contextMenu.target.sceneId && (
-            <>
-              <div onClick={() => handleContextMenuAction("addScene")}>
-                Add Scene
-              </div>
-              <div onClick={() => handleContextMenuAction("removeChapter")}>
-                Delete Chapter
-              </div>
-            </>
-          )}
-          {contextMenu.target.sceneId && !contextMenu.target.dialogueId && (
-            <>
-              <div onClick={() => handleContextMenuAction("addDialogue")}>
-                Add Dialogue
-              </div>
-              <div onClick={() => handleContextMenuAction("removeScene")}>
-                Delete Scene
-              </div>
-            </>
-          )}
-          {contextMenu.target.dialogueId && (
-            <>
-              <div onClick={() => handleContextMenuAction("removeDialogue")}>
-                Delete Dialogue
-              </div>
-            </>
-          )}
-          {contextMenu.target.characterId && (
-            <>
-              <div onClick={() => handleContextMenuAction("removeCharacter")}>
-                Delete Character
-              </div>
-            </>
-          )}
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

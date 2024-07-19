@@ -637,12 +637,10 @@ canvas {
 
 .editor {
   position: relative;
-  height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 .block {
@@ -983,10 +981,19 @@ canvas {
 
 .file-explorer {
   width: 40%;
-  height: 100%;
+  height: calc(100vh - 50px);
   background-color: #f4f4f4;
   padding: 10px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  display: block;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.file-explorer-content {
   overflow-y: auto;
   overflow-x: hidden;
   position: relative;
@@ -1037,7 +1044,7 @@ canvas {
 }
 
 .context-menu {
-  position: absolute;
+  position: fixed;
   background-color: white;
   border: 1px solid #ccc;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
@@ -1098,6 +1105,7 @@ canvas {
   position: relative;
   flex: 1;
   height: 100%;
+  z-index: 9;
 }
 
 .editing p {

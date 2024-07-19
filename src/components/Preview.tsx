@@ -115,7 +115,11 @@ const Preview: React.FC = () => {
             )}
           </div>
           <div className="dialogue-container">
-            <div>{npc?.name}</div>
+            <div className="name-container">
+              <div className="name">
+                <p> {npc?.name}</p>
+              </div>
+            </div>
             <Typewriter dialogue={dialogue} getNext={() => {}} />
             <div className="dialogue-options">
               {dialogue.next.dialog_options &&

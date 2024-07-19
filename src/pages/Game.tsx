@@ -10,6 +10,7 @@ import { Character } from "../components/Creation";
 import Typewriter from "../components/Typewriter";
 import { fetchCharacters, fetchStory } from "./Editor";
 import { Character_Repository, Game_Character } from "../story/Characters";
+import { useNavigate } from "react-router-dom";
 
 export interface Save_Data {
   chapter_id: string;
@@ -19,8 +20,9 @@ export interface Save_Data {
 
 const Game = () => {
   const user = useContext(User);
+  const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(true);
-  const [story, setStory] = useState<Story>({});
+  const [story, setStory] = useState<Story>();
   const [characters, setCharacters] = useState<Character_Repository>({});
   const [currentChapterId, setCurrentChapterId] = useState<string>("");
   const [currentSceneId, setCurrentSceneId] = useState<string>("");
@@ -59,7 +61,7 @@ const Game = () => {
   useEffect(() => {
     if (story) {
       setLoading(false);
-      // if (user.character === undefined) navigate("/Home"); // uncomment for prod
+      //if (user.character === undefined) navigate("/Home"); // uncomment for prod
 
       const saveData = {
         chapter_id: "day_one",
@@ -73,7 +75,7 @@ const Game = () => {
 
   const getNPC = (id: string) => characters[id];
 
-  const getChapter = (id: string) => story[id];
+  const getChapter = (id: string) => (story as Story)[id];
 
   const getNextChapter = (next: Dialogue_Next) => {
     if (next.chapter_id === undefined) return;
@@ -161,7 +163,11 @@ const Game = () => {
         )}
       </div>
       <div className="dialogue-container">
-        <div>{NPC?.name}</div>
+        <div className="name-container">
+          <div className="name">
+            <p> {playerTurn ? "Anon" : NPC?.name}</p>
+          </div>
+        </div>
         <Typewriter dialogue={dialogue} getNext={getNext} />
         <div className="dialogue-options">
           {dialogueOptions?.map((option: Dialogue_Option) => {

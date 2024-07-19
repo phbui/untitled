@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { Dialogue_Next, Dialogue_Option, Story } from "../../story/Interfaces";
-import { Editor_Type, fetchStory } from "../../pages/Editor";
+import { Editor_Type } from "../../pages/Editor";
 
 export const Block_Dialogue_Next: React.FC = () => {
   const editor = useContext(Editor_Type);
@@ -8,74 +8,80 @@ export const Block_Dialogue_Next: React.FC = () => {
 
   const [navigateNext, setNavigateNext] = useState<Partial<Dialogue_Next>>({});
   const [choiceNext, setChoiceNext] = useState<Partial<Dialogue_Next>>({});
-  const [story, setStory] = useState<Story | null>(null);
   const [availableScenes, setAvailableScenes] = useState<string[]>([]);
   const [availableDialogues, setAvailableDialogues] = useState<string[]>([]);
 
-  const next = (editor.story as Story)[editor.currentChapterId].scenes[
+  const next = (editor.story as Story)[editor.currentChapterId]?.scenes[
     editor.currentSceneId
-  ].dialogue[editor.currentDialogueId].next;
+  ]?.dialogue[editor.currentDialogueId]?.next;
 
   useEffect(() => {
-    const fetchStoryData = async () => {
-      const fetchedStory = await fetchStory();
-      setStory(fetchedStory);
-    };
-    fetchStoryData();
-  }, []);
+    if (editor.story === null) return;
 
-  useEffect(() => {
-    if (story === null) return;
-
-    if (next.chapter_id || next.scene_id || next.dialogue_id) {
-      setNextType("navigate");
-      setNavigateNext(next);
-    } else if (next.dialog_options && next.dialog_options.length > 0) {
-      setNextType("options");
-      setChoiceNext(next);
+    if (next) {
+      if (next.chapter_id || next.scene_id || next.dialogue_id) {
+        setNextType("navigate");
+        setNavigateNext(next);
+        updateAvailableScenes(next.chapter_id || editor.currentChapterId);
+        updateAvailableDialogues(
+          next.chapter_id || editor.currentChapterId,
+          next.scene_id || editor.currentSceneId
+        );
+      } else if (next.dialog_options && next.dialog_options.length > 0) {
+        setNextType("options");
+        setChoiceNext(next);
+      }
+    } else {
+      setNextType(undefined);
+      setNavigateNext({});
+      setChoiceNext({});
+      setAvailableScenes([]);
+      setAvailableDialogues([]);
     }
-  }, [next, story]);
+  }, [
+    editor.currentChapterId,
+    editor.currentSceneId,
+    editor.currentDialogueId,
+    editor.story,
+  ]);
 
-  const findScenes = (chapterId: string) => {
-    if (chapterId && story)
-      setAvailableScenes(
-        Object.keys(story[chapterId.replace(" (current)", "")]?.scenes || {})
-          .sort()
-          .map((sceneId) => {
-            return sceneId === editor.currentSceneId
-              ? `${sceneId} (current)`
-              : sceneId;
-          })
+  useEffect(() => {
+    if (nextType === "navigate" && navigateNext.chapter_id) {
+      updateAvailableScenes(navigateNext.chapter_id);
+      updateAvailableDialogues(
+        navigateNext.chapter_id,
+        navigateNext.scene_id || ""
       );
+    }
+  }, [nextType, navigateNext.chapter_id, navigateNext.scene_id]);
+
+  const updateAvailableScenes = (chapterId: string) => {
+    if (chapterId && editor.story) {
+      setAvailableScenes(
+        Object.keys(
+          editor.story[chapterId.replace(" (current)", "")]?.scenes || {}
+        )
+          .sort()
+          .map((sceneId) =>
+            sceneId === editor.currentSceneId ? `${sceneId} (current)` : sceneId
+          )
+      );
+    }
   };
 
-  const findDialogues = (chapterId: string, sceneId: string) => {
-    if (chapterId && sceneId && story)
+  const updateAvailableDialogues = (chapterId: string, sceneId: string) => {
+    if (chapterId && sceneId && editor.story) {
       setAvailableDialogues(
         Object.keys(
-          story[chapterId.replace(" (current)", "")]?.scenes[
+          editor.story[chapterId.replace(" (current)", "")]?.scenes[
             sceneId.replace(" (current)", "")
           ]?.dialogue || {}
         )
           .filter((dialogueId) => dialogueId !== editor.currentDialogueId)
           .sort()
       );
+    }
   };
-
-  useEffect(() => {
-    if (navigateNext.chapter_id) {
-      findScenes(navigateNext.chapter_id);
-      setNavigateNext((prev) => ({ ...prev, scene_id: "", dialogue_id: "" }));
-      setAvailableDialogues([]);
-    }
-  }, [navigateNext.chapter_id]);
-
-  useEffect(() => {
-    if (navigateNext.scene_id) {
-      findDialogues(navigateNext.chapter_id!, navigateNext.scene_id);
-      setNavigateNext((prev) => ({ ...prev, dialogue_id: "" }));
-    }
-  }, [navigateNext.scene_id]);
 
   const handleNextOptionChange = (
     index: number,
@@ -90,6 +96,15 @@ export const Block_Dialogue_Next: React.FC = () => {
     if (dialogOption) {
       dialogOption[field] = value;
       setChoiceNext(updatedOptions);
+      editor.handleNextChange(
+        editor.currentChapterId,
+        editor.currentSceneId,
+        editor.currentDialogueId,
+        {
+          ...choiceNext,
+          dialog_options: updatedOptions.dialog_options,
+        } as Dialogue_Next
+      );
     }
   };
 
@@ -102,12 +117,30 @@ export const Block_Dialogue_Next: React.FC = () => {
       ...choiceNext,
       dialog_options: updatedOptions as Dialogue_Option[],
     });
+    editor.handleNextChange(
+      editor.currentChapterId,
+      editor.currentSceneId,
+      editor.currentDialogueId,
+      {
+        ...choiceNext,
+        dialog_options: updatedOptions,
+      } as Dialogue_Next
+    );
   };
 
   const handleDeleteOption = (index: number) => {
     const updatedOptions = [...(choiceNext.dialog_options || [])];
     updatedOptions.splice(index, 1);
     setChoiceNext({ ...choiceNext, dialog_options: updatedOptions });
+    editor.handleNextChange(
+      editor.currentChapterId,
+      editor.currentSceneId,
+      editor.currentDialogueId,
+      {
+        ...choiceNext,
+        dialog_options: updatedOptions,
+      } as Dialogue_Next
+    );
   };
 
   const switchTab = (type: "navigate" | "options") => {
@@ -135,6 +168,20 @@ export const Block_Dialogue_Next: React.FC = () => {
         );
         break;
     }
+  };
+
+  const handleNavigateNextChange = (
+    field: keyof Dialogue_Next,
+    value: string
+  ) => {
+    const updatedNavigateNext = { ...navigateNext, [field]: value };
+    setNavigateNext(updatedNavigateNext);
+    editor.handleNextChange(
+      editor.currentChapterId,
+      editor.currentSceneId,
+      editor.currentDialogueId,
+      updatedNavigateNext as Dialogue_Next
+    );
   };
 
   const renderSelect = (
@@ -181,7 +228,7 @@ export const Block_Dialogue_Next: React.FC = () => {
         {renderSelect(
           "Next Chapter ID:",
           option.next.chapter_id || "",
-          Object.keys(story || {}).map((id) =>
+          Object.keys(editor.story || {}).map((id) =>
             id === editor.currentChapterId ? `${id} (current)` : id
           ),
           (e) => {
@@ -189,7 +236,7 @@ export const Block_Dialogue_Next: React.FC = () => {
               ...option.next,
               chapter_id: e.target.value,
             });
-            findScenes(e.target.value);
+            updateAvailableScenes(e.target.value);
           }
         )}
         {renderSelect(
@@ -201,7 +248,10 @@ export const Block_Dialogue_Next: React.FC = () => {
               ...option.next,
               scene_id: e.target.value,
             });
-            findDialogues(option.next.chapter_id || "", e.target.value);
+            updateAvailableDialogues(
+              option.next.chapter_id || "",
+              e.target.value
+            );
           },
           !option.next.chapter_id
         )}
@@ -233,34 +283,23 @@ export const Block_Dialogue_Next: React.FC = () => {
             {renderSelect(
               "Next Chapter ID:",
               navigateNext.chapter_id || editor.currentChapterId,
-              Object.keys(story || {}).map((id) =>
+              Object.keys(editor.story || {}).map((id) =>
                 id === editor.currentChapterId ? `${id} (current)` : id
               ),
-              (e) =>
-                setNavigateNext({
-                  ...navigateNext,
-                  chapter_id: e.target.value,
-                  scene_id: "",
-                  dialogue_id: "",
-                })
+              (e) => handleNavigateNextChange("chapter_id", e.target.value)
             )}
             {renderSelect(
               "Next Scene ID:",
               navigateNext.scene_id || "",
               availableScenes,
-              (e) =>
-                setNavigateNext({ ...navigateNext, scene_id: e.target.value }),
+              (e) => handleNavigateNextChange("scene_id", e.target.value),
               !navigateNext.chapter_id
             )}
             {renderSelect(
               "Next Dialogue ID:",
               navigateNext.dialogue_id || "",
               availableDialogues,
-              (e) =>
-                setNavigateNext({
-                  ...navigateNext,
-                  dialogue_id: e.target.value,
-                }),
+              (e) => handleNavigateNextChange("dialogue_id", e.target.value),
               !navigateNext.scene_id
             )}
           </>

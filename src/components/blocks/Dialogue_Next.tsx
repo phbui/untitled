@@ -82,7 +82,7 @@ export const Block_Dialogue_Next: React.FC = () => {
 
   const handleNextOptionChange = (
     index: number,
-    field: keyof Dialogue_Next,
+    field: keyof Dialogue_Option["next"],
     value: string
   ) => {
     const updatedOptions = [...(choiceNext.dialog_options || [])];
@@ -194,22 +194,30 @@ export const Block_Dialogue_Next: React.FC = () => {
           />
         </label>
         {renderSelect(
-          "Next Dialogue ID:",
-          option.next.dialogue_id || "",
-          availableDialogues,
-          (e) => handleNextOptionChange(index, "dialogue_id", e.target.value)
+          "Next Chapter ID:",
+          option.next.chapter_id || "",
+          Object.keys(story || {}),
+          (e) => {
+            handleNextOptionChange(index, "chapter_id", e.target.value);
+            findScenes(e.target.value);
+          }
         )}
         {renderSelect(
           "Next Scene ID:",
           option.next.scene_id || "",
           availableScenes,
-          (e) => handleNextOptionChange(index, "scene_id", e.target.value)
+          (e) => {
+            handleNextOptionChange(index, "scene_id", e.target.value);
+            findDialogues(option.next.chapter_id || "", e.target.value);
+          },
+          !option.next.chapter_id
         )}
         {renderSelect(
-          "Next Chapter ID:",
-          option.next.chapter_id || "",
-          Object.keys(story || {}),
-          (e) => handleNextOptionChange(index, "chapter_id", e.target.value)
+          "Next Dialogue ID:",
+          option.next.dialogue_id || "",
+          availableDialogues,
+          (e) => handleNextOptionChange(index, "dialogue_id", e.target.value),
+          !option.next.scene_id
         )}
         <button
           className="block-next__delete-button"

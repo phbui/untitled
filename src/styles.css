@@ -479,6 +479,7 @@ canvas {
   justify-content: space-between;
   align-items: center;
   padding: 0% 20%;
+  z-index: 13;
 }
 
 .pc {
@@ -534,6 +535,7 @@ canvas {
   justify-content: center;
   align-items: center;
   padding: 0 20%;
+  z-index: 14;
 }
 
 .dialogue {

@@ -43,26 +43,32 @@ export const Block_Dialogue_Next: React.FC = () => {
   const findScenes = (chapterId: string) => {
     if (chapterId && story)
       setAvailableScenes(
-        Object.keys(story[chapterId]?.scenes || {}).map((sceneId) => {
-          return sceneId === editor.currentSceneId
-            ? `${sceneId} (current)`
-            : sceneId;
-        })
+        Object.keys(story[chapterId.replace(" (current)", "")]?.scenes || {})
+          .sort()
+          .map((sceneId) => {
+            return sceneId === editor.currentSceneId
+              ? `${sceneId} (current)`
+              : sceneId;
+          })
       );
   };
 
   const findDialogues = (chapterId: string, sceneId: string) => {
     if (chapterId && sceneId && story)
       setAvailableDialogues(
-        Object.keys(story[chapterId]?.scenes[sceneId]?.dialogue || {}).filter(
-          (dialogueId) => dialogueId !== editor.currentDialogueId
+        Object.keys(
+          story[chapterId.replace(" (current)", "")]?.scenes[
+            sceneId.replace(" (current)", "")
+          ]?.dialogue || {}
         )
+          .filter((dialogueId) => dialogueId !== editor.currentDialogueId)
+          .sort()
       );
   };
 
   useEffect(() => {
     if (navigateNext.chapter_id) {
-      findScenes(navigateNext.chapter_id.replace(" (current)", ""));
+      findScenes(navigateNext.chapter_id);
       setNavigateNext((prev) => ({ ...prev, scene_id: "", dialogue_id: "" }));
       setAvailableDialogues([]);
     }
@@ -70,10 +76,7 @@ export const Block_Dialogue_Next: React.FC = () => {
 
   useEffect(() => {
     if (navigateNext.scene_id) {
-      findDialogues(
-        navigateNext.chapter_id!.replace(" (current)", ""),
-        navigateNext.scene_id.replace(" (current)", "")
-      );
+      findDialogues(navigateNext.chapter_id!, navigateNext.scene_id);
       setNavigateNext((prev) => ({ ...prev, dialogue_id: "" }));
     }
   }, [navigateNext.scene_id]);
@@ -185,9 +188,12 @@ export const Block_Dialogue_Next: React.FC = () => {
         {renderSelect(
           "Next Chapter ID:",
           option.next.chapter_id || "",
-          Object.keys(story || {}),
+          Object.keys(story || {}).map((id) =>
+            id === editor.currentChapterId ? `${id} (current)` : id
+          ),
           (e) => {
             handleNextOptionChange(index, "next", {
+              ...option.next,
               chapter_id: e.target.value,
             });
             findScenes(e.target.value);
@@ -198,7 +204,10 @@ export const Block_Dialogue_Next: React.FC = () => {
           option.next.scene_id || "",
           availableScenes,
           (e) => {
-            handleNextOptionChange(index, "next", { scene_id: e.target.value });
+            handleNextOptionChange(index, "next", {
+              ...option.next,
+              scene_id: e.target.value,
+            });
             findDialogues(option.next.chapter_id || "", e.target.value);
           },
           !option.next.chapter_id
@@ -209,6 +218,7 @@ export const Block_Dialogue_Next: React.FC = () => {
           availableDialogues,
           (e) =>
             handleNextOptionChange(index, "next", {
+              ...option.next,
               dialogue_id: e.target.value,
             }),
           !option.next.scene_id

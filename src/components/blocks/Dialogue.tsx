@@ -37,12 +37,15 @@ export const Block_Dialogue: React.FC<{}> = () => {
   };
 
   return (
-    <div className="block-dialogue" onClick={(e) => e.stopPropagation()}>
-      <h2>Dialogue: {editor.currentDialogueId}</h2>
+    <div className="block" onClick={(e) => e.stopPropagation()}>
+      <h2 className="block-dialogue__title">
+        Dialogue: {editor.currentDialogueId}
+      </h2>
 
-      <label>
+      <label className="block-dialogue__label">
         Character:
         <select
+          className="block-dialogue__select"
           value={dialogue.character_id}
           onChange={(e) => handleInputChange("character_id", e.target.value)}
         >
@@ -57,10 +60,16 @@ export const Block_Dialogue: React.FC<{}> = () => {
         </select>
       </label>
       <br />
-      <label>
+      <label className="block-dialogue__label">
         Text:
-        <input
-          type="text"
+        <textarea
+          className="block-dialogue__input"
+          style={{
+            resize: "vertical",
+            maxHeight: "250px",
+            overflowX: "hidden",
+            overflowY: "auto",
+          }}
           value={dialogue.text}
           onChange={(e) => handleInputChange("text", e.target.value)}
         />

@@ -645,18 +645,17 @@ canvas {
   overflow-y: auto;
 }
 
-.block,
-.block-dialogue {
+.block {
   padding: 10px;
   margin-bottom: 10px;
   background-color: #f9f9f9;
   height: 100%;
   position: relative;
   z-index: 9;
+  overflow: hidden;
 }
 
-.block h2,
-.block-dialogue h2 {
+.block h2 {
   margin: 0 0 10px;
   padding: 5px;
   cursor: pointer;
@@ -754,18 +753,13 @@ canvas {
 }
 
 .background-scene {
-  height: 5%;
+  height: 10%;
   padding: 10px;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
   text-wrap: nowrap;
-}
-
-.background-scene input {
-  width: 100%;
-  margin-left: 10px;
 }
 
 .add-button {
@@ -776,8 +770,9 @@ canvas {
   padding: 10px;
 }
 
-button {
-  padding: 5px 10px;
+.add-button button {
+  width: 120px;
+  padding: 10px;
   cursor: pointer;
   border: none;
   background-color: #4caf50;
@@ -785,7 +780,7 @@ button {
   border-radius: 3px;
 }
 
-button:hover {
+.add-button button:hover {
   background-color: #45a049;
 }
 
@@ -813,12 +808,32 @@ button:hover {
   box-sizing: border-box;
 }
 
-.block-dialogue-container p {
-  cursor: pointer;
+.block-dialogue__label,
+.background-scene {
+  display: block;
+  font-weight: bold;
+  color: #333;
 }
 
-.block-dialogue-container button {
-  margin-left: 10px;
+.block-dialogue__select,
+.block-dialogue__input,
+.background-scene input {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  font-size: 1em;
+}
+
+.block-dialogue__select:focus,
+.block-dialogue__input:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
 .block-next button.active {
@@ -951,7 +966,7 @@ button:hover {
   background-color: #f4f4f4;
   position: relative;
   z-index: 11;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 2px 2px 5px rgba(172, 154, 154, 0.1);
 }
 
 .save-button-container button {
@@ -959,6 +974,8 @@ button:hover {
   width: 50px;
   background-color: transparent;
   color: #555;
+  border: none;
+  cursor: pointer;
 }
 
 .save-button-container button:hover {

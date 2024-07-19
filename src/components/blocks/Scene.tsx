@@ -68,15 +68,15 @@ export const Block_Scene: React.FC<{}> = () => {
           ></i>
         </h2>
       )}
-      <div className="background-scene">
+      <label className="background-scene">
         Background Url:
         <input
           type="text"
           value={scene.background}
           onChange={(e) => handleBackgroundChange(e.target.value)}
         />
-      </div>
-      <div style={{ height: "75%" }} className="block-list">
+      </label>
+      <div style={{ height: "70%" }} className="block-list">
         {Object.entries(scene.dialogue)
           .sort(([a], [b]) => {
             if (a === "start") return -1;

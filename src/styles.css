@@ -1262,6 +1262,40 @@ canvas {
   font-size: 0.875rem;
 }
 
+.game-transition {
+  position: fixed;
+  top: -100%;
+  right: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 1);
+  color: white;
+  animation: slideIn 6s forwards;
+  z-index: 20000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@keyframes slideIn {
+  0% {
+    top: -100%;
+    opacity: 1;
+  }
+  25% {
+    top: 0;
+    opacity: 1;
+  }
+  50% {
+    top: 0;
+    opacity: 1;
+  }
+  100% {
+    top: 0;
+    opacity: 0;
+  }
+}
+
 @media only screen and (min-width: 600px) {
 }
 

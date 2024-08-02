@@ -32,6 +32,9 @@ const Game = () => {
   const [dialogueOptions, setDialogueOptions] = useState<Dialogue_Option[]>();
   const [NPC, setNPC] = useState<Game_Character>();
   const [playerTurn, setPlayerTurn] = useState<boolean>(true);
+  const [transitionChapter, setTransitionChapter] = useState<string>();
+  const [transitionScene, setTransitionScene] = useState<string>();
+  const [animate, setAnimate] = useState(false);
 
   const saveGame = () => {
     const saveData: Save_Data = {
@@ -80,8 +83,14 @@ const Game = () => {
   const getNextChapter = (next: Dialogue_Next) => {
     if (next.chapter_id === undefined) return;
 
-    setCurrentChapterId(next.chapter_id.replace(" (current)", ""));
-    getNextScene(next);
+    getTransition(next.chapter_id.replace(" (current)", ""), "start");
+
+    setTimeout(() => {
+      setCurrentChapterId(
+        (next.chapter_id as string).replace(" (current)", "")
+      );
+      getNextScene(next);
+    }, 3000);
   };
 
   const getScene = (id: string) => getChapter(currentChapterId).scenes[id];
@@ -89,8 +98,12 @@ const Game = () => {
   const getNextScene = (next: Dialogue_Next) => {
     if (next.scene_id === undefined) return;
 
-    setCurrentSceneId(next.scene_id.replace(" (current)", ""));
-    getNextDialogue(next);
+    getTransition(currentChapterId, next.scene_id.replace(" (current)", ""));
+
+    setTimeout(() => {
+      setCurrentSceneId((next.scene_id as string).replace(" (current)", ""));
+      getNextDialogue(next);
+    }, 3000);
   };
 
   const getDialogue = (id: string) => getScene(currentSceneId).dialogue[id];
@@ -101,6 +114,17 @@ const Game = () => {
     if (next.dialogue_id === undefined) return;
 
     setCurrentDialogueId(next.dialogue_id.replace(" (current)", ""));
+  };
+
+  const getTransition = (chatpter_id: string, scene_id: string) => {
+    setTransitionChapter(getChapter(chatpter_id).name);
+    setTransitionScene(getScene(scene_id).name);
+
+    setAnimate(true);
+
+    setTimeout(() => {
+      setAnimate(false);
+    }, 6000);
   };
 
   const getInitialized = () =>
@@ -139,10 +163,19 @@ const Game = () => {
   const getNext = (next: Dialogue_Next | undefined) => {
     if (next === undefined) return;
 
-    if (next.chapter_id) getNextChapter(next);
-    else if (next.scene_id) getNextScene(next);
-    else if (next.dialog_options) summonOptions();
-    else if (next.dialogue_id) setCurrentDialogueId(next.dialogue_id);
+    if (next.dialog_options) summonOptions();
+    else if (
+      next.chapter_id &&
+      next.chapter_id.replace(" (current)", "") !== currentChapterId
+    )
+      getNextChapter(next);
+    else if (
+      next.scene_id &&
+      next.scene_id.replace(" (current)", "") !== currentSceneId
+    )
+      getNextScene(next);
+    else if (next.dialogue_id && next.dialogue_id !== currentDialogueId)
+      setCurrentDialogueId(next.dialogue_id);
   };
 
   return (
@@ -158,6 +191,11 @@ const Game = () => {
         )}
       </div>
       <div className="game-buttons"></div>
+      {animate && (
+        <div className="game-transition">
+          {transitionChapter} - {transitionScene}
+        </div>
+      )}
       <div className="game-characters">
         <div
           className={`pc ${

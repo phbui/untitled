@@ -159,7 +159,11 @@ const Game = () => {
       </div>
       <div className="game-buttons"></div>
       <div className="game-characters">
-        <div className={`pc ${playerTurn ? "active" : ""}`}>
+        <div
+          className={`pc ${
+            playerTurn || dialogue?.character_id === "anon" ? "active" : ""
+          }`}
+        >
           <Character character={user.character} />
         </div>
         {NPC && (

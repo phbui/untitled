@@ -10,6 +10,8 @@ import {
 } from "../story/Interfaces";
 import { Character_Repository, Game_Character } from "../story/Characters";
 import { EditorLayout } from "../components/Explorer";
+import Login from "../components/Login";
+import { getAuth, signOut } from "firebase/auth";
 
 export const fetchStory = async (): Promise<Story | null> => {
   try {
@@ -76,17 +78,19 @@ const EditorContext = () => {
   const [currentSceneId, setCurrentSceneId] = useState<string>("");
   const [currentDialogueId, setCurrentDialogueId] = useState<string>("");
   const [currentCharacterId, setCurrentCharacterId] = useState<string>("");
+  const [login, setLogin] = useState<boolean>(false);
+
+  const load = async () => {
+    const fetchedStory = await fetchStory();
+    setStory(fetchedStory);
+    const fetchedCharacters = await fetchCharacters();
+    setCharacters(fetchedCharacters);
+    setLoading(false);
+  };
 
   useEffect(() => {
-    const load = async () => {
-      const fetchedStory = await fetchStory();
-      setStory(fetchedStory);
-      const fetchedCharacters = await fetchCharacters();
-      setCharacters(fetchedCharacters);
-      setLoading(false);
-    };
-    load();
-  }, []);
+    if (login) load();
+  }, [login]);
 
   const handleAddChapter = (chapterId: string) => {
     if (story) {
@@ -346,6 +350,8 @@ const EditorContext = () => {
     currentSceneId,
     currentDialogueId,
     currentCharacterId,
+    login,
+    setLogin,
     handleAddChapter,
     handleDeleteChapter,
     handleChapterChange,
@@ -373,24 +379,28 @@ export const Editor_Type = createContext(
 const Editor: React.FC = () => {
   const editor = EditorContext();
 
-  if (editor.loading) {
-    return <p>Loading story...</p>;
-  }
-
-  if (!editor.story) {
-    return <p>No story data available</p>;
-  }
+  const handleLogout = async () => {
+    const auth = getAuth();
+    await signOut(auth);
+  };
 
   return (
     <Editor_Type.Provider value={editor}>
-      <div className="editor">
-        <div className="save-button-container">
-          <button className="save-button" onClick={editor.handleSave}>
-            <i className="fas fa-save"></i>
-          </button>
+      {editor.login && !editor.loading && editor.story ? (
+        <div className="editor">
+          <div className="save-button-container">
+            <button className="save-button" onClick={editor.handleSave}>
+              <i className="fas fa-save"></i>
+            </button>
+            <button className="save-button" onClick={handleLogout}>
+              <i className="fas fa-sign-out-alt"></i>
+            </button>
+          </div>
+          <EditorLayout />
         </div>
-        <EditorLayout />
-      </div>
+      ) : (
+        <Login />
+      )}
     </Editor_Type.Provider>
   );
 };

@@ -495,7 +495,7 @@ canvas {
 }
 
 .npc {
-  height: 100%;
+  height: 80%;
   width: 120px;
   margin-bottom: 10%;
   display: flex;
@@ -518,7 +518,8 @@ canvas {
 
 .npc img {
   height: auto;
-  width: 360px;
+  max-height: 100%;
+  width: auto;
   opacity: 0.5;
   transition: opacity ease-in-out 0.25s;
 }

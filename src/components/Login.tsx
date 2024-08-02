@@ -20,7 +20,7 @@ const Login: React.FC = () => {
     onAuthStateChanged(auth, (user) => {
       editor.setLogin(user != null);
     });
-  }, []);
+  }, [editor]);
 
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -50,25 +50,38 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="login">
-      <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Email"
-          autoComplete="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          autoComplete="current-password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button type="submit">Login</button>
-      </form>
-      {error && <p>{error}</p>}
+    <div className="login-container">
+      <div className="login-form">
+        <h2>Login</h2>
+        <form onSubmit={handleLogin}>
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              placeholder="Enter your email"
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              placeholder="Enter your password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <button type="submit" className="login-button">
+            Login
+          </button>
+        </form>
+        {error && <p className="error-message">{error}</p>}
+      </div>
     </div>
   );
 };

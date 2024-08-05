@@ -304,7 +304,7 @@ export interface Character {
 }
 
 export interface Props_Character {
-  character?: Character;
+  character: Character | null;
 }
 
 export const Character: React.FC<Props_Character> = ({ character }) => {

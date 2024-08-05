@@ -37,14 +37,10 @@ const Game = () => {
   const [animate, setAnimate] = useState(false);
   const [settingsVisible, setSettingsVisible] = useState(false);
 
-  const saveGame = () => {
-    const saveData: Save_Data = {
-      chapter_id: currentChapterId,
-      scene_id: currentSceneId,
-      dialogue_id: currentDialogueId,
-    };
-    // Add your save game logic here
-  };
+  const saveGame = () =>
+    user.saveGame(currentChapterId, currentSceneId, currentDialogueId);
+
+  const leave = () => navigate("/Home");
 
   const parseSaveData = (saveData: Save_Data) => {
     setCurrentChapterId(saveData.chapter_id);
@@ -201,7 +197,7 @@ const Game = () => {
         <div
           className={`leave-button ${settingsVisible ? "visible" : "hidden"}`}
         >
-          <button>
+          <button onClick={leave}>
             <i className="fas fa-sign-out-alt"></i>
           </button>
         </div>

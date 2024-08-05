@@ -292,7 +292,7 @@ const EditorContext = () => {
     }
   };
 
-  const handleSave = async () => {
+  const handleSaveStory = async () => {
     if (story && characters) {
       if (window.confirm("Are you sure you want to save changes?")) {
         await updateStory(story);
@@ -361,7 +361,7 @@ const EditorContext = () => {
     handleAddCharacter,
     handleDeleteCharacter,
     handleCharacterChange,
-    handleSave,
+    handleSaveStory,
     handleItemClick,
   };
 
@@ -385,7 +385,7 @@ const Editor: React.FC = () => {
       {editor.login && !editor.loading && editor.story ? (
         <div className="editor">
           <div className="save-button-container">
-            <button className="save-button" onClick={editor.handleSave}>
+            <button className="save-button" onClick={editor.handleSaveStory}>
               <i className="fas fa-save"></i>
             </button>
             <button className="save-button" onClick={handleLogout}>

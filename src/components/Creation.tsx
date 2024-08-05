@@ -1,7 +1,8 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import ImageMapper from "react-image-mapper"; //ignore this lol
+import ImageMapper from "react-image-mapper";
 import { MAP, wardrobe_tabs } from "../dummydata";
 import { User } from "../App";
+import Modal from "./Modal";
 
 export interface Character_Item {
   name: string;
@@ -378,6 +379,7 @@ const Creation: React.FC<Props_Creation> = ({ startGame }) => {
 
   const handleYes = () => {
     user.setCharacter(character);
+    setIsModalOpen(false);
     if (startGame) startGame();
   };
 
@@ -441,22 +443,14 @@ const Creation: React.FC<Props_Creation> = ({ startGame }) => {
           openModal={openModal}
         />
       </div>
-      {isModalOpen && (
-        <div id="modal" className="modal">
-          <div className="modal-content">
-            <p>Are you sure you want to start the game?</p>
-            <p>You can't change your character after you start.</p>
-            <div className="modal-buttons">
-              <button id="noButton" onClick={handleNo}>
-                No
-              </button>
-              <button id="yesButton" onClick={handleYes}>
-                Yes
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={handleNo}
+        onConfirm={handleYes}
+        message="Are you sure you want to start the game? You can't change your character after you start."
+        confirmText="Yes"
+        cancelText="No"
+      />
     </div>
   );
 };

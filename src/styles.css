@@ -328,6 +328,7 @@ canvas {
   text-align: center;
   box-shadow: 0 0 10px #000;
   animation: fadeIn 1s ease-in;
+  color: white;
 }
 
 .modal-buttons {

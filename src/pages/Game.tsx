@@ -11,6 +11,7 @@ import Typewriter from "../components/Typewriter";
 import { fetchCharacters, fetchStory } from "./Editor";
 import { Character_Repository, Game_Character } from "../story/Characters";
 import { useNavigate } from "react-router-dom";
+import Modal from "../components/Modal";
 
 export interface Save_Data {
   chapter_id: string;
@@ -36,11 +37,21 @@ const Game = () => {
   const [transitionScene, setTransitionScene] = useState<string>();
   const [animate, setAnimate] = useState(false);
   const [settingsVisible, setSettingsVisible] = useState(false);
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
+  const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
 
-  const saveGame = () =>
+  const saveGame = () => {
     user.saveGame(currentChapterId, currentSceneId, currentDialogueId);
+    setIsSaveModalOpen(true);
+  };
 
-  const leave = () => navigate("/Home");
+  const leave = () => {
+    setIsLeaveModalOpen(true);
+  };
+
+  const confirmLeave = () => {
+    navigate("/Home");
+  };
 
   const parseSaveData = (saveData: Save_Data) => {
     setCurrentChapterId(saveData.chapter_id);
@@ -180,6 +191,21 @@ const Game = () => {
     setSettingsVisible(!settingsVisible);
   };
 
+  useEffect(() => {
+    const handleBeforeUnload = (event: {
+      preventDefault: () => void;
+      returnValue: string;
+    }) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
   return (
     <div className="game">
       {backgroundURL && <img className="game-background" src={backgroundURL} />}
@@ -266,6 +292,21 @@ const Game = () => {
           })}
         </div>
       </div>
+      <Modal
+        isOpen={isSaveModalOpen}
+        onClose={() => setIsSaveModalOpen(false)}
+        onConfirm={() => setIsSaveModalOpen(false)}
+        message="Game saved successfully."
+        confirmText="OK"
+      />
+      <Modal
+        isOpen={isLeaveModalOpen}
+        onClose={() => setIsLeaveModalOpen(false)}
+        onConfirm={confirmLeave}
+        message="You have unsaved changes. Do you want to save before leaving?"
+        confirmText="Leave"
+        cancelText="Cancel"
+      />
     </div>
   );
 };

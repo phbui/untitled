@@ -1,5 +1,57 @@
+import { useContext, useEffect, useState } from "react";
+import { User } from "../App";
+import { Character } from "./Creation";
+import { fetchStory } from "../pages/Editor";
+import { Story } from "../story/Interfaces";
+import { useNavigate } from "react-router-dom";
+
 const Load = () => {
-  return <div>Load</div>;
+  const user = useContext(User);
+  const navigate = useNavigate();
+  const [userData, setUserData] = useState<any>();
+  const [story, setStory] = useState<Story>();
+
+  const getChapter = () => (story as Story)[userData.currentChapterId];
+  const getScene = () => getChapter().scenes[userData.currentSceneId];
+
+  useEffect(() => {
+    const load = async () => {
+      const fetchedStory = await fetchStory();
+      setStory(fetchedStory as Story);
+    };
+    load();
+  }, []);
+
+  const login = async () => setUserData((await user.loadUserData())?.savedata);
+
+  const load = () => navigate("/Play");
+
+  return (
+    <div className="load-container">
+      {userData ? (
+        <div className="load-selection">
+          <Character character={userData.player_character} />
+          <div className="load-info">
+            <h1>
+              {getChapter().name}: {getScene().name}
+            </h1>
+            <div className="modal-buttons">
+              <button onClick={load}>Load</button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <>
+          <h3 style={{ fontWeight: 500 }}> You must login to load a game.</h3>
+          <div className="modal-buttons">
+            <div />
+            <button onClick={login}>Login</button>
+            <div />
+          </div>
+        </>
+      )}
+    </div>
+  );
 };
 
 export default Load;

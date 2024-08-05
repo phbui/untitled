@@ -39,24 +39,52 @@ const Game = () => {
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
   const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
+  const [lastSavedData, setLastSavedData] = useState<Save_Data>({
+    chapter_id: "",
+    scene_id: "",
+    dialogue_id: "",
+  });
 
   const saveGame = () => {
     user.saveGame(currentChapterId, currentSceneId, currentDialogueId);
+    setLastSavedData({
+      chapter_id: currentChapterId,
+      scene_id: currentSceneId,
+      dialogue_id: currentDialogueId,
+    });
     setIsSaveModalOpen(true);
   };
 
   const leave = () => {
-    setIsLeaveModalOpen(true);
+    if (
+      currentChapterId === lastSavedData.chapter_id &&
+      currentSceneId === lastSavedData.scene_id &&
+      currentDialogueId === lastSavedData.dialogue_id
+    ) {
+      navigate("/Home");
+    } else {
+      setIsLeaveModalOpen(true);
+    }
   };
 
   const confirmLeave = () => {
     navigate("/Home");
   };
 
-  const parseSaveData = (saveData: Save_Data) => {
-    setCurrentChapterId(saveData.chapter_id);
-    setCurrentSceneId(saveData.scene_id);
-    setCurrentDialogueId(saveData.dialogue_id);
+  const parseSaveData = (saveData: any) => {
+    let data: Save_Data = {
+      chapter_id: saveData.currentChapterId,
+      scene_id: saveData.currentSceneId,
+      dialogue_id: saveData.currentDialogueId,
+    };
+
+    console.log(data);
+
+    setCurrentChapterId(data.chapter_id);
+    setCurrentSceneId(data.scene_id);
+    setCurrentDialogueId(data.dialogue_id);
+
+    setLastSavedData(data);
   };
 
   useEffect(() => {
@@ -66,6 +94,8 @@ const Game = () => {
       const fetchedCharacters = await fetchCharacters();
       setCharacters(fetchedCharacters as Character_Repository);
       setLoading(false);
+      let data = await user.loadUserData();
+      if (data) parseSaveData(data.savedata);
     };
     load();
   }, []);
@@ -74,14 +104,6 @@ const Game = () => {
     if (story) {
       setLoading(false);
       if (user.character === undefined) navigate("/Home"); // uncomment for prod
-
-      const saveData = {
-        chapter_id: "day_one",
-        scene_id: "start",
-        dialogue_id: "start",
-      };
-
-      parseSaveData(saveData);
     }
   }, [story]);
 
@@ -144,10 +166,10 @@ const Game = () => {
     currentDialogueId.length > 0;
 
   const prepCharacters = (dialogue_id: string) => {
-    const chapter_id: string = getDialogue(dialogue_id).character_id;
+    const character_id: string = getDialogue(dialogue_id).character_id;
 
-    setPlayerTurn(chapter_id === "player");
-    setNPC(getNPC(chapter_id) ?? getNPC(chapter_id));
+    setPlayerTurn(character_id === "player");
+    setNPC(getNPC(character_id) ?? getNPC(character_id));
   };
 
   useEffect(() => {

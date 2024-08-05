@@ -72,7 +72,7 @@ const sections = [
   },
   {
     id: "load",
-    title: "Saved Characters",
+    title: "Load Game",
     imageId: "45a1cea5d95969b309795bea796a559b",
     component: "load",
   },

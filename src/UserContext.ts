@@ -25,6 +25,24 @@ const UserContext = () => {
     return () => unsubscribe();
   }, []);
 
+  const loadUserData = async () => {
+    if (!user) {
+      promptLogin();
+      return;
+    }
+
+    const userDoc = await getDoc(doc(db, "users", user.uid));
+    if (userDoc.exists()) {
+      return userDoc.data();
+    }
+
+    return {
+      currentChapterId: "day_one",
+      currentSceneId: "start",
+      currentDialogueId: "start",
+    };
+  };
+
   const loadCharacterData = async (userId: string) => {
     const userDoc = await getDoc(doc(db, "users", userId));
     if (userDoc.exists()) {
@@ -76,6 +94,7 @@ const UserContext = () => {
     character,
     setCharacter,
     saveGame,
+    loadUserData,
     user,
     promptLogin,
   };

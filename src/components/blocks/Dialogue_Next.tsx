@@ -14,16 +14,8 @@ export const Block_Dialogue_Next: React.FC = () => {
     editor.currentSceneId
   ]?.dialogue[editor.currentDialogueId]?.next;
 
-  useEffect(() => {
-    setNextType(undefined);
-    setNavigateNext({});
-    setChoiceNext({});
-    setAvailableScenes([]);
-    setAvailableDialogues([]);
-  }, []);
-
   const load = () => {
-    if (editor.story === null) return;
+    if (!editor.story) return;
 
     if (next) {
       if (next.chapter_id || next.scene_id || next.dialogue_id) {
@@ -38,6 +30,12 @@ export const Block_Dialogue_Next: React.FC = () => {
         setNextType("options");
         setChoiceNext(next);
       }
+    } else {
+      setNextType(undefined);
+      setNavigateNext({});
+      setChoiceNext({});
+      setAvailableScenes([]);
+      setAvailableDialogues([]);
     }
   };
 
@@ -58,10 +56,7 @@ export const Block_Dialogue_Next: React.FC = () => {
         navigateNext.scene_id || ""
       );
     }
-    if (nextType === "options" && choiceNext.dialog_options) {
-      setChoiceNext(choiceNext);
-    }
-  }, [nextType, navigateNext.chapter_id, navigateNext.scene_id, choiceNext]);
+  }, [nextType, navigateNext.chapter_id, navigateNext.scene_id]);
 
   const updateAvailableScenes = (chapterId: string) => {
     if (chapterId && editor.story) {

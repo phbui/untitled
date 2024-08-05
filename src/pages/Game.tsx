@@ -35,6 +35,7 @@ const Game = () => {
   const [transitionChapter, setTransitionChapter] = useState<string>();
   const [transitionScene, setTransitionScene] = useState<string>();
   const [animate, setAnimate] = useState(false);
+  const [settingsVisible, setSettingsVisible] = useState(false);
 
   const saveGame = () => {
     const saveData: Save_Data = {
@@ -42,6 +43,7 @@ const Game = () => {
       scene_id: currentSceneId,
       dialogue_id: currentDialogueId,
     };
+    // Add your save game logic here
   };
 
   const parseSaveData = (saveData: Save_Data) => {
@@ -178,9 +180,39 @@ const Game = () => {
       setCurrentDialogueId(next.dialogue_id);
   };
 
+  const toggleSettings = () => {
+    setSettingsVisible(!settingsVisible);
+  };
+
   return (
     <div className="game">
       {backgroundURL && <img className="game-background" src={backgroundURL} />}
+      <div className="game-buttons">
+        <button className="settings-button" onClick={toggleSettings}>
+          <i className="fas fa-cog"></i>
+        </button>
+        <div
+          className={`audio-button ${settingsVisible ? "visible" : "hidden"}`}
+        >
+          <button>
+            <i className="fas fa-volume-up"></i>
+          </button>
+        </div>
+        <div
+          className={`leave-button ${settingsVisible ? "visible" : "hidden"}`}
+        >
+          <button>
+            <i className="fas fa-sign-out-alt"></i>
+          </button>
+        </div>
+        <div
+          className={`save-button ${settingsVisible ? "visible" : "hidden"}`}
+        >
+          <button onClick={saveGame}>
+            <i className="fas fa-save"></i>
+          </button>
+        </div>
+      </div>
       <div className="title">
         {getInitialized() && dialogue && (
           <p>
@@ -190,7 +222,6 @@ const Game = () => {
           </p>
         )}
       </div>
-      <div className="game-buttons"></div>
       {animate && (
         <div className="game-transition">
           {transitionChapter} - {transitionScene}

@@ -469,7 +469,66 @@ canvas {
 }
 
 .game-buttons {
-  /* Add styles for the game buttons container */
+  top: 10px;
+  right: 10px;
+  position: absolute;
+  display: flex;
+  height: 100px;
+  width: 100px;
+  justify-content: flex-end;
+}
+
+.game-buttons button {
+  position: relative;
+  background: transparent;
+  filter: drop-shadow(0px 0px 2px rgba(255, 255, 255, 1));
+  color: rgb(218, 82, 122);
+  border: none;
+  cursor: pointer;
+  height: 100%;
+  z-index: 20;
+  font-size: 40px;
+}
+
+.game-buttons button:hover {
+  filter: drop-shadow(0px 0px 6px rgba(218, 82, 122, 1));
+  color: rgb(255, 255, 255);
+}
+
+.game-buttons .settings-button {
+  height: fit-content;
+  width: fit-content;
+  position: relative;
+}
+
+.game-buttons .hidden {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s, visibility 0.5s;
+}
+
+.game-buttons .visible {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s, visibility 0.5s;
+}
+
+.game-buttons .audio-button {
+  position: absolute;
+  left: -60px;
+  top: 10px;
+}
+
+.game-buttons .leave-button {
+  position: absolute;
+  left: -20px;
+  top: 80px;
+}
+
+.game-buttons .save-button {
+  position: absolute;
+  left: 50px;
+  bottom: -50px;
 }
 
 .game-characters {

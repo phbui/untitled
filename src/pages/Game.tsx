@@ -78,8 +78,6 @@ const Game = () => {
       dialogue_id: saveData.currentDialogueId,
     };
 
-    console.log(data);
-
     setCurrentChapterId(data.chapter_id);
     setCurrentSceneId(data.scene_id);
     setCurrentDialogueId(data.dialogue_id);
@@ -87,18 +85,26 @@ const Game = () => {
     setLastSavedData(data);
   };
 
+  const load = async () => {
+    const fetchedStory = await fetchStory();
+    setStory(fetchedStory as Story);
+    const fetchedCharacters = await fetchCharacters();
+    setCharacters(fetchedCharacters as Character_Repository);
+    setLoading(false);
+    let data = await user.loadUserData();
+    if (data) parseSaveData(data.savedata);
+    else {
+      parseSaveData({
+        currentChapterId: "day_one",
+        currentSceneId: "start",
+        currentDialogueId: "start",
+      });
+    }
+  };
+
   useEffect(() => {
-    const load = async () => {
-      const fetchedStory = await fetchStory();
-      setStory(fetchedStory as Story);
-      const fetchedCharacters = await fetchCharacters();
-      setCharacters(fetchedCharacters as Character_Repository);
-      setLoading(false);
-      let data = await user.loadUserData();
-      if (data) parseSaveData(data.savedata);
-    };
     load();
-  }, []);
+  }, [user.user]);
 
   useEffect(() => {
     if (story) {
@@ -213,21 +219,6 @@ const Game = () => {
     setSettingsVisible(!settingsVisible);
   };
 
-  useEffect(() => {
-    const handleBeforeUnload = (event: {
-      preventDefault: () => void;
-      returnValue: string;
-    }) => {
-      event.preventDefault();
-      event.returnValue = "";
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, []);
-
   return (
     <div className="game">
       {backgroundURL && <img className="game-background" src={backgroundURL} />}
@@ -235,13 +226,13 @@ const Game = () => {
         <button className="settings-button" onClick={toggleSettings}>
           <i className="fas fa-cog"></i>
         </button>
-        <div
+        {/*         <div
           className={`audio-button ${settingsVisible ? "visible" : "hidden"}`}
         >
           <button>
             <i className="fas fa-volume-up"></i>
           </button>
-        </div>
+        </div> */}
         <div
           className={`leave-button ${settingsVisible ? "visible" : "hidden"}`}
         >

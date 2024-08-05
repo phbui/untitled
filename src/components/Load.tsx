@@ -5,9 +5,12 @@ import { fetchStory } from "../pages/Editor";
 import { Story } from "../story/Interfaces";
 import { useNavigate } from "react-router-dom";
 
-const Load = () => {
+export interface Props_Load {
+  startGame?: () => void;
+}
+
+const Load: React.FC<Props_Load> = ({ startGame }) => {
   const user = useContext(User);
-  const navigate = useNavigate();
   const [userData, setUserData] = useState<any>();
   const [story, setStory] = useState<Story>();
 
@@ -24,7 +27,9 @@ const Load = () => {
 
   const login = async () => setUserData((await user.loadUserData())?.savedata);
 
-  const load = () => navigate("/Play");
+  const load = () => {
+    if (startGame) startGame();
+  };
 
   return (
     <div className="load-container">

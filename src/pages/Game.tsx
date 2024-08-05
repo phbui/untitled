@@ -38,6 +38,7 @@ const Game = () => {
   const [animate, setAnimate] = useState(false);
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
+  const [isConfirmSaveModalOpen, setIsConfirmSaveModalOpen] = useState(false);
   const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
   const [lastSavedData, setLastSavedData] = useState<Save_Data>({
     chapter_id: "",
@@ -45,14 +46,19 @@ const Game = () => {
     dialogue_id: "",
   });
 
-  const saveGame = () => {
+  const confirmSaveGame = () => {
     user.saveGame(currentChapterId, currentSceneId, currentDialogueId);
     setLastSavedData({
       chapter_id: currentChapterId,
       scene_id: currentSceneId,
       dialogue_id: currentDialogueId,
     });
+    setIsConfirmSaveModalOpen(false);
     setIsSaveModalOpen(true);
+  };
+
+  const saveGame = () => {
+    setIsConfirmSaveModalOpen(true);
   };
 
   const leave = () => {
@@ -153,8 +159,8 @@ const Game = () => {
     setCurrentDialogueId(next.dialogue_id.replace(" (current)", ""));
   };
 
-  const getTransition = (chatpter_id: string, scene_id: string) => {
-    setTransitionChapter(getChapter(chatpter_id).name);
+  const getTransition = (chapter_id: string, scene_id: string) => {
+    setTransitionChapter(getChapter(chapter_id).name);
     setTransitionScene(getScene(scene_id).name);
 
     setAnimate(true);
@@ -226,7 +232,7 @@ const Game = () => {
         <button className="settings-button" onClick={toggleSettings}>
           <i className="fas fa-cog"></i>
         </button>
-        {/*         <div
+        {/* <div
           className={`audio-button ${settingsVisible ? "visible" : "hidden"}`}
         >
           <button>
@@ -311,6 +317,14 @@ const Game = () => {
         onConfirm={() => setIsSaveModalOpen(false)}
         message="Game saved successfully."
         confirmText="OK"
+      />
+      <Modal
+        isOpen={isConfirmSaveModalOpen}
+        onClose={() => setIsConfirmSaveModalOpen(false)}
+        onConfirm={confirmSaveGame}
+        message="Saving will override your previous save. Do you want to continue?"
+        confirmText="Save"
+        cancelText="Cancel"
       />
       <Modal
         isOpen={isLeaveModalOpen}

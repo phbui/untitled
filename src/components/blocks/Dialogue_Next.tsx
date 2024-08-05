@@ -15,6 +15,14 @@ export const Block_Dialogue_Next: React.FC = () => {
   ]?.dialogue[editor.currentDialogueId]?.next;
 
   useEffect(() => {
+    setNextType(undefined);
+    setNavigateNext({});
+    setChoiceNext({});
+    setAvailableScenes([]);
+    setAvailableDialogues([]);
+  }, []);
+
+  const load = () => {
     if (editor.story === null) return;
 
     if (next) {
@@ -30,13 +38,11 @@ export const Block_Dialogue_Next: React.FC = () => {
         setNextType("options");
         setChoiceNext(next);
       }
-    } else {
-      setNextType(undefined);
-      setNavigateNext({});
-      setChoiceNext({});
-      setAvailableScenes([]);
-      setAvailableDialogues([]);
     }
+  };
+
+  useEffect(() => {
+    load();
   }, [
     editor.currentChapterId,
     editor.currentSceneId,
@@ -145,29 +151,50 @@ export const Block_Dialogue_Next: React.FC = () => {
     );
   };
 
+  const handleNavigateChange = () => {
+    const navigateData =
+      JSON.stringify(navigateNext).length > 2
+        ? navigateNext
+        : {
+            text: "",
+            chapter_id: editor.currentChapterId,
+            scene_id: editor.currentSceneId,
+            dialogue_id: editor.currentDialogueId,
+          };
+
+    editor.handleNextChange(
+      editor.currentChapterId,
+      editor.currentSceneId,
+      editor.currentDialogueId,
+      navigateData as Dialogue_Next
+    );
+  };
+
+  const handleOptionsChange = () => {
+    const optionsData =
+      JSON.stringify(choiceNext).length > 2
+        ? choiceNext
+        : {
+            dialog_options: [],
+          };
+
+    editor.handleNextChange(
+      editor.currentChapterId,
+      editor.currentSceneId,
+      editor.currentDialogueId,
+      optionsData as Dialogue_Next
+    );
+  };
+
   const switchTab = (type: "navigate" | "options") => {
     setNextType(type);
 
     switch (type) {
       case "navigate":
-        editor.handleNextChange(
-          editor.currentChapterId,
-          editor.currentSceneId,
-          editor.currentDialogueId,
-          {
-            ...navigateNext,
-          } as Dialogue_Next
-        );
+        handleNavigateChange();
         break;
       case "options":
-        editor.handleNextChange(
-          editor.currentChapterId,
-          editor.currentSceneId,
-          editor.currentDialogueId,
-          {
-            ...choiceNext,
-          } as Dialogue_Next
-        );
+        handleOptionsChange();
         break;
     }
   };
@@ -214,8 +241,8 @@ export const Block_Dialogue_Next: React.FC = () => {
     </div>
   );
 
-  const renderOptionInputs = () =>
-    (choiceNext.dialog_options || []).map((option, index) => (
+  const renderOptionInputs = () => {
+    return (choiceNext.dialog_options || []).map((option, index) => (
       <div key={index} className="block-next__option">
         <label>
           Text:
@@ -276,6 +303,7 @@ export const Block_Dialogue_Next: React.FC = () => {
         </button>
       </div>
     ));
+  };
 
   const renderInputs = () => {
     switch (nextType) {

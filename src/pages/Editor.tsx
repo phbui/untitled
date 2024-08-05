@@ -338,10 +338,6 @@ const EditorContext = () => {
     }
   };
 
-  useEffect(() => {
-    console.log(story);
-  }, [story]);
-
   const editor = {
     story,
     characters,

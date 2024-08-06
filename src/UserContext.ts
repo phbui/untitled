@@ -26,21 +26,29 @@ const UserContext = () => {
   }, []);
 
   const loadUserData = async () => {
+    let data: any = {};
+
     if (!user) {
-      promptLogin();
+      data = await promptLogin();
+    } else {
+      data = user;
+    }
+
+    const userDoc = await getDoc(doc(db, "users", data.uid));
+    if (userDoc.exists()) {
+      return userDoc.data();
+    }
+  };
+
+  const loadGameData = async () => {
+    if (!user) {
       return;
     }
 
     const userDoc = await getDoc(doc(db, "users", user.uid));
     if (userDoc.exists()) {
-      return userDoc.data();
+      return userDoc.data().savedata;
     }
-
-    return {
-      currentChapterId: "day_one",
-      currentSceneId: "start",
-      currentDialogueId: "start",
-    };
   };
 
   const loadCharacterData = async (userId: string) => {
@@ -78,16 +86,13 @@ const UserContext = () => {
     );
   };
 
-  const promptLogin = () => {
+  const promptLogin = async () => {
     const provider = new GoogleAuthProvider();
 
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        setUser(result.user);
-      })
-      .catch((error) => {
-        console.error("Error during login:", error);
-      });
+    let signin = await signInWithPopup(auth, provider);
+
+    setUser(signin.user);
+    return signin.user;
   };
 
   return {
@@ -95,6 +100,7 @@ const UserContext = () => {
     setCharacter,
     saveGame,
     loadUserData,
+    loadGameData,
     user,
     promptLogin,
   };

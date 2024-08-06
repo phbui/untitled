@@ -97,8 +97,8 @@ const Game = () => {
     const fetchedCharacters = await fetchCharacters();
     setCharacters(fetchedCharacters as Character_Repository);
     setLoading(false);
-    let data = await user.loadUserData();
-    if (data) parseSaveData(data.savedata);
+    let data = await user.loadGameData();
+    if (data) parseSaveData(data);
     else {
       parseSaveData({
         currentChapterId: "day_one",

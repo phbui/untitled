@@ -3,7 +3,6 @@ import { User } from "../App";
 import { Character } from "./Creation";
 import { fetchStory } from "../pages/Editor";
 import { Story } from "../story/Interfaces";
-import { useNavigate } from "react-router-dom";
 
 export interface Props_Load {
   startGame?: () => void;
@@ -25,7 +24,9 @@ const Load: React.FC<Props_Load> = ({ startGame }) => {
     load();
   }, []);
 
-  const login = async () => setUserData((await user.loadUserData())?.savedata);
+  const login = async () => {
+    setUserData((await user.loadUserData())?.savedata);
+  };
 
   const load = () => {
     if (startGame) startGame();

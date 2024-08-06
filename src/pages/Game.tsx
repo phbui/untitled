@@ -115,7 +115,8 @@ const Game = () => {
   useEffect(() => {
     if (story) {
       setLoading(false);
-      if (user.character === undefined) navigate("/Home"); // uncomment for prod
+
+      if (!user.character) navigate("/Home"); // uncomment for prod
     }
   }, [story]);
 

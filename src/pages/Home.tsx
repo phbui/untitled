@@ -72,11 +72,11 @@ const sections = [
   },
   {
     id: "load",
-    title: "Saved Characters",
+    title: "Load Game",
     imageId: "45a1cea5d95969b309795bea796a559b",
     component: "load",
   },
-  {
+  /*   {
     id: "catalog",
     title: "Character Catalog",
     imageId: "5417248dd165247176733799b1f8507d",
@@ -87,7 +87,7 @@ const sections = [
     title: "Options",
     imageId: "6454b5c45e742493313517467e602d59",
     component: "options",
-  },
+  }, */
 ];
 
 // Define props for Home

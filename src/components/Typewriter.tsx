@@ -4,9 +4,14 @@ import { Dialogue, Dialogue_Next } from "../story/Interfaces";
 interface Props_Typewriter {
   dialogue?: Dialogue;
   getNext: (next: Dialogue_Next) => void;
+  playerTurn: boolean;
 }
 
-const Typewriter: React.FC<Props_Typewriter> = ({ dialogue, getNext }) => {
+const Typewriter: React.FC<Props_Typewriter> = ({
+  dialogue,
+  getNext,
+  playerTurn,
+}) => {
   if (dialogue === undefined) return;
 
   const [displayedText, setDisplayedText] = useState<string>("");
@@ -44,7 +49,14 @@ const Typewriter: React.FC<Props_Typewriter> = ({ dialogue, getNext }) => {
   };
 
   return (
-    <div className="dialogue" onClick={handleClick}>
+    <div
+      className="dialogue"
+      style={{
+        opacity: `${playerTurn ? "0.8" : "1"}`,
+        cursor: `${playerTurn ? "not-allowed" : "pointer"}`,
+      }}
+      onClick={handleClick}
+    >
       <div className="halftone" />
       <p>
         {displayedText}

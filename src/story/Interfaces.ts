@@ -1,4 +1,5 @@
 export interface Dialogue_Next {
+  text?: string;
   dialogue_id?: string;
   dialog_options?: Dialogue_Option[];
   scene_id?: string;
